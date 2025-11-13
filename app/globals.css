@@ -1,3 +1,14 @@
+:root {
+  --primary: hsl(15, 70%, 60%); /* Soft Terracotta */
+  --primary-dark: hsl(15, 70%, 50%);
+  --background: hsl(20, 33%, 98%);
+  --surface: hsl(0, 0%, 100%);
+  --text-primary: hsl(20, 15%, 20%);
+  --text-secondary: hsl(20, 10%, 40%);
+  --border-color: hsl(20, 20%, 88%);
+  --white: hsl(0, 0%, 100%);
+}
+
 /* Reset some basic styles */
 body, h1, h2, h3, p, ul, li, a {
   margin: 0;
@@ -8,17 +19,22 @@ body, h1, h2, h3, p, ul, li, a {
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: var(--background);
+  color: var(--text-secondary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
 }
 
 a {
-  color: #0070f3;
+  color: var(--primary);
   text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+  color: var(--primary-dark);
+  text-decoration: none; /* Removing underline for a cleaner look */
 }
 
 /* Add any other global styles, font imports, etc. here */

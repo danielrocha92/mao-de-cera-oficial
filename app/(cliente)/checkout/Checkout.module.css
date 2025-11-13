@@ -15,7 +15,7 @@
 }
 
 .formSection, .summarySection {
-  background: #fff;
+  background: var(--surface);
   padding: 2rem;
   border-radius: 8px;
 }

@@ -1,12 +1,12 @@
 .form {
-  background: #fff;
+  background: var(--surface);
   padding: 2rem;
   border-radius: 8px;
   margin-top: 1.5rem;
 }
 
 .form fieldset {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   padding: 1.5rem;
   border-radius: 5px;
   margin-bottom: 1.5rem;

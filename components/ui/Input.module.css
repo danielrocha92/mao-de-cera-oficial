@@ -12,7 +12,7 @@
 .input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 5px;
   font-size: 1rem;
 }

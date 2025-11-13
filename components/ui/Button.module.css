@@ -9,20 +9,20 @@
 }
 
 .primary {
-  background-color: #0070f3;
-  color: white;
+  background-color: var(--primary);
+  color: var(--white);
 }
 
 .primary:hover {
-  background-color: #005bb5;
+  background-color: var(--primary-dark);
 }
 
 .secondary {
-  background-color: #f4f4f4;
-  color: #333;
-  border: 1px solid #ddd;
+  background-color: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--border-color);
 }
 
 .secondary:hover {
-  background-color: #e0e0e0;
+  background-color: var(--background);
 }

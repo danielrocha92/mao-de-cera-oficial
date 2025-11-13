@@ -16,8 +16,9 @@
     "firebase": "^10.12.2",
     "firebase-admin": "^12.1.1",
     "cloudinary": "^2.2.0",
+    "@cloudinary/url-gen": "^1.19.0",
     "mercadopago": "^2.0.10",
-    "emailjs-com": "^3.2.0"
+    "@emailjs/browser": "^4.3.3"
   },
   "devDependencies": {
     "eslint": "^8",

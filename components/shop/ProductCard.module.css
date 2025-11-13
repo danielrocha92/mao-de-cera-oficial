@@ -1,13 +1,13 @@
 .card {
-  border: 1px solid #eee;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
-  background: #fff;
+  background: var(--surface);
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .card a {
@@ -25,6 +25,7 @@
   font-size: 1.1rem;
   margin: 1rem;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .priceContainer {
@@ -36,12 +37,12 @@
 
 .oldPrice {
   text-decoration: line-through;
-  color: #999;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .price {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #0070f3;
+  color: var(--primary);
 }

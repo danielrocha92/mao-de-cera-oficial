@@ -5,7 +5,7 @@
   width: 90%;
   max-width: 1100px;
   margin: 2rem auto;
-  background: #fff;
+  background: var(--surface);
   padding: 2rem;
   border-radius: 8px;
 }
@@ -22,7 +22,7 @@
 
 .price {
   font-size: 1.8rem;
-  color: #0070f3;
+  color: var(--primary);
   margin-bottom: 1.5rem;
 }
 
@@ -34,7 +34,7 @@
 .shippingCalculator {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
 }
 
 .shippingForm {
@@ -46,7 +46,7 @@
 
 .shippingResults {
   margin-top: 1rem;
-  background-color: #f4f4f4;
+  background-color: var(--background);
   padding: 1rem;
   border-radius: 5px;
 }

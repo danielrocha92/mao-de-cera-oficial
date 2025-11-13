@@ -36,5 +36,5 @@
 .mainContent {
   flex: 1;
   padding: 2rem;
-  background-color: #ecf0f1;
+  background-color: var(--background);
 }
