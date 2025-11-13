@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import styles from './FormProduto.module.css';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -86,7 +87,9 @@ export default function NovoProdutoPage() {
           <legend>Imagens</legend>
           <Input type="file" name="imagem" label="Adicionar Imagem" onChange={handleImageUpload} />
           <div className={styles.imageList}>
-            {product.imagens.map(url => <img key={url} src={url} alt="Preview" width="100" />)}
+            {product.imagens.map(url => (
+              <Image key={url} src={url} alt="Preview" width={100} height={100} style={{ objectFit: 'cover', borderRadius: '5px' }}/>
+            ))}
           </div>
         </fieldset>
 
