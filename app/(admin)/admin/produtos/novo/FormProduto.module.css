@@ -1,0 +1,41 @@
+.form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 1rem;
+}
+
+.fieldset {
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  border-radius: 5px;
+  margin: 1.5rem 0;
+}
+
+.fieldset legend {
+  padding: 0 0.5rem;
+  font-weight: bold;
+}
+
+.imageList {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}

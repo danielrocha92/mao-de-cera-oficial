@@ -1,0 +1,36 @@
+.container {
+  width: 90%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.container h1 {
+  margin-bottom: 1.5rem;
+}
+
+.pedidosList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pedidoItem {
+  border: 1px solid #eee;
+  padding: 1rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.status {
+  background-color: #0070f3;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}

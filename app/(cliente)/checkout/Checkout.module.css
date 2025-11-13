@@ -1,0 +1,21 @@
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
+.container h1 {
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.formSection, .summarySection {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+}
