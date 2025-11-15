@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import CustomLink from '../ui/CustomLink';
 import styles from './Header.module.css';
 
 const Header = ({ settings }) => {
@@ -25,14 +25,13 @@ const Header = ({ settings }) => {
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.logo}>
-          <Link href="/">{settings?.nome_loja || 'Mão de Cera'}</Link>
+          <CustomLink href="/">{settings?.nome_loja || 'Mão de Cera'}</CustomLink>
         </div>
         <nav className={styles.nav}>
-          <Link href="/produtos">Produtos</Link>
-          <Link href="/quem-somos">Quem Somos</Link>
-          <Link href="/carrinho">Carrinho</Link>
-          <Link href="/conta/pedidos">Meus Pedidos</Link>
-          <Link href="/conta/login">Login</Link>
+          <CustomLink href="/produtos">Produtos</CustomLink>
+          <CustomLink href="/carrinho">Carrinho</CustomLink>
+          <CustomLink href="/conta/pedidos">Meus Pedidos</CustomLink>
+          <CustomLink href="/conta/login">Login</CustomLink>
         </nav>
         <div className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`} onClick={toggleMenu} data-testid="hamburger-button">
           <div className={styles.line}></div>
@@ -41,11 +40,10 @@ const Header = ({ settings }) => {
         </div>
       </div>
       <div className={`${styles.mobileNav} ${menuOpen ? styles.open : ''}`}>
-        <Link href="/produtos" onClick={toggleMenu}>Produtos</Link>
-        <Link href="/quem-somos" onClick={toggleMenu}>Quem Somos</Link>
-        <Link href="/carrinho" onClick={toggleMenu}>Carrinho</Link>
-        <Link href="/conta/pedidos" onClick={toggleMenu}>Meus Pedidos</Link>
-        <Link href="/conta/login" onClick={toggleMenu}>Login</Link>
+        <CustomLink href="/produtos" onClick={toggleMenu}>Produtos</CustomLink>
+        <CustomLink href="/carrinho" onClick={toggleMenu}>Carrinho</CustomLink>
+        <CustomLink href="/conta/pedidos" onClick={toggleMenu}>Meus Pedidos</CustomLink>
+        <CustomLink href="/conta/login" onClick={toggleMenu}>Login</CustomLink>
       </div>
     </header>
   );

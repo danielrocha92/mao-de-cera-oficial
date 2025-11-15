@@ -27,6 +27,9 @@ async function getStoreSettings() {
 }
 
 
+import { TransitionProvider } from '@/context/TransitionContext';
+import PageTransition from '@/components/animations/PageTransition';
+
 export default async function RootLayout({ children }) {
   // Fetch store-wide settings, including tracking IDs
   const settings = await getStoreSettings();
@@ -52,10 +55,14 @@ export default async function RootLayout({ children }) {
         <meta name="description" content={metadata.description} />
       </head>
       <body>
-        {/* Pass settings to Header and Footer */}
-        <Header settings={settings} />
-        <main>{children}</main>
-        <Footer settings={settings} />
+        <TransitionProvider>
+          <PageTransition>
+            {/* Pass settings to Header and Footer */}
+            <Header settings={settings} />
+            <main>{children}</main>
+            <Footer settings={settings} />
+          </PageTransition>
+        </TransitionProvider>
       </body>
     </html>
   );

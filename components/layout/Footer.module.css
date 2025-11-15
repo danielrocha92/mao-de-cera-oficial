@@ -1,20 +1,106 @@
 .footer {
-  background-color: var(--text-primary);
-  color: var(--background);
+  background-color: #f8f8f8;
+  color: #333;
   padding: 2rem 0;
   margin-top: 2rem;
+  font-size: 0.9rem;
 }
 
 .container {
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.contact {
-  margin-top: 1rem;
+.links {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
   gap: 2rem;
+  width: 100%;
+}
+
+.section {
+  flex: 1;
+  min-width: 150px;
+}
+
+.section h4 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.content {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.content.open {
+  display: flex;
+}
+
+.content a {
+  color: #555;
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.social h5,
+.payment h5 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.socialIcons,
+.paymentIcons {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialIcons img,
+.paymentIcons img {
+  width: 32px;
+  height: 32px;
+}
+
+.legal {
+  width: 100%;
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+@media (min-width: 768px) {
+  .links {
+    width: 70%;
+  }
+
+  .section h4 {
+    cursor: default;
+  }
+
+  .content {
+    display: flex;
+  }
+
+  .rightSection {
+    width: 30%;
+    margin-top: 0;
+  }
 }

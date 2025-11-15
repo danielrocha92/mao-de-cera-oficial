@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import CustomLink from '../ui/CustomLink';
 import Image from 'next/image';
 import styles from './ProductCard.module.css';
 
@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className={styles.card}>
-      <Link href={`/produtos/${product.slug}`}>
+      <CustomLink href={`/produtos/${product.slug}`}>
         <Image
           src={product.imagens?.[0] || "https://via.placeholder.com/300"}
           alt={product.nome}
@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
           )}
           <span className={styles.price}>R$ {displayPrice.toFixed(2)}</span>
         </div>
-      </Link>
+      </CustomLink>
     </div>
   );
 };
