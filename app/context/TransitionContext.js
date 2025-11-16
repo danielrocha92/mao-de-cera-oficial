@@ -7,15 +7,25 @@ export const TransitionContext = createContext();
 export const TransitionProvider = ({ children }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const startTransition = useCallback((callback) => {
+  const startTransition = useCallback((callback, delayNavigation = false) => {
     if (isTransitioning) return;
+
     setIsTransitioning(true);
-    setTimeout(() => {
-      callback();
+
+    if (delayNavigation) {
+      // Delay navigation for external links to allow animation to play
       setTimeout(() => {
-        setIsTransitioning(false);
-      }, 1000);
-    }, 1000);
+        callback();
+      }, 1000); // 1s delay before navigating
+    } else {
+      // Navigate immediately for internal links
+      callback();
+    }
+
+    // Hide the animation overlay after it has had time to complete
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 2000); // Total animation time
   }, [isTransitioning]);
 
   return (

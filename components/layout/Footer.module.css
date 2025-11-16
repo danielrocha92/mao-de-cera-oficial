@@ -17,8 +17,8 @@
 
 .links {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 0.5rem; /* Reduced gap */
   width: 100%;
 }
 
@@ -29,14 +29,25 @@
 
 .section h4 {
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem; /* Reduced margin */
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.indicator {
+  font-size: 1.5rem;
+  font-weight: 400;
 }
 
 .content {
   display: none;
   flex-direction: column;
   gap: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid #eee;
+  margin-left: 0.25rem;
 }
 
 .content.open {
@@ -86,21 +97,64 @@
   color: #777;
 }
 
+@media (max-width: 767px) {
+  .footer {
+    padding: 2rem 0 1rem 0; /* Reduced bottom padding */
+    font-size: 0.85rem;
+  }
+  .rightSection {
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .socialIcons img,
+  .paymentIcons img {
+    width: 28px;
+    height: 28px;
+  }
+  .legal {
+    margin-top: 1.5rem;
+  }
+}
+
 @media (min-width: 768px) {
+  .container {
+    flex-wrap: nowrap;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
   .links {
-    width: 70%;
+    flex: 3; /* Takes up 3 parts of the space */
+    width: auto;
+    flex-direction: row; /* Ensure it's row on desktop */
+    gap: 2rem;
   }
 
   .section h4 {
     cursor: default;
+    margin-bottom: 1rem; /* Restore margin for desktop */
+  }
+
+  .indicator {
+    display: none; /* Hide indicator on desktop */
   }
 
   .content {
     display: flex;
+    border-left: none;
+    padding-left: 0;
+    margin-left: 0;
   }
 
   .rightSection {
-    width: 30%;
+    flex: 1; /* Takes up 1 part of the space */
+    width: auto;
     margin-top: 0;
+    text-align: right; /* Align content to the right */
+  }
+
+  .socialIcons,
+  .paymentIcons {
+    justify-content: flex-end; /* Align icons to the right */
   }
 }

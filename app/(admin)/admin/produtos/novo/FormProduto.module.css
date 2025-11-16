@@ -11,7 +11,18 @@
   gap: 1rem;
 }
 
-.textarea {
+.descriptionControl {
+  margin-bottom: 1rem;
+}
+
+.descriptionControl label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.descriptionControl textarea {
   width: 100%;
   min-height: 120px;
   padding: 10px;
@@ -19,7 +30,22 @@
   border-radius: 5px;
   font-size: 1rem;
   font-family: inherit;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem; /* Adjusted margin */
+}
+
+.descriptionControl button {
+  /* Style for the AI button */
+  padding: 0.5rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.descriptionControl button:hover {
+  background-color: var(--primary-dark);
 }
 
 .fieldset {
@@ -34,8 +60,130 @@
   font-weight: bold;
 }
 
-.imageList {
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  margin-top: 0.5rem;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.profitMargin {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.radioLabel input[type="radio"] {
+  width: 18px;
+  height: 18px;
+}
+
+.inventoryActions {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.helpText {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.helpText a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.helpText a:hover {
+  text-decoration: underline;
+}
+
+.select {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: var(--background);
+  cursor: pointer;
+}
+
+.categorySelection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.imageList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.imageUploadHint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.imagePreviewContainer {
+  position: relative;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.deleteImageButton {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.mainImageCheckbox {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }

@@ -18,8 +18,73 @@
 .item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid var(--border-color);
+  gap: 1rem;
+}
+
+.itemDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-grow: 1;
+}
+
+.itemName {
+  font-weight: 500;
+}
+
+.itemPrice {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.quantityControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quantityButton, .trashButton {
+  background: none;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+.quantityButton:hover, .trashButton:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.quantityText {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.trashButton {
+  color: var(--danger);
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.trashButton:hover {
+  background-color: #fbe9e7; /* Light red background on hover */
+  border-color: transparent;
+}
+
+.trashButton svg {
+  width: 20px;
+  height: 20px;
 }
 
 .summary {

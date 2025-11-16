@@ -1,0 +1,145 @@
+/* Main container */
+.carouselWrapper {
+  width: 100vw;
+  height: 100vh; /* Fullscreen height for desktop */
+  position: relative;
+  overflow: hidden;
+  background-color: #000; /* Fallback background */
+}
+
+/* Slides container - this moves */
+.slidesContainer {
+  display: flex;
+  height: 100%;
+  transition: transform 0.7s ease-in-out;
+}
+
+/* Individual slide */
+.slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slideMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* As requested */
+}
+
+/* Dark overlay for text readability */
+.slideOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Text content on the slide */
+.slideContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  z-index: 1;
+  width: 80%;
+}
+
+.slideContent h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.slideContent p {
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Navigation Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.arrow:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.leftArrow {
+  left: 20px;
+}
+
+.rightArrow {
+  right: 20px;
+}
+
+/* Pagination Dots */
+.dotsContainer {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.activeDot {
+  background-color: white;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .carouselWrapper {
+    height: 60vh; /* Adjusted height for mobile */
+  }
+
+  .slideContent h2 {
+    font-size: 1.8rem;
+  }
+
+  .slideContent p {
+    font-size: 1rem;
+  }
+
+  .arrow {
+    padding: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .leftArrow {
+    left: 10px;
+  }
+
+  .rightArrow {
+    right: 10px;
+  }
+}

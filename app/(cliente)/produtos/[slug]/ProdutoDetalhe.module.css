@@ -1,34 +1,75 @@
 .container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.5fr; /* Ajustado para dar mais espaço aos detalhes */
   gap: 3rem;
   width: 90%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 2rem auto;
   background: var(--surface);
   padding: 2rem;
   border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.imageGallery img {
+.imageGallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.productImage {
   width: 100%;
+  height: auto; /* Manter proporção */
   border-radius: 8px;
+  object-fit: contain; /* Garante que a imagem inteira seja visível */
+  border: 1px solid var(--border-color);
 }
 
 .details h1 {
-  font-size: 2.2rem;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+  color: #333;
 }
 
 .price {
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   color: var(--primary);
+  font-weight: bold;
   margin-bottom: 1.5rem;
 }
 
-.description {
+.actions {
   margin-bottom: 2rem;
+}
+
+.descriptionSection,
+.specifications {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.descriptionSection h3,
+.specifications h3,
+.shippingCalculator h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.descriptionSection p {
   line-height: 1.7;
+  color: #555;
+}
+
+.specifications ul {
+  list-style: none;
+  padding: 0;
+}
+
+.specifications li {
+  margin-bottom: 0.5rem;
+  color: #555;
 }
 
 .shippingCalculator {
@@ -44,9 +85,36 @@
   margin-top: 1rem;
 }
 
+.shippingForm > div { /* Estilo para o Input component */
+  flex-grow: 1;
+}
+
 .shippingResults {
   margin-top: 1rem;
   background-color: var(--background);
   padding: 1rem;
   border-radius: 5px;
+  border: 1px solid var(--border-color);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .details h1 {
+    font-size: 2rem;
+  }
+
+  .price {
+    font-size: 1.8rem;
+  }
+
+  .shippingForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

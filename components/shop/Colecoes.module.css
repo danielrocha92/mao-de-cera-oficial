@@ -1,0 +1,27 @@
+.colecoes {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.collectionItem {
+  border: 1px solid #eee;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}

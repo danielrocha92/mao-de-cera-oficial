@@ -1,6 +1,6 @@
 .container {
-  text-align: center;
-  padding: 4rem 2rem;
+  /* This container can be used for sections below the main carousel */
+  padding: 0;
 }
 
 .title {
@@ -11,4 +11,10 @@
 .subtitle {
   font-size: 1.2rem;
   color: var(--text-secondary);
+}
+
+/* Example for future sections */
+.featuredProducts {
+  padding: 4rem 2rem;
+  text-align: center;
 }
