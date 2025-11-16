@@ -113,6 +113,7 @@ const Header = ({ settings }) => {
             </div>
 
             {/* Desktop Icons */}
+            {/*
             <div className={styles.desktopIcons}>
               <CustomLink href="/conta/login" aria-label="Minha Conta">
                 <UserIcon className={styles.icon} />
@@ -121,6 +122,7 @@ const Header = ({ settings }) => {
                 <CartIcon className={styles.icon} ref={cartIconRef} />
               </CustomLink>
             </div>
+            */}
           </div>
         </div>
       </header>
