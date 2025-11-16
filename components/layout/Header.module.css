@@ -25,11 +25,22 @@
   left: auto;
 }
 
-.headerWrapper.transparent {
+/* Initial Transparent State (for homepage, not scrolled) */
+.headerWrapper.initialTransparent {
   background-color: transparent;
   box-shadow: none;
 }
 
+.headerWrapper.initialTransparent .logo a,
+.headerWrapper.initialTransparent .line {
+  color: var(--white); /* Force white color for text and icons */
+}
+
+.headerWrapper.initialTransparent .line {
+  background-color: var(--white); /* Force white color for hamburger lines */
+}
+
+/* Scrolled State */
 .headerWrapper.scrolled {
   background-color: var(--surface);
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -43,17 +54,26 @@
 
 .mainHeader {
   padding: 0.75rem 0;
+  position: relative; /* Needed for absolute positioning of logo */
 }
 
 .mainHeader .container {
   justify-content: space-between;
+  flex-wrap: nowrap; /* Prevent wrapping */
+}
+
+.logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1; /* Ensure logo is above other elements if needed */
 }
 
 .logo a {
   font-size: 1.5rem; /* Smaller logo on mobile */
   font-weight: bold;
   text-decoration: none;
-  color: #fff;
+  color: var(--text-primary); /* Use theme variable */
   transition: color 0.3s ease;
 }
 
@@ -61,22 +81,14 @@
   display: none; /* Hidden on mobile */
 }
 
-.iconsWrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; /* Tighter gap on mobile */
+.desktopIcons {
+  display: none; /* Hidden on mobile */
 }
 
-.iconButton, .mobileSearchIcon {
-  color: #fff;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-}
-
-.iconText {
-  display: none; /* Hide text labels on mobile */
+.icon {
+  color: var(--text-primary);
+  width: 24px;
+  height: 24px;
 }
 
 .hamburger {
@@ -91,56 +103,184 @@
 .line {
   width: 24px;
   height: 2px;
-  background-color: #fff;
+  background-color: var(--text-primary); /* Use theme variable */
   transition: all 0.3s ease-in-out;
 }
 
-.navBar {
-  display: none; /* Hidden by default, shown via JS */
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: rgba(20, 20, 20, 0.95);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+/* Hamburger to Close Icon */
+.hamburger.open .line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
 }
 
-.navBar.mobileNavOpen {
-  display: block;
+.hamburger.open .line:nth-child(2) {
+  opacity: 0;
 }
 
-.navBar .container {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0;
+.hamburger.open .line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.mobileHeaderIcons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1; /* Ensure icons are above other elements if needed */
+}
+
+.mobileHeaderIcons .iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
   padding: 0;
 }
 
-.navBar a {
-  text-align: center;
-  padding: 1rem;
-  border-bottom: 1px solid #444;
-  color: #fff;
+/* Mobile Menu Overlay */
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background); /* Use theme variable */
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem; /* Increased padding for Apple-like feel */
+  overflow-y: auto; /* Enable scrolling for long menus */
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(100%); /* Start off-screen */
+}
+
+.mobileMenuOverlay.open {
+  transform: translateX(0); /* Slide in */
+}
+
+.mobileMenuTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color); /* Subtle separator */
+  margin-bottom: 1rem;
+}
+
+.mobileMenuLogin {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
-/* --- Scrolled State Colors --- */
-.scrolled .logo a,
-.scrolled .iconButton,
-.scrolled .mobileSearchIcon,
-.scrolled .line {
+.mobileMenuLogin .icon {
+  width: 28px; /* Larger icon for prominence */
+  height: 28px;
+  color: var(--primary); /* Highlight color for login icon */
+}
+
+.closeMobileMenuButton {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1; /* Adjust line height to center 'x' */
+}
+
+.mobileMenuSearchAndCart {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.mobileMenuSearchAndCart .mobileSearchContainer {
+  flex-grow: 1; /* Allow search container to take available space */
+  margin: 0; /* Reset margin */
+}
+
+.mobileMenuCart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Fixed width for cart icon */
+  height: 40px;
+  border-radius: 50%; /* Circular background */
+  background-color: var(--surface-alt); /* Subtle background for cart */
+}
+
+.mobileMenuCart .icon {
   color: var(--text-primary);
-  background-color: transparent;
+  width: 24px;
+  height: 24px;
 }
-.scrolled .line {
-  background-color: var(--text-primary);
-}
-.scrolled .navBar.mobileNavOpen {
+
+.mobileSearchContainer {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  overflow: hidden;
   background-color: var(--surface);
 }
-.scrolled .navBar.mobileNavOpen a {
-  color: var(--text-secondary);
-  border-bottom-color: #eee;
+
+.mobileSearchContainer .searchInput {
+  width: 100%;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  outline: none;
+  background-color: var(--surface);
+  color: var(--text-primary);
+}
+
+.mobileSearchContainer .searchButton {
+  background-color: var(--primary);
+  border: none;
+  padding: 0 1.25rem;
+  cursor: pointer;
+  color: var(--text-on-primary);
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem; /* Reduced gap for Apple-like density */
+  padding: 0; /* Reset padding, will be handled by links */
+}
+
+.mobileNav a {
+  text-align: left;
+  padding: 0.75rem 0; /* Padding for each link */
+  font-size: 1.2rem;
+  font-weight: normal; /* Lighter font weight for Apple-like */
+  color: var(--text-primary);
+  text-decoration: none;
+  border-bottom: none; /* Remove border for cleaner look */
+  transition: color 0.2s ease;
+}
+
+.mobileNav a:hover {
+  color: var(--primary); /* Highlight on hover */
+}
+
+.mobileNav a:last-child {
+  border-bottom: none;
+}
+
+/* --- Scrolled State Colors --- */
+.scrolled .headerWrapper {
+  background-color: var(--surface);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.scrolled .logo a,
+.scrolled .mobileHeaderIcons .icon,
+.scrolled .hamburger .line {
+  color: var(--text-primary);
+  background-color: var(--text-primary); /* For line */
 }
 
 /* --- Search Overlay --- */
@@ -150,7 +290,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--surface);
+  background: var(--surface); /* Use theme variable */
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -161,7 +301,7 @@
   top: 1rem;
   right: 1rem;
   font-size: 2.5rem;
-  color: var(--text-secondary);
+  color: var(--text-secondary); /* Use theme variable */
   background: none;
   border: none;
   cursor: pointer;
@@ -171,7 +311,7 @@
   margin: auto;
   width: 90%;
   max-width: 600px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color); /* Use theme variable */
   border-radius: 25px;
   overflow: hidden;
 }
@@ -181,6 +321,8 @@
   padding: 1rem 1.5rem;
   font-size: 1.2rem;
   outline: none;
+  background-color: var(--surface); /* Use theme variable */
+  color: var(--text-primary); /* Use theme variable */
 }
 .searchOverlayButton {
   background-color: var(--primary);
@@ -199,21 +341,30 @@
   }
   .mainHeader {
     padding: 1.5rem 0;
+    position: static; /* Reset for desktop */
+  }
+  .mainHeader .container {
+    justify-content: space-between;
+  }
+  .logo {
+    position: static; /* Reset for desktop */
+    transform: none; /* Reset for desktop */
   }
   .logo a {
     font-size: 2rem;
+    color: var(--text-primary);
   }
-  .hamburger, .mobileSearchIcon {
-    display: none;
+  .hamburger, .mobileHeaderIcons {
+    display: none; /* Hide mobile elements on desktop */
   }
   .desktopSearchContainer {
     display: flex;
     width: 100%;
     max-width: 600px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color); /* Use theme variable */
     border-radius: 25px;
     overflow: hidden;
-    background-color: #fff;
+    background-color: var(--surface); /* Use theme variable */
   }
   .searchInput {
     width: 100%;
@@ -221,7 +372,7 @@
     padding: 0.75rem 1.25rem;
     font-size: 1rem;
     outline: none;
-    color: var(--text-primary);
+    color: var(--text-primary); /* Use theme variable */
   }
   .searchButton {
     background-color: var(--primary);
@@ -230,22 +381,18 @@
     cursor: pointer;
     color: var(--text-on-primary);
   }
-  .iconsWrapper {
+  .desktopIcons {
+    display: flex;
+    align-items: center;
     gap: 1.5rem;
   }
-  .iconText {
-    display: inline;
-    font-size: 0.9rem;
+  .desktopIcons .icon {
+    color: var(--text-primary);
   }
   .navBar {
     display: block;
-    position: relative;
     background-color: transparent;
     border: none;
-  }
-  .scrolled .navBar {
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
   }
   .navBar .container {
     flex-direction: row;
@@ -254,18 +401,22 @@
     padding: 0.8rem 0;
   }
   .navBar a {
-    color: #fff;
+    color: var(--text-primary); /* Use theme variable */
     border-bottom: 2px solid transparent;
   }
   .scrolled .navBar a {
     color: var(--text-secondary);
   }
   .navBar a:hover {
-    color: #fff;
-    border-bottom-color: #fff;
+    color: var(--primary); /* Use theme variable */
+    border-bottom-color: var(--primary); /* Use theme variable */
   }
   .scrolled .navBar a:hover {
     color: var(--primary);
     border-bottom-color: var(--primary);
+  }
+
+  .mobileMenuOverlay {
+    display: none; /* Hide mobile overlay on desktop */
   }
 }

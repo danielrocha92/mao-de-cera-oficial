@@ -5,6 +5,7 @@ import { TransitionProvider } from '@/context/TransitionContext';
 import PageTransition from '@/components/animations/PageTransition';
 import { CartAnimationProvider } from '@/context/CartAnimationContext';
 import FlyToCartAnimation from '@/components/animations/FlyToCartAnimation';
+import { ThemeProvider } from './context/ThemeContext';
 
 import MainContent from './MainContent';
 
@@ -37,16 +38,18 @@ export default async function RootLayout({ children }) {
         <meta name="description" content={metadata.description} />
       </head>
       <body>
-        <TransitionProvider>
-          <CartAnimationProvider>
-            <PageTransition>
-              <Header settings={settings} />
-              <MainContent>{children}</MainContent>
-              <Footer settings={settings} />
-            </PageTransition>
-            <FlyToCartAnimation />
-          </CartAnimationProvider>
-        </TransitionProvider>
+        <ThemeProvider>
+          <TransitionProvider>
+            <CartAnimationProvider>
+              <PageTransition>
+                <Header settings={settings} />
+                <MainContent>{children}</MainContent>
+                <Footer settings={settings} />
+              </PageTransition>
+              <FlyToCartAnimation />
+            </CartAnimationProvider>
+          </TransitionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

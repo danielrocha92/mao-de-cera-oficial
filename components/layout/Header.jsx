@@ -8,14 +8,17 @@ import SearchIcon from '../ui/icons/SearchIcon';
 import UserIcon from '../ui/icons/UserIcon';
 import CartIcon from '../ui/icons/CartIcon';
 import { CartAnimationContext } from '@/app/context/CartAnimationContext';
+import { useTheme } from '@/app/context/ThemeContext'; // Import useTheme
 
 const Header = ({ settings }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isInitialTransparent, setIsInitialTransparent] = useState(true); // New state
   const { setAnimationEndpoint } = useContext(CartAnimationContext);
   const cartIconRef = useRef(null);
   const pathname = usePathname(); // Get current path
+  const { theme, toggleTheme } = useTheme(); // Use theme context
 
   const isHomePage = pathname === '/';
 
@@ -27,19 +30,17 @@ const Header = ({ settings }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Only apply scroll effect on the homepage
-      if (isHomePage) {
-        setIsScrolled(window.scrollY > 50);
-      }
+      const scrolled = window.scrollY > 50;
+      setIsScrolled(scrolled);
+      setIsInitialTransparent(isHomePage && !scrolled); // Only transparent on homepage and not scrolled
     };
 
-    // Always set scrolled to true on non-homepage
-    if (!isHomePage) {
-      setIsScrolled(true);
-    } else {
-      // For homepage, check initial scroll position and add listener
-      handleScroll();
+    if (isHomePage) {
+      handleScroll(); // Set initial state
       window.addEventListener('scroll', handleScroll);
+    } else {
+      setIsScrolled(true); // Always scrolled on other pages
+      setIsInitialTransparent(false); // Never transparent on other pages
     }
 
     return () => {
@@ -67,7 +68,7 @@ const Header = ({ settings }) => {
   const headerClasses = [
     styles.headerWrapper,
     isHomePage ? styles.homeHeader : styles.otherHeader,
-    isScrolled ? styles.scrolled : styles.transparent,
+    isInitialTransparent ? styles.initialTransparent : (isScrolled ? styles.scrolled : styles.transparent),
   ].join(' ');
 
   return (
@@ -90,6 +91,19 @@ const Header = ({ settings }) => {
               <CustomLink href="/">{settings?.nome_loja || 'Mão de Cera'}</CustomLink>
             </div>
 
+            {/* Mobile Icons (Search, User, and Cart) */}
+            <div className={styles.mobileHeaderIcons}>
+              <button className={styles.iconButton} onClick={toggleSearch} aria-label="Buscar">
+                <SearchIcon className={styles.icon} />
+              </button>
+              <CustomLink href="/conta/login" aria-label="Minha Conta">
+                <UserIcon className={styles.icon} />
+              </CustomLink>
+              <CustomLink href="/carrinho" aria-label="Carrinho de Compras">
+                <CartIcon className={styles.icon} ref={cartIconRef} />
+              </CustomLink>
+            </div>
+
             {/* Desktop Search */}
             <div className={styles.desktopSearchContainer}>
               <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
@@ -98,42 +112,62 @@ const Header = ({ settings }) => {
               </button>
             </div>
 
-            <div className={styles.iconsWrapper}>
-              {/* Mobile Search Icon */}
-              <button className={styles.mobileSearchIcon} onClick={toggleSearch}>
-                <SearchIcon />
-              </button>
-              <CustomLink href="/conta/login" className={styles.iconButton}>
-                <UserIcon />
-                <span className={styles.iconText}>Entrar</span>
+            {/* Desktop Icons */}
+            <div className={styles.desktopIcons}>
+              <CustomLink href="/conta/login" aria-label="Minha Conta">
+                <UserIcon className={styles.icon} />
               </CustomLink>
-              <div ref={cartIconRef}>
-                <CustomLink href="/carrinho" className={styles.iconButton}>
-                  <CartIcon />
-                  <span className={styles.iconText}>Carrinho</span>
-                </CustomLink>
-              </div>
+              <CustomLink href="/carrinho" aria-label="Carrinho de Compras">
+                <CartIcon className={styles.icon} ref={cartIconRef} />
+              </CustomLink>
             </div>
           </div>
         </div>
-
-        <nav className={`${styles.navBar} ${menuOpen ? styles.mobileNavOpen : ''}`}>
-          <div className={styles.container}>
-            <CustomLink href="/produtos" onClick={menuOpen ? toggleMenu : undefined}>Velas Aromáticas</CustomLink>
-            <CustomLink href="/produtos?categoria=kits" onClick={menuOpen ? toggleMenu : undefined}>Kits</CustomLink>
-            <CustomLink href="/produtos?categoria=acessorios" onClick={menuOpen ? toggleMenu : undefined}>Acessórios</CustomLink>
-            <CustomLink href="/quem-somos" onClick={menuOpen ? toggleMenu : undefined}>Quem Somos</CustomLink>
-            <CustomLink href="/contato" onClick={menuOpen ? toggleMenu : undefined}>Contato</CustomLink>
-          </div>
-        </nav>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      {menuOpen && (
+        <div className={`${styles.mobileMenuOverlay} ${menuOpen ? styles.open : ''}`}>
+          <div className={styles.mobileMenuTop}>
+            <CustomLink href="/conta/login" aria-label="Minha Conta" onClick={toggleMenu} className={styles.mobileMenuLogin}>
+              <UserIcon className={styles.icon} />
+              <span>Minha Conta</span>
+            </CustomLink>
+            <button className={styles.closeMobileMenuButton} onClick={toggleMenu} aria-label="Fechar Menu">
+              &times;
+            </button>
+          </div>
+
+          <div className={styles.mobileMenuSearchAndCart}>
+            <div className={styles.mobileSearchContainer}>
+              <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
+              <button className={styles.searchButton}>
+                <SearchIcon className={styles.searchIcon} />
+              </button>
+            </div>
+            <CustomLink href="/carrinho" aria-label="Carrinho de Compras" onClick={toggleMenu} className={styles.mobileMenuCart}>
+              <CartIcon className={styles.icon} />
+            </CustomLink>
+          </div>
+
+          <nav className={styles.mobileNav}>
+            <CustomLink href="/produtos" onClick={toggleMenu}>Velas Aromáticas</CustomLink>
+            <CustomLink href="/produtos?categoria=kits" onClick={toggleMenu}>Kits</CustomLink>
+            <CustomLink href="/produtos?categoria=acessorios" onClick={toggleMenu}>Acessórios</CustomLink>
+            <CustomLink href="/quem-somos" onClick={toggleMenu}>Quem Somos</CustomLink>
+            <CustomLink href="/contato" onClick={toggleMenu}>Contato</CustomLink>
+            <CustomLink href="/conta/pedidos" onClick={toggleMenu}>Meus Pedidos</CustomLink>
+            <CustomLink href="/atendimento" onClick={toggleMenu}>Atendimento</CustomLink>
+          </nav>
+        </div>
+      )}
 
       {/* Search Overlay */}
       {searchOpen && (
         <div className={styles.searchOverlay}>
           <button className={styles.closeSearchButton} onClick={toggleSearch}>&times;</button>
           <div className={styles.searchOverlayContent}>
-            <input type="text" placeholder="O que você está procurando?" className={styles.searchOverlayInput} autoFocus />
+            <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} autoFocus />
             <button className={styles.searchOverlayButton}>
               <SearchIcon />
             </button>

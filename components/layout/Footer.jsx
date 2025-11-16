@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { FaFacebook, FaYoutube, FaPinterest, FaTiktok, FaInstagram } from 'react-icons/fa';
 import CustomLink from '../ui/CustomLink';
 import styles from './Footer.module.css';
+import { useTheme } from '@/app/context/ThemeContext';
 
 const Footer = ({ settings }) => {
   const [openSection, setOpenSection] = useState(null);
+  const { theme } = useTheme();
 
   const toggleSection = (section) => {
     if (window.innerWidth < 768) {
@@ -15,7 +17,7 @@ const Footer = ({ settings }) => {
   };
 
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} ${theme === 'dark' ? styles.darkTheme : ''}`}>
       <div className={styles.container}>
         <div className={styles.links}>
           <div className={styles.section}>

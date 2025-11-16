@@ -9,6 +9,17 @@
   --white: hsl(0, 0%, 100%);
 }
 
+[data-theme='dark'] {
+  --primary: hsl(15, 70%, 60%);
+  --primary-dark: hsl(15, 70%, 50%);
+  --background: hsl(220, 20%, 15%);
+  --surface: hsl(220, 20%, 20%);
+  --text-primary: hsl(20, 33%, 98%);
+  --text-secondary: hsl(20, 10%, 70%);
+  --border-color: hsl(220, 15%, 30%);
+  --white: hsl(0, 0%, 100%);
+}
+
 /* Reset some basic styles */
 body, h1, h2, h3, p, ul, li, a {
   margin: 0;
