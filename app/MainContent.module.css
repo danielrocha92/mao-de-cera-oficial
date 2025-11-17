@@ -1,6 +1,6 @@
 /* Adiciona preenchimento no topo em páginas que não são a home para compensar a altura do header */
 .mainContent {
-    /* padding-top: 140px; */ /* Altura aproximada do header no desktop */
+    padding-top: 140px; /* Altura aproximada do header no desktop */
 }
 
 /* Na home, não há preenchimento, pois o header flutua sobre o conteúdo */
@@ -10,6 +10,6 @@
 
 @media (max-width: 768px) {
     .mainContent {
-        /* padding-top: 110px; */ /* Altura aproximada do header no mobile */
+        padding-top: 110px; /* Altura aproximada do header no mobile */
     }
 }

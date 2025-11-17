@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useContext, useState, useEffect } from 'react';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
+const Lottie = dynamic(() => import('lottie-react').then(mod => mod.default), { ssr: false });
 import { TransitionContext } from '../../app/context/TransitionContext';
 import styles from './PageTransition.module.css';
 import animationData from '../../public/animation.json';

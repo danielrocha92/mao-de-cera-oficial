@@ -51,8 +51,8 @@
 .logoLink {
   display: block;
   position: relative;
-  width: 45px;
-  height: 45px;
+  width: 60px;
+  height: 60px;
 }
 
 .logoImage {
@@ -133,6 +133,17 @@
   padding: 0;
 }
 
+.mobileIcon {
+  color: var(--white);
+  width: 28px; /* Unified size */
+  height: 28px; /* Unified size */
+  transition: color 0.3s ease;
+}
+
+.scrolled .mobileIcon {
+  color: var(--text-primary);
+}
+
 /* Mobile Menu Overlay */
 .mobileMenuOverlay {
   position: fixed;
@@ -140,133 +151,85 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--background); /* Use theme variable */
-  z-index: 9999;
+  background-color: var(--background);
+  z-index: 1000;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem; /* Increased padding for Apple-like feel */
-  overflow-y: auto; /* Enable scrolling for long menus */
+  padding: 1rem;
+  overflow-y: auto;
   transition: transform 0.3s ease-in-out;
-  transform: translateX(100%); /* Start off-screen */
+  transform: translateX(-100%);
 }
 
 .mobileMenuOverlay.open {
-  transform: translateX(0); /* Slide in */
+  transform: translateX(0);
 }
 
-.mobileMenuTop {
+.mobileMenuHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color); /* Subtle separator */
-  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.mobileMenuLogin {
+.mobileMenuLogo {
+  width: 80px;
+  height: 80px;
+}
+
+.mobileMenuSearch {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-decoration: none;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+  gap: 0.5rem;
 }
 
-.mobileMenuLogin .icon {
-  width: 28px; /* Larger icon for prominence */
-  height: 28px;
-  color: var(--primary); /* Highlight color for login icon */
-}
-
-.closeMobileMenuButton {
-  background: none;
-  border: none;
-  font-size: 2.5rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: 0;
-  line-height: 1; /* Adjust line height to center 'x' */
-}
-
-.mobileMenuSearchAndCart {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.mobileMenuSearchAndCart .mobileSearchContainer {
-  flex-grow: 1; /* Allow search container to take available space */
-  margin: 0; /* Reset margin */
-}
-
-.mobileMenuCart {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px; /* Fixed width for cart icon */
-  height: 40px;
-  border-radius: 50%; /* Circular background */
-  background-color: var(--surface-alt); /* Subtle background for cart */
-}
-
-.mobileMenuCart .icon {
-  color: var(--text-primary);
-  width: 24px;
-  height: 24px;
-}
-
-.mobileSearchContainer {
-  display: flex;
-  border: 1px solid var(--border-color);
-  border-radius: 25px;
-  overflow: hidden;
-  background-color: var(--surface);
-}
-
-.mobileSearchContainer .searchInput {
+.mobileMenuSearch input {
   width: 100%;
+  background: transparent;
   border: none;
-  padding: 0.75rem 1.25rem;
   font-size: 1rem;
-  outline: none;
-  background-color: var(--surface);
   color: var(--text-primary);
 }
 
-.mobileSearchContainer .searchButton {
-  background-color: var(--primary);
-  border: none;
-  padding: 0 1.25rem;
-  cursor: pointer;
-  color: var(--text-on-primary);
+.mobileMenuSearch input:focus {
+  outline: none;
+}
+
+.mobileMenuSearch .icon {
+  color: var(--text-secondary);
 }
 
 .mobileNav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem; /* Reduced gap for Apple-like density */
-  padding: 0; /* Reset padding, will be handled by links */
+  gap: 0.5rem;
+  padding-top: 1rem;
+  flex-grow: 1;
 }
 
 .mobileNav a {
   text-align: left;
-  padding: 0.75rem 0; /* Padding for each link */
+  padding: 0.75rem 0;
   font-size: 1.2rem;
-  font-weight: normal; /* Lighter font weight for Apple-like */
   color: var(--text-primary);
   text-decoration: none;
-  border-bottom: none; /* Remove border for cleaner look */
-  transition: color 0.2s ease;
 }
 
-.mobileNav a:hover {
-  color: var(--primary); /* Highlight on hover */
+.mobileMenuFooter {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
 }
 
-.mobileNav a:last-child {
-  border-bottom: none;
+.mobileMenuFooter a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 1.1rem;
 }
 
 /* --- Scrolled State Colors --- */
@@ -497,7 +460,92 @@
     border-color: var(--white);
   }
 
-  .scrolled .themeToggle {
-    border-color: var(--border-color);
+    .scrolled .themeToggle {
+
+      border-color: var(--border-color);
+
+    }
+
   }
-}
+
+  
+
+  /* Styles for initial solid header on non-home pages */
+
+  .solidInitial {
+
+    background-color: var(--surface);
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  }
+
+  
+
+  .solidInitial .icon,
+
+  .solidInitial .line,
+
+  .solidInitial .desktopNav a,
+
+  .solidInitial .searchInput,
+
+  .solidInitial .searchIcon {
+
+    color: var(--text-primary);
+
+  }
+
+  
+
+  .solidInitial .line {
+
+    background-color: var(--text-primary);
+
+  }
+
+  
+
+  .solidInitial .desktopNav a {
+
+    color: var(--text-secondary);
+
+  }
+
+  
+
+  .solidInitial .searchInput::placeholder {
+
+    color: var(--text-secondary);
+
+  }
+
+  
+
+  .solidInitial .desktopSearchContainer {
+
+    border-color: var(--border-color);
+
+    background-color: var(--surface);
+
+  }
+
+  
+
+  .solidInitial .themeToggle {
+
+    border-color: var(--border-color);
+
+  }
+
+  
+
+  .solidInitial .topBar {
+
+    color: var(--text-primary);
+
+    background-color: var(--surface);
+
+  }
+
+  

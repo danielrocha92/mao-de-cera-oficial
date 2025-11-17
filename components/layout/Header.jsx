@@ -24,6 +24,7 @@ const Header = ({ settings }) => {
   const { setAnimationEndpoint } = useContext(CartAnimationContext);
   const cartIconRef = useRef(null);
   const { theme, toggleTheme } = useTheme(); // Use theme context
+  const pathname = usePathname();
 
   useEffect(() => {
     if (cartIconRef.current) {
@@ -56,8 +57,11 @@ const Header = ({ settings }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const isHomePage = pathname === '/';
   // As classes agora são muito mais simples
-  const headerClasses = `${styles.headerWrapper} ${isScrolled ? styles.scrolled : ''}`;
+  const headerClasses = `${styles.headerWrapper} ${
+    isScrolled ? styles.scrolled : ''
+  } ${!isHomePage ? styles.solidInitial : ''}`;
 
 
   return (
@@ -91,15 +95,14 @@ const Header = ({ settings }) => {
               </div>
 
               <div className={styles.mobileHeaderIcons}>
-                <ThemeToggleButton className={styles.themeToggle} />
                 <button className={styles.iconButton} onClick={toggleSearch} aria-label="Buscar">
-                  <SearchIcon className={styles.icon} />
+                  <SearchIcon className={styles.mobileIcon} />
                 </button>
                 <CustomLink href="/conta/login" aria-label="Minha Conta">
-                  <UserIcon className={styles.icon} />
+                  <UserIcon className={styles.mobileIcon} />
                 </CustomLink>
                 <CustomLink href="/carrinho" aria-label="Carrinho de Compras">
-                  <CartIcon className={styles.icon} ref={cartIconRef} />
+                  <CartIcon className={styles.mobileIcon} ref={cartIconRef} />
                 </CustomLink>
               </div>
             </div>
@@ -159,37 +162,42 @@ const Header = ({ settings }) => {
       {/* Mobile Menu Overlay */}
       {menuOpen && (
         <div className={`${styles.mobileMenuOverlay} ${menuOpen ? styles.open : ''}`}>
-          <div className={styles.mobileMenuTop}>
-            <CustomLink href="/conta/login" aria-label="Minha Conta" onClick={toggleMenu} className={styles.mobileMenuLogin}>
-              <UserIcon className={styles.icon} />
-              <span>Minha Conta</span>
-            </CustomLink>
-            <button className={styles.closeMobileMenuButton} onClick={toggleMenu} aria-label="Fechar Menu">
-              &times;
-            </button>
+          <div className={styles.mobileMenuHeader}>
+            <div className={styles.mobileMenuLogo}>
+              <CustomLink href="/" onClick={toggleMenu}>
+                <Image
+                  src={logoSrc}
+                  alt="Mão de Cera Oficial Logo"
+                  width={80}
+                  height={80}
+                  className={styles.logoImage}
+                />
+              </CustomLink>
+            </div>
+            <ThemeToggleButton />
           </div>
 
-          <div className={styles.mobileMenuSearchAndCart}>
-            <div className={styles.mobileSearchContainer}>
-              <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
-              <button className={styles.searchButton}>
-                <SearchIcon className={styles.searchIcon} />
-              </button>
-            </div>
-            <CustomLink href="/carrinho" aria-label="Carrinho de Compras" onClick={toggleMenu} className={styles.mobileMenuCart}>
-              <CartIcon className={styles.icon} />
-            </CustomLink>
+          <div className={styles.mobileMenuSearch}>
+            <input type="text" placeholder="O que você procura?" />
+            <SearchIcon />
           </div>
 
           <nav className={styles.mobileNav}>
             <CustomLink href="/produtos" onClick={toggleMenu}>Velas Aromáticas</CustomLink>
             <CustomLink href="/produtos?categoria=kits" onClick={toggleMenu}>Kits</CustomLink>
-            <CustomLink href="/produtos?categoria=acessorios" onClick={toggleMenu}>Acessórios</CustomLink>
+            <CustomLink href="/produtos?categoria=acessorios">Acessórios</CustomLink>
             <CustomLink href="/quem-somos" onClick={toggleMenu}>Quem Somos</CustomLink>
             <CustomLink href="/contato" onClick={toggleMenu}>Contato</CustomLink>
             <CustomLink href="/conta/pedidos" onClick={toggleMenu}>Meus Pedidos</CustomLink>
             <CustomLink href="/atendimento" onClick={toggleMenu}>Atendimento</CustomLink>
           </nav>
+
+          <div className={styles.mobileMenuFooter}>
+            <CustomLink href="/conta/login" onClick={toggleMenu}>
+              <UserIcon />
+              <span>Minha Conta</span>
+            </CustomLink>
+          </div>
         </div>
       )}
 
