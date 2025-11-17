@@ -1,6 +1,8 @@
-// components/ui/icons/CartIcon.jsx
-const CartIcon = ({ className }) => (
+import { forwardRef } from 'react';
+
+const CartIcon = forwardRef(({ className }, ref) => (
   <svg
+    ref={ref} // Attach the ref to the SVG element
     className={className}
     width="24px"
     height="24px"
@@ -15,6 +17,9 @@ const CartIcon = ({ className }) => (
     <path d="M17 17h-11v-14h-2" />
     <path d="M6 5l14 1l-1 7h-13" />
   </svg>
-);
+));
+
+CartIcon.displayName = 'CartIcon'; // It's a good practice to set a display name
 
 export default CartIcon;
+

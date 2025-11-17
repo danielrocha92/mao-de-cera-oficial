@@ -2,25 +2,28 @@
 
 import { useState, useEffect, useContext, useRef } from 'react';
 import { usePathname } from 'next/navigation'; // Import usePathname
+import Image from 'next/image';
 import CustomLink from '../ui/CustomLink';
 import styles from './Header.module.css';
 import SearchIcon from '../ui/icons/SearchIcon';
 import UserIcon from '../ui/icons/UserIcon';
 import CartIcon from '../ui/icons/CartIcon';
+import HeartIcon from '../ui/icons/HeartIcon';
+import LocationIcon from '../ui/icons/LocationIcon';
 import { CartAnimationContext } from '@/app/context/CartAnimationContext';
 import { useTheme } from '@/app/context/ThemeContext'; // Import useTheme
+import ThemeToggleButton from '../ui/ThemeToggleButton'; // Importar o botão
+
+// Caminho para o logo a partir da pasta public
+const logoSrc = '/imagens/mao-de-cera-oficial-logo-claro.png';
 
 const Header = ({ settings }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isInitialTransparent, setIsInitialTransparent] = useState(true); // New state
   const { setAnimationEndpoint } = useContext(CartAnimationContext);
   const cartIconRef = useRef(null);
-  const pathname = usePathname(); // Get current path
   const { theme, toggleTheme } = useTheme(); // Use theme context
-
-  const isHomePage = pathname === '/';
 
   useEffect(() => {
     if (cartIconRef.current) {
@@ -28,27 +31,16 @@ const Header = ({ settings }) => {
     }
   }, [setAnimationEndpoint]);
 
+  // Efeito para controlar o estado de scroll, agora aplicado a todas as páginas
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY > 50;
-      setIsScrolled(scrolled);
-      setIsInitialTransparent(isHomePage && !scrolled); // Only transparent on homepage and not scrolled
+      setIsScrolled(window.scrollY > 50);
     };
-
-    if (isHomePage) {
-      handleScroll(); // Set initial state
-      window.addEventListener('scroll', handleScroll);
-    } else {
-      setIsScrolled(true); // Always scrolled on other pages
-      setIsInitialTransparent(false); // Never transparent on other pages
-    }
-
-    return () => {
-      if (isHomePage) {
-        window.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, [isHomePage]);
+    
+    handleScroll(); // Define o estado inicial no carregamento
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const toggleSearch = () => setSearchOpen(!searchOpen);
@@ -64,12 +56,9 @@ const Header = ({ settings }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Determine header classes based on page and scroll state
-  const headerClasses = [
-    styles.headerWrapper,
-    isHomePage ? styles.homeHeader : styles.otherHeader,
-    isInitialTransparent ? styles.initialTransparent : (isScrolled ? styles.scrolled : styles.transparent),
-  ].join(' ');
+  // As classes agora são muito mais simples
+  const headerClasses = `${styles.headerWrapper} ${isScrolled ? styles.scrolled : ''}`;
+
 
   return (
     <>
@@ -80,49 +69,89 @@ const Header = ({ settings }) => {
 
         <div className={styles.mainHeader}>
           <div className={styles.container}>
-            {/* Mobile-specific hamburger */}
-            <div className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`} onClick={toggleMenu} data-testid="hamburger-button">
-              <div className={styles.line}></div>
-              <div className={styles.line}></div>
-              <div className={styles.line}></div>
+            {/* --- MOBILE HEADER --- */}
+            <div className={styles.mobileOnly}>
+              <div className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`} onClick={toggleMenu} data-testid="hamburger-button">
+                <div className={styles.line}></div>
+                <div className={styles.line}></div>
+                <div className={styles.line}></div>
+              </div>
+
+              <div className={styles.logoWrapper}>
+                <CustomLink href="/" className={styles.logoLink}>
+                  <Image
+                    src={logoSrc}
+                    alt="Mão de Cera Oficial Logo"
+                    fill
+                    sizes="(max-width: 767px) 45px, 70px"
+                    priority
+                    className={styles.logoImage}
+                  />
+                </CustomLink>
+              </div>
+
+              <div className={styles.mobileHeaderIcons}>
+                <ThemeToggleButton className={styles.themeToggle} />
+                <button className={styles.iconButton} onClick={toggleSearch} aria-label="Buscar">
+                  <SearchIcon className={styles.icon} />
+                </button>
+                <CustomLink href="/conta/login" aria-label="Minha Conta">
+                  <UserIcon className={styles.icon} />
+                </CustomLink>
+                <CustomLink href="/carrinho" aria-label="Carrinho de Compras">
+                  <CartIcon className={styles.icon} ref={cartIconRef} />
+                </CustomLink>
+              </div>
             </div>
 
-            <div className={styles.logo}>
-              <CustomLink href="/">{settings?.nome_loja || 'Mão de Cera'}</CustomLink>
-            </div>
+            {/* --- DESKTOP HEADER (Fast Shop Style) --- */}
+            <div className={styles.desktopOnly}>
+              <div className={styles.desktopLeft}>
+                <div className={styles.logoWrapper}>
+                  <CustomLink href="/" className={styles.logoLink}>
+                    <Image
+                      src={logoSrc}
+                      alt="Mão de Cera Oficial Logo"
+                      fill
+                      sizes="(max-width: 767px) 45px, 70px"
+                      priority
+                      className={styles.logoImage}
+                    />
+                  </CustomLink>
+                </div>
+              </div>
 
-            {/* Mobile Icons (Search, User, and Cart) */}
-            <div className={styles.mobileHeaderIcons}>
-              <button className={styles.iconButton} onClick={toggleSearch} aria-label="Buscar">
-                <SearchIcon className={styles.icon} />
-              </button>
-              <CustomLink href="/conta/login" aria-label="Minha Conta">
-                <UserIcon className={styles.icon} />
-              </CustomLink>
-              <CustomLink href="/carrinho" aria-label="Carrinho de Compras">
-                <CartIcon className={styles.icon} ref={cartIconRef} />
-              </CustomLink>
-            </div>
+              <nav className={styles.desktopNav}>
+                <CustomLink href="/produtos">Velas Aromáticas</CustomLink>
+                <CustomLink href="/produtos?categoria=kits">Kits</CustomLink>
+                <CustomLink href="/produtos?categoria=acessorios">Acessórios</CustomLink>
+                <CustomLink href="/quem-somos">Quem Somos</CustomLink>
+              </nav>
 
-            {/* Desktop Search */}
-            <div className={styles.desktopSearchContainer}>
-              <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
-              <button className={styles.searchButton}>
-                <SearchIcon className={styles.searchIcon} />
-              </button>
+              <div className={styles.desktopRight}>
+                <div className={styles.desktopSearchContainer}>
+                  <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
+                  <button className={styles.searchButton}>
+                    <SearchIcon className={styles.searchIcon} />
+                  </button>
+                </div>
+                <div className={styles.desktopIcons}>
+                  <CustomLink href="/cep" aria-label="Informe seu CEP">
+                    <LocationIcon className={styles.icon} />
+                  </CustomLink>
+                  <CustomLink href="/favoritos" aria-label="Favoritos">
+                    <HeartIcon className={styles.icon} />
+                  </CustomLink>
+                  <CustomLink href="/conta/login" aria-label="Minha Conta">
+                    <UserIcon className={styles.icon} />
+                  </CustomLink>
+                  <CustomLink href="/carrinho" aria-label="Carrinho de Compras">
+                    <CartIcon className={styles.icon} ref={cartIconRef} />
+                  </CustomLink>
+                  <ThemeToggleButton className={styles.themeToggle} />
+                </div>
+              </div>
             </div>
-
-            {/* Desktop Icons */}
-            {/*
-            <div className={styles.desktopIcons}>
-              <CustomLink href="/conta/login" aria-label="Minha Conta">
-                <UserIcon className={styles.icon} />
-              </CustomLink>
-              <CustomLink href="/carrinho" aria-label="Carrinho de Compras">
-                <CartIcon className={styles.icon} ref={cartIconRef} />
-              </CustomLink>
-            </div>
-            */}
           </div>
         </div>
       </header>

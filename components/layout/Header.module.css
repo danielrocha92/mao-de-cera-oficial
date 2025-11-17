@@ -8,36 +8,14 @@
 }
 
 .headerWrapper {
-  z-index: 1000;
-  transition: background-color 0.4s ease, box-shadow 0.4s ease;
-  width: 100%;
-}
-
-.homeHeader {
   position: fixed;
   top: 0;
   left: 0;
-}
-
-.otherHeader {
-  position: relative; /* Garante que não seja fixo */
-  top: auto;
-  left: auto;
-}
-
-/* Initial Transparent State (for homepage, not scrolled) */
-.headerWrapper.initialTransparent {
+  z-index: 1000;
+  width: 100%;
   background-color: transparent;
   box-shadow: none;
-}
-
-.headerWrapper.initialTransparent .logo a,
-.headerWrapper.initialTransparent .line {
-  color: var(--white); /* Force white color for text and icons */
-}
-
-.headerWrapper.initialTransparent .line {
-  background-color: var(--white); /* Force white color for hamburger lines */
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 /* Scrolled State */
@@ -53,7 +31,7 @@
 }
 
 .mainHeader {
-  padding: 0.75rem 0;
+  padding: 0.25rem 0;
   position: relative; /* Needed for absolute positioning of logo */
 }
 
@@ -62,33 +40,50 @@
   flex-wrap: nowrap; /* Prevent wrapping */
 }
 
-.logo {
+.logoWrapper {
+  /* Centralização para o layout mobile */
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1; /* Ensure logo is above other elements if needed */
+  z-index: 1;
 }
 
-.logo a {
-  font-size: 1.5rem; /* Smaller logo on mobile */
-  font-weight: bold;
-  text-decoration: none;
-  color: var(--text-primary); /* Use theme variable */
-  transition: color 0.3s ease;
+.logoLink {
+  display: block;
+  position: relative;
+  width: 45px;
+  height: 45px;
+}
+
+.logoImage {
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .desktopSearchContainer {
-  display: none; /* Hidden on mobile */
+  display: none;
 }
 
-.desktopIcons {
-  display: none; /* Hidden on mobile */
+.mobileOnly {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.desktopOnly {
+  display: none;
 }
 
 .icon {
-  color: var(--text-primary);
+  color: var(--white); /* Default to white for initial state */
   width: 24px;
   height: 24px;
+  transition: color 0.3s ease;
+}
+
+.scrolled .icon {
+  color: var(--text-primary);
 }
 
 .hamburger {
@@ -103,8 +98,12 @@
 .line {
   width: 24px;
   height: 2px;
-  background-color: var(--text-primary); /* Use theme variable */
+  background-color: var(--white); /* Default to white */
   transition: all 0.3s ease-in-out;
+}
+
+.scrolled .line {
+  background-color: var(--text-primary);
 }
 
 /* Hamburger to Close Icon */
@@ -332,91 +331,173 @@
   color: var(--text-on-primary);
 }
 
-/* --- Desktop Styles --- */
+/* --- Desktop Styles (Fast Shop Inspired) --- */
 @media (min-width: 768px) {
   .topBar {
     display: block;
     padding: 0.5rem 0;
     font-size: 0.8rem;
+    text-align: center;
+    transition: color 0.4s ease, background-color 0.4s ease;
+    color: var(--white); /* Cor do texto no estado inicial */
   }
-  .mainHeader {
-    padding: 1.5rem 0;
-    position: static; /* Reset for desktop */
+
+  .scrolled .topBar {
+    color: var(--text-primary); /* Cor do texto no estado rolado */
+    background-color: var(--surface); /* Garante que tenha o fundo correto */
   }
-  .mainHeader .container {
-    justify-content: space-between;
+
+  .mobileOnly,
+  .hamburger, 
+  .mobileHeaderIcons, 
+  .mobileMenuOverlay {
+    display: none;
   }
-  .logo {
-    position: static; /* Reset for desktop */
-    transform: none; /* Reset for desktop */
-  }
-  .logo a {
-    font-size: 2rem;
-    color: var(--text-primary);
-  }
-  .hamburger, .mobileHeaderIcons {
-    display: none; /* Hide mobile elements on desktop */
-  }
-  .desktopSearchContainer {
-    display: flex;
-    width: 100%;
-    max-width: 600px;
-    border: 1px solid var(--border-color); /* Use theme variable */
-    border-radius: 25px;
-    overflow: hidden;
-    background-color: var(--surface); /* Use theme variable */
-  }
-  .searchInput {
-    width: 100%;
-    border: none;
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
-    outline: none;
-    color: var(--text-primary); /* Use theme variable */
-  }
-  .searchButton {
-    background-color: var(--primary);
-    border: none;
-    padding: 0 1.25rem;
-    cursor: pointer;
-    color: var(--text-on-primary);
-  }
-  .desktopIcons {
-    display: flex;
+
+  .desktopOnly {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr; /* Logo | Nav | Search/Icons */
     align-items: center;
+    width: 100%;
     gap: 1.5rem;
   }
-  .desktopIcons .icon {
-    color: var(--text-primary);
+
+  .mainHeader {
+    padding: 0.5rem 0;
+    position: static;
   }
-  .navBar {
-    display: block;
-    background-color: transparent;
-    border: none;
+
+  /* --- Left Section: Logo --- */
+  .desktopLeft {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; /* Alinhar verticalmente */
   }
-  .navBar .container {
-    flex-direction: row;
+  
+  .desktopLeft .logoWrapper {
+    position: static;
+    transform: none;
+  }
+
+  .desktopLeft .logoLink {
+    width: 70px;
+    height: 70px;
+  }
+
+  /* --- Center Section: Navigation --- */
+  .desktopNav {
+    display: flex;
     justify-content: center;
-    gap: 2.5rem;
-    padding: 0.8rem 0;
+    gap: 1.5rem;
   }
-  .navBar a {
-    color: var(--text-primary); /* Use theme variable */
+
+  .desktopNav a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding-bottom: 4px;
     border-bottom: 2px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
   }
-  .scrolled .navBar a {
+
+  .scrolled .desktopNav a {
     color: var(--text-secondary);
   }
-  .navBar a:hover {
-    color: var(--primary); /* Use theme variable */
-    border-bottom-color: var(--primary); /* Use theme variable */
-  }
-  .scrolled .navBar a:hover {
-    color: var(--primary);
+
+  .desktopNav a:hover {
+    color: var(--text-primary);
     border-bottom-color: var(--primary);
   }
 
-  .mobileMenuOverlay {
-    display: none; /* Hide mobile overlay on desktop */
+  /* --- Right Section: Search & Icons --- */
+  .desktopRight {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  .desktopSearchContainer {
+    display: flex;
+    width: 100%;
+    max-width: 350px;
+    border: 1px solid var(--white); /* Default to white border */
+    border-radius: 25px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .scrolled .desktopSearchContainer {
+    border-color: var(--border-color);
+    background-color: var(--surface);
+  }
+
+  .desktopSearchContainer:focus-within {
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+
+  .searchInput {
+    width: 100%;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    outline: none;
+    color: var(--white); /* Default to white */
+    background-color: transparent;
+  }
+
+  .searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .scrolled .searchInput {
+    color: var(--text-primary);
+  }
+
+  .scrolled .searchInput::placeholder {
+    color: var(--text-secondary);
+  }
+
+  .searchButton {
+    background-color: transparent;
+    border: none;
+    padding: 0 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .searchIcon {
+     color: var(--white);
+  }
+
+  .scrolled .searchIcon {
+    color: var(--text-secondary);
+  }
+
+  .desktopIcons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .desktopIcons a:hover .icon,
+  .desktopIcons button:hover {
+    color: var(--primary);
+  }
+
+  .desktopIcons a, .desktopIcons button {
+     display: flex;
+     align-items: center;
+  }
+
+  .themeToggle {
+    border-color: var(--white);
+  }
+
+  .scrolled .themeToggle {
+    border-color: var(--border-color);
   }
 }
