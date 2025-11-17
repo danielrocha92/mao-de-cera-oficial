@@ -33,3 +33,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignorar chave de serviço do Firebase Admin
+serviceAccountKey.json
