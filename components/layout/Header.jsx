@@ -19,6 +19,9 @@ const logoSrc = '/imagens/mao-de-cera-oficial-logo-claro.png';
 
 const Header = ({ settings }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  // ADICIONADO: Estado para controlar o menu mobile
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const { setAnimationEndpoint } = useContext(CartAnimationContext);
   const cartIconRef = useRef(null);
   const { theme, toggleTheme } = useTheme();
@@ -36,10 +39,20 @@ const Header = ({ settings }) => {
       setIsScrolled(window.scrollY > 50);
     };
     
-    handleScroll(); // Define o estado inicial no carregamento
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // ADICIONADO: Função para abrir/fechar o menu
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+  
+  // ADICIONADO: Função para fechar o menu (usada nos links)
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  }
 
   const isHomePage = pathname === '/';
   const headerClasses = `${styles.headerWrapper} ${
@@ -59,7 +72,13 @@ const Header = ({ settings }) => {
             
             {/* --- Bloco .mobileOnly (Linha 1: Hambúrguer, Logo, Ícones) --- */}
             <div className={styles.mobileOnly}>
-              <div className={`${styles.hamburger}`} data-testid="hamburger-button">
+              
+              {/* MODIFICADO: Adicionado onClick e classe 'open' */}
+              <div 
+                className={`${styles.hamburger} ${isMenuOpen ? styles.open : ''}`} 
+                data-testid="hamburger-button"
+                onClick={toggleMenu} // <-- Adicionado o evento de clique
+              >
                 <div className={styles.line}></div>
                 <div className={styles.line}></div>
                 <div className={styles.line}></div>
@@ -79,7 +98,6 @@ const Header = ({ settings }) => {
               </div>
 
               <div className={styles.mobileHeaderIcons}>
-                {/* Ícone de busca foi REMOVIDO daqui */}
                 <CustomLink href="/conta/login" aria-label="Minha Conta">
                   <UserIcon className={styles.mobileIcon} />
                 </CustomLink>
@@ -89,7 +107,7 @@ const Header = ({ settings }) => {
               </div>
             </div>
 
-            {/* --- NOVO: Bloco .mobileSearchContainer (Linha 2: Barra de Busca) --- */}
+            {/* --- Bloco .mobileSearchContainer (Linha 2: Barra de Busca) --- */}
             <div className={styles.mobileSearchContainer}>
               <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
               <button className={styles.searchButton}>
@@ -150,7 +168,18 @@ const Header = ({ settings }) => {
         </div>
       </header>
 
-      {/* O Search Overlay foi REMOVIDO daqui */}
+      {/* ADICIONADO: O menu overlay que será aberto */}
+      <div 
+        className={`${styles.mobileMenuOverlay} ${isMenuOpen ? styles.active : ''}`}
+      >
+        <nav className={styles.mobileNav}>
+          {/* Adicionamos 'closeMenu' para fechar o menu ao clicar num link */}
+          <CustomLink href="/produtos" onClick={closeMenu}>Velas Aromáticas</CustomLink>
+          <CustomLink href="/produtos?categoria=kits" onClick={closeMenu}>Kits</CustomLink>
+          <CustomLink href="/produtos?categoria=acessorios" onClick={closeMenu}>Acessórios</CustomLink>
+          <CustomLink href="/quem-somos" onClick={closeMenu}>Quem Somos</ComLink>
+        </nav>
+      </div>
     </>
   );
 };
