@@ -1,3 +1,8 @@
+/* Reset some basic styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 :root {
   --primary: hsl(15, 70%, 60%); /* Soft Terracotta */
   --primary-dark: hsl(15, 70%, 50%);
@@ -7,6 +12,13 @@
   --text-secondary: hsl(20, 10%, 40%);
   --border-color: hsl(20, 20%, 88%);
   --white: hsl(0, 0%, 100%);
+
+  /* Breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
 }
 
 [data-theme='dark'] {
@@ -27,11 +39,23 @@ body, h1, h2, h3, p, ul, li, a {
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px; /* Base font size */
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px; /* Smaller base font size for mobile */
+  }
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
   background-color: var(--background);
   color: var(--text-secondary);
+  max-width: var(--breakpoint-xxl); /* Max width for content on very large screens */
+  margin: 0 auto; /* Center the content */
 }
 
 h1, h2, h3, h4, h5, h6 {

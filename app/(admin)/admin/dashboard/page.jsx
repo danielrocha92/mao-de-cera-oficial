@@ -3,7 +3,7 @@ import styles from './Dashboard.module.css';
 export default function DashboardPage() {
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1 className={styles.dashboardTitle}>Dashboard</h1>
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
           <h3>Vendas (Hoje)</h3>

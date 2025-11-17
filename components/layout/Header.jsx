@@ -18,7 +18,6 @@ import ThemeToggleButton from '../ui/ThemeToggleButton'; // Importar o botão
 const logoSrc = '/imagens/mao-de-cera-oficial-logo-claro.png';
 
 const Header = ({ settings }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { setAnimationEndpoint } = useContext(CartAnimationContext);
@@ -43,13 +42,11 @@ const Header = ({ settings }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
   const toggleSearch = () => setSearchOpen(!searchOpen);
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
-        setMenuOpen(false);
         setSearchOpen(false);
       }
     };
@@ -75,7 +72,7 @@ const Header = ({ settings }) => {
           <div className={styles.container}>
             {/* --- MOBILE HEADER --- */}
             <div className={styles.mobileOnly}>
-              <div className={`${styles.hamburger} ${menuOpen ? styles.open : ''}`} onClick={toggleMenu} data-testid="hamburger-button">
+              <div className={`${styles.hamburger}`} data-testid="hamburger-button">
                 <div className={styles.line}></div>
                 <div className={styles.line}></div>
                 <div className={styles.line}></div>
@@ -158,48 +155,6 @@ const Header = ({ settings }) => {
           </div>
         </div>
       </header>
-
-      {/* Mobile Menu Overlay */}
-      {menuOpen && (
-        <div className={`${styles.mobileMenuOverlay} ${menuOpen ? styles.open : ''}`}>
-          <div className={styles.mobileMenuHeader}>
-            <div className={styles.mobileMenuLogo}>
-              <CustomLink href="/" onClick={toggleMenu}>
-                <Image
-                  src={logoSrc}
-                  alt="Mão de Cera Oficial Logo"
-                  width={80}
-                  height={80}
-                  className={styles.logoImage}
-                />
-              </CustomLink>
-            </div>
-            <ThemeToggleButton />
-          </div>
-
-          <div className={styles.mobileMenuSearch}>
-            <input type="text" placeholder="O que você procura?" />
-            <SearchIcon />
-          </div>
-
-          <nav className={styles.mobileNav}>
-            <CustomLink href="/produtos" onClick={toggleMenu}>Velas Aromáticas</CustomLink>
-            <CustomLink href="/produtos?categoria=kits" onClick={toggleMenu}>Kits</CustomLink>
-            <CustomLink href="/produtos?categoria=acessorios">Acessórios</CustomLink>
-            <CustomLink href="/quem-somos" onClick={toggleMenu}>Quem Somos</CustomLink>
-            <CustomLink href="/contato" onClick={toggleMenu}>Contato</CustomLink>
-            <CustomLink href="/conta/pedidos" onClick={toggleMenu}>Meus Pedidos</CustomLink>
-            <CustomLink href="/atendimento" onClick={toggleMenu}>Atendimento</CustomLink>
-          </nav>
-
-          <div className={styles.mobileMenuFooter}>
-            <CustomLink href="/conta/login" onClick={toggleMenu}>
-              <UserIcon />
-              <span>Minha Conta</span>
-            </CustomLink>
-          </div>
-        </div>
-      )}
 
       {/* Search Overlay */}
       {searchOpen && (

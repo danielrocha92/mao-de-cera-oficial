@@ -25,7 +25,7 @@
 
 .container {
   width: 90%;
-  max-width: 1200px;
+  max-width: 75rem; /* 1200px */
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -41,7 +41,7 @@
 
 .section {
   flex: 1;
-  min-width: 150px;
+  min-width: 9.375rem; /* 150px */
 }
 
 .section h4 {
@@ -63,7 +63,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding-left: 0.5rem;
-  border-left: 1px solid var(--border-color);
+  border-left: 0.0625rem solid var(--border-color); /* 1px */
   margin-left: 0.25rem;
 }
 
@@ -102,8 +102,8 @@
 
 .socialIcons img,
 .paymentIcons img {
-  width: 32px;
-  height: 32px;
+  width: 2rem; /* 32px */
+  height: 2rem; /* 32px */
 }
 
 .legal {
@@ -114,7 +114,7 @@
   color: var(--text-secondary);
 }
 
-@media (max-width: 767px) {
+@media (max-width: calc(var(--breakpoint-md) - 1px)) { /* 767px */
   .footer {
     padding: 2rem 0 1rem 0; /* Reduced bottom padding */
     font-size: 0.85rem;
@@ -125,15 +125,15 @@
   }
   .socialIcons img,
   .paymentIcons img {
-    width: 28px;
-    height: 28px;
+    width: 1.75rem; /* 28px */
+    height: 1.75rem; /* 28px */
   }
   .legal {
     margin-top: 1.5rem;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: var(--breakpoint-md)) { /* 768px */
   .container {
     flex-wrap: nowrap;
     gap: 2rem;
