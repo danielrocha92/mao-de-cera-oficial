@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useContext, useRef } from 'react';
-import { usePathname } from 'next/navigation'; // Import usePathname
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import CustomLink from '../ui/CustomLink';
 import styles from './Header.module.css';
@@ -11,18 +11,17 @@ import CartIcon from '../ui/icons/CartIcon';
 import HeartIcon from '../ui/icons/HeartIcon';
 import LocationIcon from '../ui/icons/LocationIcon';
 import { CartAnimationContext } from '@/app/context/CartAnimationContext';
-import { useTheme } from '@/app/context/ThemeContext'; // Import useTheme
-import ThemeToggleButton from '../ui/ThemeToggleButton'; // Importar o botão
+import { useTheme } from '@/app/context/ThemeContext';
+import ThemeToggleButton from '../ui/ThemeToggleButton';
 
 // Caminho para o logo a partir da pasta public
 const logoSrc = '/imagens/mao-de-cera-oficial-logo-claro.png';
 
 const Header = ({ settings }) => {
-  const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { setAnimationEndpoint } = useContext(CartAnimationContext);
   const cartIconRef = useRef(null);
-  const { theme, toggleTheme } = useTheme(); // Use theme context
+  const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -31,7 +30,7 @@ const Header = ({ settings }) => {
     }
   }, [setAnimationEndpoint]);
 
-  // Efeito para controlar o estado de scroll, agora aplicado a todas as páginas
+  // Efeito para controlar o estado de scroll
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -42,20 +41,7 @@ const Header = ({ settings }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleSearch = () => setSearchOpen(!searchOpen);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setSearchOpen(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const isHomePage = pathname === '/';
-  // As classes agora são muito mais simples
   const headerClasses = `${styles.headerWrapper} ${
     isScrolled ? styles.scrolled : ''
   } ${!isHomePage ? styles.solidInitial : ''}`;
@@ -70,7 +56,8 @@ const Header = ({ settings }) => {
 
         <div className={styles.mainHeader}>
           <div className={styles.container}>
-            {/* --- MOBILE HEADER --- */}
+            
+            {/* --- Bloco .mobileOnly (Linha 1: Hambúrguer, Logo, Ícones) --- */}
             <div className={styles.mobileOnly}>
               <div className={`${styles.hamburger}`} data-testid="hamburger-button">
                 <div className={styles.line}></div>
@@ -92,9 +79,7 @@ const Header = ({ settings }) => {
               </div>
 
               <div className={styles.mobileHeaderIcons}>
-                <button className={styles.iconButton} onClick={toggleSearch} aria-label="Buscar">
-                  <SearchIcon className={styles.mobileIcon} />
-                </button>
+                {/* Ícone de busca foi REMOVIDO daqui */}
                 <CustomLink href="/conta/login" aria-label="Minha Conta">
                   <UserIcon className={styles.mobileIcon} />
                 </CustomLink>
@@ -104,7 +89,16 @@ const Header = ({ settings }) => {
               </div>
             </div>
 
-            {/* --- DESKTOP HEADER (Fast Shop Style) --- */}
+            {/* --- NOVO: Bloco .mobileSearchContainer (Linha 2: Barra de Busca) --- */}
+            <div className={styles.mobileSearchContainer}>
+              <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} />
+              <button className={styles.searchButton}>
+                <SearchIcon className={styles.searchIcon} />
+              </button>
+            </div>
+
+
+            {/* --- Bloco .desktopOnly (Layout de Desktop) --- */}
             <div className={styles.desktopOnly}>
               <div className={styles.desktopLeft}>
                 <div className={styles.logoWrapper}>
@@ -156,18 +150,7 @@ const Header = ({ settings }) => {
         </div>
       </header>
 
-      {/* Search Overlay */}
-      {searchOpen && (
-        <div className={styles.searchOverlay}>
-          <button className={styles.closeSearchButton} onClick={toggleSearch}>&times;</button>
-          <div className={styles.searchOverlayContent}>
-            <input type="text" placeholder="O que você está procurando?" className={styles.searchInput} autoFocus />
-            <button className={styles.searchOverlayButton}>
-              <SearchIcon />
-            </button>
-          </div>
-        </div>
-      )}
+      {/* O Search Overlay foi REMOVIDO daqui */}
     </>
   );
 };
