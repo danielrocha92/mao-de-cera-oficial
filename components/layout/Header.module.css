@@ -1,12 +1,4 @@
-/* Geral */
-.container {
-  width: 90%;
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-}
-
+/* === ESTRUTURA GERAL === */
 .headerWrapper {
   position: fixed;
   top: 0;
@@ -18,175 +10,108 @@
   transition: background-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Scrolled State */
-.headerWrapper.scrolled {
+.topBar {
+  display: none;
+}
+
+.mainHeader {
+  padding: 1rem 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* === ESTADOS (SCROLLED / SOLID) === */
+.scrolled, .solidInitial {
   background-color: var(--surface);
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* --- Mobile First Styles --- */
+/* === COMPONENTES DO HEADER (MOBILE-FIRST) === */
 
-.topBar {
-  display: none; /* Hidden on mobile */
-}
-
-.mainHeader {
-  padding: 1.5rem 0;
-  position: relative;
-}
-
-/* 1. MODIFICADO: Permitir quebra de linha no mobile */
-.mainHeader .container {
-  justify-content: space-between;
-  flex-wrap: wrap; /* <-- PERMITE QUE A BARRA DE BUSCA PULE PARA A LINHA DE BAIXO */
-}
-
+/* --- Logo --- */
 .logoWrapper {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
 }
-
 .logoLink {
   display: block;
   position: relative;
-  width: 6.5rem; /* 104px */
-  height: 6.5rem; /* 104px */
+  width: 4rem;
+  height: 4rem;
 }
-
 .logoImage {
   border-radius: 50%;
   object-fit: cover;
 }
 
-.desktopSearchContainer {
-  display: none;
-}
-
-.mobileOnly {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.desktopOnly {
-  display: none;
-}
-
-.icon {
-  color: var(--white);
-  width: 1.75rem; /* 28px */
-  height: 1.75rem; /* 28px */
-  transition: color 0.3s ease;
-}
-
-.scrolled .icon {
-  color: var(--text-primary);
-}
-
+/* --- Hamburger --- */
 .hamburger {
   display: flex;
   cursor: pointer;
   flex-direction: column;
-  gap: 0.375rem; /* 6px */
-  z-index: 1001;
+  gap: 0.375rem;
+  z-index: 1010;
   padding: 0.5rem;
+  background: transparent;
+  border: none;
 }
-
 .line {
-  width: 1.75rem; /* 28px */
-  height: 0.15rem; /* 2.4px */
+  width: 1.75rem;
+  height: 0.15rem;
   background-color: var(--white);
   transition: all 0.3s ease-in-out;
 }
-
-.scrolled .line {
+.scrolled .line, .solidInitial .line {
   background-color: var(--text-primary);
 }
+.hamburger.open .line:nth-child(1) { transform: translateY(0.5rem) rotate(45deg); }
+.hamburger.open .line:nth-child(2) { opacity: 0; }
+.hamburger.open .line:nth-child(3) { transform: translateY(-0.5rem) rotate(-45deg); }
 
-/* Hamburger to Close Icon */
-.hamburger.open .line:nth-child(1) {
-  transform: translateY(0.5rem) rotate(45deg);
-}
-.hamburger.open .line:nth-child(2) {
-  opacity: 0;
-}
-.hamburger.open .line:nth-child(3) {
-  transform: translateY(-0.5rem) rotate(-45deg);
-}
-
-.mobileHeaderIcons {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  z-index: 1;
-}
-
-.mobileHeaderIcons .iconButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.mobileIcon {
-  color: var(--white);
-  width: 2rem; /* 32px */
-  height: 2rem; /* 32px */
-  transition: color 0.3s ease;
-}
-
-.scrolled .mobileIcon {
-  color: var(--text-primary);
-}
-
-/* --- Scrolled State Colors --- */
-.scrolled .headerWrapper {
-  background-color: var(--surface);
-  box-shadow: 0 0.125rem 0.625rem rgba(0,0,0,0.1);
-}
-
-.scrolled .logo a,
-.scrolled .mobileHeaderIcons .icon,
-.scrolled .hamburger .line {
-  color: var(--text-primary);
-  background-color: var(--text-primary); /* For line */
-}
-
-/* 2. ADICIONADO: Estilos da nova barra de busca mobile */
-.mobileSearchContainer {
+/* --- Barra de Busca --- */
+.searchWrapper {
   display: flex;
   width: 100%;
-  margin-top: 1rem; /* Espaçamento da linha de cima */
-  border: 1px solid var(--white); /* Borda branca inicial */
-  border-radius: 1.5625rem; /* 25px */
+  margin-top: 1rem;
+  border: 1px solid var(--white);
+  border-radius: 1.5625rem;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.2);
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
-
-.scrolled .mobileSearchContainer {
+.scrolled .searchWrapper, .solidInitial .searchWrapper {
   border-color: var(--border-color);
-  background-color: var(--surface);
+  background-color: var(--background);
 }
-
-.mobileSearchContainer .searchInput {
+.searchInput {
   width: 100%;
   border: none;
   padding: 0.6rem 1.25rem;
-  font-size: 0.9375rem; /* 15px */
+  font-size: 0.9375rem;
   outline: none;
   background-color: transparent;
-  color: var(--white); /* Cor do texto inicial */
+  color: var(--white);
 }
-
-.mobileSearchContainer .searchInput::placeholder {
+.searchInput::placeholder {
   color: rgba(255, 255, 255, 0.8);
 }
-
-.mobileSearchContainer .searchButton {
+.scrolled .searchInput, .solidInitial .searchInput {
+  color: var(--text-primary);
+}
+.scrolled .searchInput::placeholder, .solidInitial .searchInput::placeholder {
+  color: var(--text-secondary);
+}
+.searchButton {
   background-color: transparent;
   border: none;
   padding: 0 1rem;
@@ -194,31 +119,92 @@
   display: flex;
   align-items: center;
 }
-
-.mobileSearchContainer .searchIcon {
-   color: var(--white); /* Cor do ícone inicial */
+.searchIcon {
+   color: var(--white);
+}
+.scrolled .searchIcon, .solidInitial .searchIcon {
+  color: var(--text-secondary);
 }
 
-/* Estilos da busca mobile quando rolado */
-.scrolled .mobileSearchContainer .searchInput {
+/* --- Ícones --- */
+.iconsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1;
+}
+.icon {
+  color: var(--white);
+  width: 1.75rem;
+  height: 1.75rem;
+  transition: color 0.3s ease;
+}
+.scrolled .icon, .solidInitial .icon {
   color: var(--text-primary);
 }
-.scrolled .mobileSearchContainer .searchInput::placeholder {
-  color: var(--text-secondary);
+.desktopOnlyIcon {
+  display: none;
 }
-.scrolled .mobileSearchContainer .searchIcon {
-  color: var(--text-secondary);
+.themeToggle {
+  border-color: var(--white);
+}
+.scrolled .themeToggle, .solidInitial .themeToggle {
+  border-color: var(--border-color);
 }
 
+/* --- Navegação --- */
+.secondaryNav {
+  display: none; /* Oculta no mobile */
+}
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1005;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.mobileMenuOverlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.mobileNav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80%;
+  max-width: 300px;
+  height: 100%;
+  background-color: var(--surface);
+  padding: 6rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.mobileMenuOverlay.active .mobileNav {
+  transform: translateX(0);
+}
+.mobileNav a {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
 
-/* 3. REMOVIDO: Todos os estilos .searchOverlay foram removidos */
-
-
-/* --- Desktop Styles (Fast Shop Inspired) --- */
-@media (min-width: var(--breakpoint-md)) {
-
-  /* Reverte a quebra de linha no desktop */
-  .mainHeader .container {
+/* === LAYOUT DESKTOP (Fast Shop Style) === */
+@media (min-width: 768px) {
+  .mainHeader {
+    padding: 0.75rem 0;
+  }
+  .container {
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* Logo | Busca | Ícones */
+    gap: 2rem;
     flex-wrap: nowrap;
   }
 
@@ -227,224 +213,79 @@
     padding: 0.5rem 0;
     font-size: 0.875rem;
     text-align: center;
-    transition: color 0.4s ease, background-color 0.4s ease;
     color: var(--white);
+    background-color: transparent;
+    transition: color 0.4s ease, background-color 0.4s ease;
   }
-
-  .scrolled .topBar {
+  .scrolled .topBar, .solidInitial .topBar {
     color: var(--text-primary);
     background-color: var(--surface);
   }
 
-  /* 4. MODIFICADO: Esconde a barra de busca mobile no desktop */
-  .mobileOnly,
-  .hamburger,
-  .mobileHeaderIcons,
-  .mobileMenuOverlay,
-  .mobileSearchContainer { /* <-- ADICIONADO AQUI */
+  .hamburger, .mobileMenuOverlay {
     display: none;
   }
 
-  .desktopOnly {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1.5fr;
-    align-items: center;
-    width: 100%;
-    gap: 1.5rem;
-  }
-
-  .mainHeader {
-    padding: 1.5rem 0;
-    position: static;
-  }
-
-  /* --- Left Section: Logo --- */
-  .desktopLeft {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .desktopLeft .logoWrapper {
+  .logoWrapper {
     position: static;
     transform: none;
+    justify-self: start;
+  }
+  .logoLink {
+    width: 4.5rem; /* 72px */
+    height: 4.5rem; /* 72px */
   }
 
-  .desktopLeft .logoLink {
-    width: 7.5rem; /* 120px */
-    height: 7.5rem; /* 120px */
+  .searchWrapper {
+    margin-top: 0;
+    max-width: 700px;
+    justify-self: center; /* Centraliza a barra de busca na sua célula do grid */
+  }
+  .searchWrapper:focus-within {
+    box-shadow: 0 0 0 2px var(--primary);
   }
 
-  /* --- Center Section: Navigation --- */
-  .desktopNav {
+  .iconsWrapper {
+    gap: 1.25rem;
+    justify-self: end;
+  }
+  .desktopOnlyIcon {
     display: flex;
-    justify-content: center;
-    gap: 1.5rem;
+  }
+  .iconsWrapper a:hover .icon,
+  .iconsWrapper button:hover .icon {
+    color: var(--primary) !important;
   }
 
-  .desktopNav a {
-    color: var(--white);
+  /* --- Barra de Navegação Secundária --- */
+  .secondaryNav {
+    display: block;
+    background-color: var(--surface);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  }
+  .scrolled .secondaryNav {
+     border-top: none;
+  }
+  .solidInitial .secondaryNav {
+    border-top: 1px solid var(--border-color);
+  }
+  .secondaryNav .container {
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 0.75rem 0;
+  }
+  .secondaryNav a {
+    color: var(--text-secondary);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.9375rem; /* 15px */
-    padding-bottom: 0.25rem; /* 4px */
-    border-bottom: 0.125rem solid transparent; /* 2px */
+    font-size: 0.9375rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid transparent;
     transition: color 0.3s ease, border-color 0.3s ease;
   }
-
-  .scrolled .desktopNav a {
-    color: var(--text-secondary);
-  }
-
-  .desktopNav a:hover {
-    color: var(--text-primary);
+  .secondaryNav a:hover {
+    color: var(--primary);
     border-bottom-color: var(--primary);
   }
-
-  /* --- Right Section: Search & Icons --- */
-  .desktopRight {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-
-  .desktopSearchContainer {
-    display: flex;
-    width: 100%;
-    max-width: 21.875rem; /* 350px */
-    border: 0.0625rem solid var(--white); /* 1px */
-    border-radius: 1.5625rem; /* 25px */
-    overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.2);
-    transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-  }
-
-  .scrolled .desktopSearchContainer {
-    border-color: var(--border-color);
-    background-color: var(--surface);
-  }
-
-  .desktopSearchContainer:focus-within {
-    box-shadow: 0 0 0 0.125rem var(--primary); /* 2px */
-  }
-
-  .searchInput {
-    width: 100%;
-    border: none;
-    padding: 0.6rem 1.25rem;
-    font-size: 0.9375rem; /* 15px */
-    outline: none;
-    color: var(--white);
-    background-color: transparent;
-  }
-
-  .searchInput::placeholder {
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .scrolled .searchInput {
-    color: var(--text-primary);
-  }
-
-  .scrolled .searchInput::placeholder {
-    color: var(--text-secondary);
-  }
-
-  .searchButton {
-    background-color: transparent;
-    border: none;
-    padding: 0 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-
-  .searchIcon {
-     color: var(--white);
-  }
-
-  .scrolled .searchIcon {
-    color: var(--text-secondary);
-  }
-
-  .desktopIcons {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .desktopIcons a:hover .icon,
-  .desktopIcons button:hover {
-    color: var(--primary);
-  }
-
-  .desktopIcons a, .desktopIcons button {
-     display: flex;
-     align-items: center;
-  }
-
-  .themeToggle {
-    border-color: var(--white);
-  }
-
-  .scrolled .themeToggle {
-    border-color: var(--border-color);
-  }
-}
-
-/* Styles for initial solid header on non-home pages */
-.solidInitial {
-  background-color: var(--surface);
-  box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
-}
-
-.solidInitial .icon,
-.solidInitial .line,
-.solidInitial .desktopNav a,
-.solidInitial .searchInput,
-.solidInitial .searchIcon {
-  color: var(--text-primary);
-}
-
-/* Cor da busca mobile em páginas .solidInitial */
-.solidInitial .mobileSearchContainer .searchInput {
-  color: var(--text-primary);
-}
-.solidInitial .mobileSearchContainer .searchInput::placeholder {
-  color: var(--text-secondary);
-}
-.solidInitial .mobileSearchContainer .searchIcon {
-  color: var(--text-secondary);
-}
-.solidInitial .mobileSearchContainer {
-  border-color: var(--border-color);
-  background-color: var(--surface);
-}
-
-
-.solidInitial .line {
-  background-color: var(--text-primary);
-}
-
-.solidInitial .desktopNav a {
-  color: var(--text-secondary);
-}
-
-.solidInitial .searchInput::placeholder {
-  color: var(--text-secondary);
-}
-
-.solidInitial .desktopSearchContainer {
-  border-color: var(--border-color);
-  background-color: var(--surface);
-}
-
-.solidInitial .themeToggle {
-  border-color: var(--border-color);
-}
-
-.solidInitial .topBar {
-  color: var(--text-primary);
-  background-color: var(--surface);
 }

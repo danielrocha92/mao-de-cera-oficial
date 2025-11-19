@@ -12,6 +12,9 @@ import MainContent from './MainContent';
 export const metadata = {
   title: 'Mão de Cera Oficial',
   description: 'E-commerce da Mão de Cera Oficial',
+  icons: {
+    icon: '/imagens/mao-de-cera-oficial-logo-claro.png',
+  },
 };
 
 async function getStoreSettings() {
