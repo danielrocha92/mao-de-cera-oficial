@@ -1,14 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaFacebook, FaYoutube, FaPinterest, FaTiktok, FaInstagram } from 'react-icons/fa';
 import CustomLink from '../ui/CustomLink';
 import styles from './Footer.module.css';
 import { useTheme } from '@/app/context/ThemeContext';
 
-const Footer = ({ settings }) => {
+async function getStoreSettings() {
+    console.log("Fetching store settings... (placeholder)");
+    return {
+        codigos_externos: {
+            gtm_id: "GTM-XXXXXX",
+            ga4_id: "G-XXXXXX",
+            fb_pixel_id: "FB-PIXEL-XXXXXX"
+        },
+        nome_loja: "Mão de Cera Oficial",
+        email_contato: "contato@maodeceraoficial.com.br",
+        telefone_contato: "(11) 99999-9999",
+    };
+}
+
+const Footer = () => {
   const [openSection, setOpenSection] = useState(null);
   const { theme } = useTheme();
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+      const fetchSettings = async () => {
+          const newSettings = await getStoreSettings();
+          setSettings(newSettings);
+      };
+
+      fetchSettings();
+  }, []);
 
   const toggleSection = (section) => {
     if (window.innerWidth < 768) {
@@ -26,8 +50,8 @@ const Footer = ({ settings }) => {
               <span className={styles.indicator}>{openSection === 'atendimento' ? '-' : '+'}</span>
             </h4>
             <div className={`${styles.content} ${openSection === 'atendimento' ? styles.open : ''}`}>
-              <p>Telefone: (11) 96130 9680</p>
-              <p>Email: maodeceraoficial@gmail.com</p>
+              <p>Telefone: {settings?.telefone_contato}</p>
+              <p>Email: {settings?.email_contato}</p>
               <CustomLink href="/como-comprar">Como Comprar</CustomLink>
               <CustomLink href="/trocas-e-devolucoes">Trocas e Devoluções</CustomLink>
             </div>
@@ -80,7 +104,7 @@ const Footer = ({ settings }) => {
       </div>
       <div className={styles.legal}>
         <p>
-          &copy; {new Date().getFullYear()} Mão de Cera Oficial. Todos os direitos reservados. Desenvolvido por{' '}
+          &copy; {new Date().getFullYear()} {settings?.nome_loja}. Todos os direitos reservados. Desenvolvido por{' '}
           <CustomLink href="https://rocha-tech-solutions.vercel.app/">
             Rocha Tech Solutions
           </CustomLink>

@@ -22,32 +22,36 @@
   width: 90%;
   max-width: 1400px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
 }
 
-/* === ESTADOS (SCROLLED / SOLID) === */
-.scrolled, .solidInitial {
+.topRow {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- ESTADOS (SCROLLED) --- */
+.scrolled {
   background-color: var(--surface);
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* === COMPONENTES DO HEADER (MOBILE-FIRST) === */
+/* --- COMPONENTES DO HEADER (MOBILE-FIRST) --- */
 
 /* --- Logo --- */
 .logoWrapper {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1;
 }
 .logoLink {
   display: block;
   position: relative;
-  width: 4rem;
-  height: 4rem;
+  width: 4.5rem; /* Aumentado para o mobile */
+  height: 4.5rem; /* Aumentado para o mobile */
 }
 .logoImage {
   border-radius: 50%;
@@ -71,7 +75,7 @@
   background-color: var(--white);
   transition: all 0.3s ease-in-out;
 }
-.scrolled .line, .solidInitial .line {
+.scrolled .line {
   background-color: var(--text-primary);
 }
 .hamburger.open .line:nth-child(1) { transform: translateY(0.5rem) rotate(45deg); }
@@ -89,7 +93,7 @@
   background-color: rgba(255, 255, 255, 0.2);
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
-.scrolled .searchWrapper, .solidInitial .searchWrapper {
+.scrolled .searchWrapper {
   border-color: var(--border-color);
   background-color: var(--background);
 }
@@ -105,10 +109,10 @@
 .searchInput::placeholder {
   color: rgba(255, 255, 255, 0.8);
 }
-.scrolled .searchInput, .solidInitial .searchInput {
+.scrolled .searchInput {
   color: var(--text-primary);
 }
-.scrolled .searchInput::placeholder, .solidInitial .searchInput::placeholder {
+.scrolled .searchInput::placeholder {
   color: var(--text-secondary);
 }
 .searchButton {
@@ -122,7 +126,7 @@
 .searchIcon {
    color: var(--white);
 }
-.scrolled .searchIcon, .solidInitial .searchIcon {
+.scrolled .searchIcon {
   color: var(--text-secondary);
 }
 
@@ -139,73 +143,56 @@
   height: 1.75rem;
   transition: color 0.3s ease;
 }
-.scrolled .icon, .solidInitial .icon {
+.scrolled .icon {
   color: var(--text-primary);
-}
-.desktopOnlyIcon {
-  display: none;
 }
 .themeToggle {
   border-color: var(--white);
 }
-.scrolled .themeToggle, .solidInitial .themeToggle {
+.scrolled .themeToggle {
   border-color: var(--border-color);
 }
 
 /* --- Navegação --- */
-.secondaryNav {
-  display: none; /* Oculta no mobile */
-}
-.mobileMenuOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1005;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-.mobileMenuOverlay.active {
-  opacity: 1;
-  visibility: visible;
+.mainNav {
+  display: none; /* Oculta no mobile por padrão */
 }
 .mobileNav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 80%;
-  max-width: 300px;
-  height: 100%;
-  background-color: var(--surface);
-  padding: 6rem 2rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
+  width: 100%;
+  background-color: var(--surface);
+  padding: 0; /* O padding será controlado pela altura */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
 }
-.mobileMenuOverlay.active .mobileNav {
-  transform: translateX(0);
+.mobileNav.active {
+  max-height: 20rem; /* Altura suficiente para os links */
+  padding: 1.5rem 0;
 }
 .mobileNav a {
   color: var(--text-primary);
   font-size: 1.1rem;
   font-weight: 500;
+  text-align: center;
 }
 
 /* === LAYOUT DESKTOP (Fast Shop Style) === */
-@media (min-width: 768px) {
+@media (min-width: 1024px) { /* Aumentado o breakpoint para melhor acomodar a navegação */
   .mainHeader {
     padding: 0.75rem 0;
   }
   .container {
     display: grid;
-    grid-template-columns: auto 1fr auto; /* Logo | Busca | Ícones */
+    grid-template-columns: auto auto 1fr auto; /* Logo | Nav | Busca | Ícones */
     gap: 2rem;
+    align-items: center;
     flex-wrap: nowrap;
+  }
+  .topRow {
+    display: contents; /* Faz o wrapper 'desaparecer' para o grid layout */
   }
 
   .topBar {
@@ -217,12 +204,12 @@
     background-color: transparent;
     transition: color 0.4s ease, background-color 0.4s ease;
   }
-  .scrolled .topBar, .solidInitial .topBar {
+  .scrolled .topBar {
     color: var(--text-primary);
     background-color: var(--surface);
   }
 
-  .hamburger, .mobileMenuOverlay {
+  .hamburger {
     display: none;
   }
 
@@ -234,6 +221,31 @@
   .logoLink {
     width: 4.5rem; /* 72px */
     height: 4.5rem; /* 72px */
+  }
+
+  /* --- Navegação Principal de Desktop --- */
+  .mainNav {
+    display: flex;
+    gap: 2rem;
+  }
+  .mainNav a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+  .scrolled .mainNav a {
+    color: var(--text-secondary);
+  }
+  .mainNav a:hover {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+  .scrolled .mainNav a:hover {
+    color: var(--primary);
   }
 
   .searchWrapper {
@@ -249,43 +261,9 @@
     gap: 1.25rem;
     justify-self: end;
   }
-  .desktopOnlyIcon {
-    display: flex;
-  }
   .iconsWrapper a:hover .icon,
   .iconsWrapper button:hover .icon {
     color: var(--primary) !important;
   }
-
-  /* --- Barra de Navegação Secundária --- */
-  .secondaryNav {
-    display: block;
-    background-color: var(--surface);
-    border-top: 1px solid var(--border-color);
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-  }
-  .scrolled .secondaryNav {
-     border-top: none;
-  }
-  .solidInitial .secondaryNav {
-    border-top: 1px solid var(--border-color);
-  }
-  .secondaryNav .container {
-    justify-content: center;
-    gap: 2.5rem;
-    padding: 0.75rem 0;
-  }
-  .secondaryNav a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9375rem;
-    padding-bottom: 0.25rem;
-    border-bottom: 2px solid transparent;
-    transition: color 0.3s ease, border-color 0.3s ease;
-  }
-  .secondaryNav a:hover {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
-  }
 }
+

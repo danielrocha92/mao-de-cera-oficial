@@ -1,53 +1,35 @@
+'use client';
+
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { TransitionProvider } from '@/context/TransitionContext';
+import { TransitionProvider } from '@/app/context/TransitionContext';
 import PageTransition from '@/components/animations/PageTransition';
-import { CartAnimationProvider } from '@/context/CartAnimationContext';
+import { CartAnimationProvider } from '@/app/context/CartAnimationContext';
 import FlyToCartAnimation from '@/components/animations/FlyToCartAnimation';
 import { ThemeProvider } from './context/ThemeContext';
-
+import { usePathname } from 'next/navigation';
 import MainContent from './MainContent';
 
-export const metadata = {
-  title: 'Mão de Cera Oficial',
-  description: 'E-commerce da Mão de Cera Oficial',
-  icons: {
-    icon: '/imagens/mao-de-cera-oficial-logo-claro.png',
-  },
-};
-
-async function getStoreSettings() {
-    console.log("Fetching store settings... (placeholder)");
-    return {
-        codigos_externos: {
-            gtm_id: "GTM-XXXXXX",
-            ga4_id: "G-XXXXXX",
-            fb_pixel_id: "FB-PIXEL-XXXXXX"
-        },
-        nome_loja: "Mão de Cera Oficial",
-        email_contato: "contato@maodeceraoficial.com.br",
-        telefone_contato: "(11) 99999-9999",
-    };
-}
-
-export default async function RootLayout({ children }) {
-  const settings = await getStoreSettings();
+export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith('/admin');
 
   return (
     <html lang="pt-BR">
       <head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
+        <title>Mão de Cera Oficial</title>
+        <meta name="description" content="E-commerce da Mão de Cera Oficial" />
+        <link rel="icon" href="/imagens/mao-de-cera-oficial-logo-claro.png" />
       </head>
       <body>
         <ThemeProvider>
           <TransitionProvider>
             <CartAnimationProvider>
               <PageTransition>
-                <Header settings={settings} />
+                {!isAdmin && <Header />}
                 <MainContent>{children}</MainContent>
-                <Footer settings={settings} />
+                {!isAdmin && <Footer />}
               </PageTransition>
               <FlyToCartAnimation />
             </CartAnimationProvider>

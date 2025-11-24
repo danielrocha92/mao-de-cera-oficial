@@ -1,6 +1,6 @@
 'use client';
 
-import { useTheme } from '@/context/ThemeContext';
+import { useTheme } from '@/app/context/ThemeContext';
 import styles from './ThemeToggleButton.module.css';
 
 const ThemeToggleButton = ({ className }) => {
