@@ -53,7 +53,13 @@ export default function LoginPage() {
     setErrorMessage(''); // Clear previous errors
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const trimmedEmail = email.trim();
+      if (!trimmedEmail || !trimmedEmail.includes('@') || trimmedEmail.indexOf('@') === 0 || trimmedEmail.indexOf('@') === trimmedEmail.length - 1) {
+        setErrorMessage('Por favor, insira um e-mail válido.');
+        return;
+      }
+
+      const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
       const idToken = await userCredential.user.getIdToken();
 
       // Optionally, send ID token to backend if registration also requires session cookie
@@ -73,7 +79,17 @@ export default function LoginPage() {
       }
     } catch (error) {
       console.error('Erro ao tentar registrar:', error);
-      setErrorMessage('Erro ao registrar. O e-mail pode já estar em uso ou a senha é fraca.');
+      if (error.code === 'auth/invalid-email') {
+        setErrorMessage('O formato do e-mail é inválido. Por favor, verifique.');
+      } else if (error.code === 'auth/weak-password') {
+        setErrorMessage('A senha é muito fraca. Ela deve ter pelo menos 6 caracteres.');
+      }
+      else if (error.code === 'auth/email-already-in-use') {
+        setErrorMessage('Este e-mail já está em uso. Tente fazer login ou use outro e-mail.');
+      }
+      else {
+        setErrorMessage('Erro ao registrar. Tente novamente mais tarde.');
+      }
     }
   };
 
