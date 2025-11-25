@@ -3,7 +3,9 @@ import HeroCarousel from '@/components/ui/HeroCarousel';
 import OffersCarousel from '@/components/shop/OffersCarousel';
 import CategoriesCarousel from '@/components/shop/CategoriesCarousel';
 import InfoCards from '@/components/shop/InfoCards';
-import PromotionalCards from '@/components/shop/PromotionalCards'; // New import
+import PromotionalCards from '@/components/shop/PromotionalCards';
+import FixedPromotionalCards from '@/components/shop/FixedPromotionalCards';
+import GoogleReviewsStatic from '@/components/shop/GoogleReviewsStatic'; // Novo import
 import styles from './Home.module.css';
 
 export default function HomePage() {
@@ -31,7 +33,9 @@ export default function HomePage() {
       <OffersCarousel />
       <CategoriesCarousel />
       <InfoCards />
-      <PromotionalCards /> {/* New component */}
+      <FixedPromotionalCards />
+      <GoogleReviewsStatic /> {/* Novo componente */}
+      <PromotionalCards />
     </>
   );
 }

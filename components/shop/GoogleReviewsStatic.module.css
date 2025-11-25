@@ -1,0 +1,124 @@
+.container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #ff6f61; /* Accent color */
+  border-radius: 2px;
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  justify-content: center;
+}
+
+.reviewCard {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reviewCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.profilePhoto {
+  border-radius: 50%;
+  margin-right: 15px;
+  border: 1px solid #eee;
+  object-fit: cover;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.authorName {
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  font-size: 1.1em;
+}
+
+.stars {
+  color: #fcc419; /* A golden color for stars */
+  font-size: 1.2em;
+}
+
+.starFilled {
+  color: #fcc419;
+}
+
+.starEmpty {
+  color: #e0e0e0;
+}
+
+.reviewText {
+  color: #555;
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  flex-grow: 1; /* Allows text to take up available space */
+}
+
+.reviewTime {
+  color: #888;
+  font-size: 0.85em;
+  text-align: right;
+  margin-top: auto; /* Pushes time to the bottom */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2em;
+  }
+  .reviewsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 10px;
+  }
+  .title {
+    font-size: 1.8em;
+  }
+  .reviewsGrid {
+    grid-template-columns: 1fr; /* Stack reviews on very small screens */
+  }
+}

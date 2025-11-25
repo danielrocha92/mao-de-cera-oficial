@@ -4,7 +4,6 @@ import * as admin from 'firebase-admin';
 // Initialize Firebase Admin if not already initialized
 if (!admin.apps.length) {
   const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
-  console.log('FIREBASE_SERVICE_ACCOUNT (first 500 chars):', serviceAccountString ? serviceAccountString.substring(0, 500) : 'NOT DEFINED');
   if (!serviceAccountString) {
     throw new Error('The FIREBASE_SERVICE_ACCOUNT environment variable is not defined.');
   }

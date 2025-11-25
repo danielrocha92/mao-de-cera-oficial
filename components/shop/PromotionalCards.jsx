@@ -51,7 +51,7 @@ const PromotionalCards = () => {
   }
 
   return (
-    <section className className={styles.promotionalCardsSection}>
+    <section className={styles.promotionalCardsSection}>
       <h2 className={styles.title}>Promoções Especiais</h2> {/* Placeholder title */}
       <div className={styles.cardsContainer}>
         {promoCards.map((card) => (

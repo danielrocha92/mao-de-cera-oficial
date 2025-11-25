@@ -1,0 +1,126 @@
+.container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #ff6f61; /* A nice accent color */
+  border-radius: 2px;
+}
+
+.error {
+  color: #e74c3c;
+  background-color: #fdd;
+  border: 1px solid #e74c3c;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  justify-content: center;
+}
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.cardImageWrapper {
+  width: 100%;
+  height: 200px; /* Fixed height for consistency */
+  position: relative;
+}
+
+.cardImageWrapper img {
+  border-bottom: 1px solid #eee;
+}
+
+.cardContent {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardContent h3 {
+  font-size: 1.5em;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.cardContent p {
+  font-size: 0.95em;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2em;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px 10px;
+  }
+
+  .title {
+    font-size: 1.8em;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr; /* Stack cards on very small screens */
+  }
+
+  .cardContent h3 {
+    font-size: 1.3em;
+  }
+}
