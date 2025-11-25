@@ -19,7 +19,13 @@ export default function MainContent({ children }) {
 
   return (
     <main className={mainClassName}>
-      {children}
+      {isHomePage ? (
+        children
+      ) : (
+        <div className={styles.contentWrapper}>
+          {children}
+        </div>
+      )}
     </main>
   );
 }

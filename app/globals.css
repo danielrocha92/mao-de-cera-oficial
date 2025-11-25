@@ -54,8 +54,6 @@ body {
   line-height: 1.6;
   background-color: var(--background);
   color: var(--text-secondary);
-  max-width: var(--breakpoint-xxl); /* Max width for content on very large screens */
-  margin: 0 auto; /* Center the content */
 }
 
 h1, h2, h3, h4, h5, h6 {

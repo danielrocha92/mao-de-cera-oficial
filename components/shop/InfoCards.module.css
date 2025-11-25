@@ -1,0 +1,61 @@
+.infoCardsSection {
+  display: flex;
+  justify-content: space-around; /* Distribute items evenly */
+  padding: 2rem;
+  background-color: var(--surface); /* Use a theme variable for background */
+  gap: 1rem; /* Space between cards */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.infoCard {
+  flex: 1; /* Allow cards to grow and shrink */
+  min-width: 280px; /* Minimum width for cards before wrapping */
+  max-width: 350px; /* Max width on desktop */
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: var(--background); /* Lighter background for cards */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex; /* Use flex to align title and description */
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+}
+
+.cardIcon {
+  font-size: 3rem; /* Adjust icon size as needed */
+  color: var(--primary-color); /* Use theme primary color for icons */
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.cardDescription {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Mobile styles: vertical layout */
+@media (max-width: 768px) {
+  .infoCardsSection {
+    flex-direction: column; /* Stack cards vertically */
+    align-items: center; /* Center cards in the column */
+    padding: 1.5rem 1rem;
+  }
+
+  .infoCard {
+    width: 90%; /* Take almost full width on mobile */
+    max-width: none; /* Remove max-width constraint */
+    margin-bottom: 1rem; /* Space between vertical cards */
+  }
+
+  .infoCard:last-child {
+    margin-bottom: 0; /* No margin for the last card */
+  }
+}

@@ -1,0 +1,102 @@
+.container {
+  padding: 2rem;
+}
+
+.container h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.formContainer {
+  background: var(--surface);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.formContainer h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+.submitButton {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background-color: var(--primary-color-dark);
+}
+
+.error {
+  color: var(--error-color);
+  margin-top: 1rem;
+}
+
+.listContainer h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.offerList {
+  list-style: none;
+  padding: 0;
+}
+
+.offerItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.offerImage {
+  width: 150px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.offerInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.offerInfo strong {
+  font-size: 1.1rem;
+}
+
+.offerInfo span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}

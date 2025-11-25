@@ -1,0 +1,188 @@
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: var(--background-light);
+  border-radius: 8px;
+  box-shadow: var(--shadow-small);
+}
+
+.container h1 {
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2em;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  box-shadow: var(--shadow-extra-small);
+}
+
+.form input {
+  padding: 0.8rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1em;
+  background-color: var(--input-background);
+  color: var(--input-text-color);
+}
+
+.form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+}
+
+.form button {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form button:hover:not(:disabled) {
+  background-color: var(--primary-color-dark);
+}
+
+.form button:disabled {
+  background-color: var(--button-disabled-background);
+  cursor: not-allowed;
+}
+
+.form button + button {
+  margin-left: 1rem;
+}
+
+.cardList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.cardItem {
+  background-color: var(--background-secondary);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-small);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardItem h3 {
+  color: var(--text-color);
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.2em;
+}
+
+.cardItem p {
+  color: var(--text-muted);
+  font-size: 0.9em;
+  word-break: break-all; /* Ensures long URLs don't break layout */
+}
+
+.cardItem a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.cardItem a:hover {
+  text-decoration: underline;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.cardActions button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cardActions button:first-child {
+  background-color: var(--accent-color); /* Edit button */
+  color: var(--button-text-color);
+}
+
+.cardActions button:first-child:hover:not(:disabled) {
+  background-color: var(--accent-color-dark);
+}
+
+.cardActions button:last-child {
+  background-color: var(--danger-color); /* Delete button */
+  color: var(--button-text-color);
+}
+
+.cardActions button:last-child:hover:not(:disabled) {
+  background-color: var(--danger-color-dark);
+}
+
+.error {
+  color: var(--danger-color);
+  background-color: rgba(var(--danger-rgb), 0.1);
+  border: 1px solid var(--danger-color);
+  padding: 0.8rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: var(--background-dark);
+    box-shadow: var(--shadow-dark-small);
+  }
+
+  .form {
+    background-color: var(--background-dark-secondary);
+    box-shadow: var(--shadow-dark-extra-small);
+  }
+
+  .form input {
+    background-color: var(--input-dark-background);
+    color: var(--input-dark-text-color);
+    border-color: var(--border-dark-color);
+  }
+
+  .cardItem {
+    background-color: var(--background-dark-secondary);
+    box-shadow: var(--shadow-dark-small);
+  }
+
+  .cardItem h3 {
+    color: var(--text-dark-color);
+  }
+
+  .cardItem p {
+    color: var(--text-dark-muted);
+  }
+
+  .cardItem a {
+    color: var(--link-dark-color);
+  }
+}

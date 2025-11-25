@@ -1,5 +1,9 @@
 import HeroCarousel from '@/components/ui/HeroCarousel';
-import Colecoes from '@/components/shop/Colecoes';
+
+import OffersCarousel from '@/components/shop/OffersCarousel';
+import CategoriesCarousel from '@/components/shop/CategoriesCarousel';
+import InfoCards from '@/components/shop/InfoCards';
+import PromotionalCards from '@/components/shop/PromotionalCards'; // New import
 import styles from './Home.module.css';
 
 export default function HomePage() {
@@ -20,23 +24,14 @@ export default function HomePage() {
     },
   ];
 
-  const collections = [
-    {
-      type: 'video',
-      src: '/videos/Colecao_Cera_e_Frutas.mp4',
-      title: 'Coleção 1',
-    },
-    {
-      type: 'video',
-      src: '/videos/Colecaoo_Mar.mp4',
-      title: 'Coleção 2',
-    },
-  ];
-
   return (
     <>
       <HeroCarousel slides={slides} />
-      <Colecoes collections={collections} />
+
+      <OffersCarousel />
+      <CategoriesCarousel />
+      <InfoCards />
+      <PromotionalCards /> {/* New component */}
     </>
   );
 }

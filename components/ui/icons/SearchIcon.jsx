@@ -1,3 +1,5 @@
+import React from 'react';
+
 // components/ui/icons/SearchIcon.jsx
 const SearchIcon = ({ className }) => (
   <svg

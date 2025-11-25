@@ -10,10 +10,6 @@
   transition: background-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.topBar {
-  display: none;
-}
-
 .mainHeader {
   padding: 1rem 0;
 }
@@ -22,11 +18,8 @@
   width: 90%;
   max-width: 1400px;
   margin: 0 auto;
-}
-
-.topRow {
-  position: relative;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
 }
@@ -41,17 +34,16 @@
 
 /* --- Logo --- */
 .logoWrapper {
+  order: 2;
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+  transform: translateX(-50%);
 }
 .logoLink {
   display: block;
   position: relative;
-  width: 4.5rem; /* Aumentado para o mobile */
-  height: 4.5rem; /* Aumentado para o mobile */
+  width: 4.5rem;
+  height: 4.5rem;
 }
 .logoImage {
   border-radius: 50%;
@@ -60,6 +52,7 @@
 
 /* --- Hamburger --- */
 .hamburger {
+  order: 1;
   display: flex;
   cursor: pointer;
   flex-direction: column;
@@ -84,6 +77,7 @@
 
 /* --- Barra de Busca --- */
 .searchWrapper {
+  order: 4;
   display: flex;
   width: 100%;
   margin-top: 1rem;
@@ -132,6 +126,7 @@
 
 /* --- Ícones --- */
 .iconsWrapper {
+  order: 3;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -163,13 +158,13 @@
   gap: 1.5rem;
   width: 100%;
   background-color: var(--surface);
-  padding: 0; /* O padding será controlado pela altura */
+  padding: 0;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
 }
 .mobileNav.active {
-  max-height: 20rem; /* Altura suficiente para os links */
+  max-height: 20rem;
   padding: 1.5rem 0;
 }
 .mobileNav a {
@@ -179,34 +174,16 @@
   text-align: center;
 }
 
-/* === LAYOUT DESKTOP (Fast Shop Style) === */
-@media (min-width: 1024px) { /* Aumentado o breakpoint para melhor acomodar a navegação */
+/* === LAYOUT DESKTOP === */
+@media (min-width: 1024px) {
   .mainHeader {
     padding: 0.75rem 0;
   }
   .container {
     display: grid;
-    grid-template-columns: auto auto 1fr auto; /* Logo | Nav | Busca | Ícones */
+    grid-template-columns: auto auto 1fr auto;
     gap: 2rem;
     align-items: center;
-    flex-wrap: nowrap;
-  }
-  .topRow {
-    display: contents; /* Faz o wrapper 'desaparecer' para o grid layout */
-  }
-
-  .topBar {
-    display: block;
-    padding: 0.5rem 0;
-    font-size: 0.875rem;
-    text-align: center;
-    color: var(--white);
-    background-color: transparent;
-    transition: color 0.4s ease, background-color 0.4s ease;
-  }
-  .scrolled .topBar {
-    color: var(--text-primary);
-    background-color: var(--surface);
   }
 
   .hamburger {
@@ -214,17 +191,18 @@
   }
 
   .logoWrapper {
+    order: 1;
     position: static;
     transform: none;
     justify-self: start;
   }
   .logoLink {
-    width: 4.5rem; /* 72px */
-    height: 4.5rem; /* 72px */
+    width: 4.5rem;
+    height: 4.5rem;
   }
 
-  /* --- Navegação Principal de Desktop --- */
   .mainNav {
+    order: 2;
     display: flex;
     gap: 2rem;
   }
@@ -249,15 +227,17 @@
   }
 
   .searchWrapper {
+    order: 3;
     margin-top: 0;
     max-width: 700px;
-    justify-self: center; /* Centraliza a barra de busca na sua célula do grid */
+    justify-self: center;
   }
   .searchWrapper:focus-within {
     box-shadow: 0 0 0 2px var(--primary);
   }
 
   .iconsWrapper {
+    order: 4;
     gap: 1.25rem;
     justify-self: end;
   }

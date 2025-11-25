@@ -59,44 +59,49 @@ const Header = () => {
         <header className={headerClasses}>
             <div className={styles.mainHeader}>
                 <div className={styles.container}>
-                    <div className={styles.topRow}>
-                        <button className={hamburgerClasses} onClick={toggleMenu} data-testid="hamburger-button" aria-label="Abrir menu">
-                            <div className={styles.line}></div>
-                            <div className={styles.line}></div>
-                            <div className={styles.line}></div>
-                        </button>
+                    <button className={hamburgerClasses} onClick={toggleMenu} data-testid="hamburger-button" aria-label="Abrir menu">
+                        <div className={styles.line}></div>
+                        <div className={styles.line}></div>
+                        <div className={styles.line}></div>
+                    </button>
 
-                        <div className={styles.logoWrapper}>
-                            <Link href="/" className={styles.logoLink}>
-                                {settings?.logo && (
-                                    <Image
-                                        src={settings.logo.url}
-                                        alt={`Logo de ${settings.nome_loja}`}
-                                        fill
-                                        sizes="10vw"
-                                        className={styles.logoImage}
-                                        priority
-                                    />
-                                )}
-                            </Link>
-                        </div>
-
-                        <div className={styles.iconsWrapper}>
-                            <Link href="/conta/login" aria-label="Minha Conta">
-                                <UserIcon className={styles.icon} />
-                            </Link>
-                            <Link href="/carrinho" aria-label="Carrinho">
-                                <CartIcon className={styles.icon} />
-                            </Link>
-                            <ThemeToggleButton className={styles.themeToggle} />
-                        </div>
+                    <div className={styles.logoWrapper}>
+                        <Link href="/" className={styles.logoLink}>
+                            {settings?.logo && (
+                                <Image
+                                    src={settings.logo.url}
+                                    alt={`Logo de ${settings.nome_loja}`}
+                                    fill
+                                    sizes="10vw"
+                                    className={styles.logoImage}
+                                    priority
+                                />
+                            )}
+                        </Link>
                     </div>
+
+                    <nav className={styles.mainNav}>
+                        <Link href="/produtos?categoria=velas-aromaticas">Velas Aromáticas</Link>
+                        <Link href="/produtos?categoria=kits">Kits</Link>
+                        <Link href="/produtos?categoria=acessorios">Acessórios</Link>
+                        <Link href="/quem-somos">Quem Somos</Link>
+                    </nav>
 
                     <div className={styles.searchWrapper}>
                         <input type="text" placeholder="O que você procura?" className={styles.searchInput} />
                         <button className={styles.searchButton} aria-label="Buscar">
                             <SearchIcon className={styles.searchIcon} />
                         </button>
+                    </div>
+
+                    <div className={styles.iconsWrapper}>
+                        <Link href="/conta/login" aria-label="Minha Conta">
+                            <UserIcon className={styles.icon} />
+                        </Link>
+                        <Link href="/carrinho" aria-label="Carrinho">
+                            <CartIcon className={styles.icon} />
+                        </Link>
+                        <ThemeToggleButton className={styles.themeToggle} />
                     </div>
                 </div>
             </div>

@@ -8,6 +8,12 @@
     padding-top: 0;
 }
 
+.contentWrapper {
+  max-width: var(--breakpoint-xxl);
+  margin: 0 auto;
+  padding: 0 1rem; /* Add some horizontal padding */
+}
+
 @media (max-width: 768px) {
     .mainContent {
         padding-top: 110px; /* Altura aproximada do header no mobile */

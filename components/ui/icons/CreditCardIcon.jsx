@@ -1,9 +1,7 @@
 import React from 'react';
 
-// components/ui/icons/UserIcon.jsx
-const UserIcon = ({ className }) => (
+const CreditCardIcon = (props) => (
   <svg
-    className={className}
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
@@ -13,10 +11,12 @@ const UserIcon = ({ className }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    {...props}
   >
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-    <circle cx="12" cy="7" r="4"></circle>
+    {/* Placeholder for a credit card icon */}
+    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+    <line x1="1" y1="10" x2="23" y2="10" />
   </svg>
 );
 
-export default UserIcon;
+export default CreditCardIcon;

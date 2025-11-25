@@ -8,14 +8,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'via.placeholder.com',
-      },
-      {
-        protocol: 'https',
         hostname: 'dcdn-us.mitiendanube.com',
       },
     ],
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
