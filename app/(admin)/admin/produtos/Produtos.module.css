@@ -1,0 +1,90 @@
+.produtosContainer {
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.addButton {
+    background-color: #27ae60;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+    background-color: #219d52;
+}
+
+.tableContainer {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.produtosTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.produtosTable th,
+.produtosTable td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.produtosTable th {
+    font-weight: bold;
+    color: #7f8c8d;
+}
+
+.status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status.ativo {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status.esgotado {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.actions button {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 0.5rem;
+    transition: opacity 0.3s ease;
+}
+
+.actions button:hover {
+    opacity: 0.8;
+}
+
+.editButton {
+    background-color: #3498db;
+    color: white;
+}
+
+.deleteButton {
+    background-color: #e74c3c;
+    color: white;
+}

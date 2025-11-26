@@ -5,24 +5,29 @@ import styles from './ProductCard.module.css';
 const ProductCard = ({ product }) => {
   if (!product) return null;
 
-  const displayPrice = product.preco_promocional || product.preco;
+  const numericPrice = parseFloat(product.price);
+  const numericComparePrice = product.comparePrice ? parseFloat(product.comparePrice) : null;
+
+  const displayPrice = numericComparePrice || numericPrice;
 
   return (
     <div className={styles.card}>
       <CustomLink href={`/produtos/${product.slug}`}>
         <Image
-          src={product.imagens?.[0] || "https://via.placeholder.com/300"}
-          alt={product.nome}
+          src={product.images?.[0] || "https://via.placeholder.com/300"}
+          alt={product.title}
           width={300}
           height={300}
           className={styles.image}
         />
-        <h3 className={styles.name}>{product.nome}</h3>
+        <h3 className={styles.name}>{product.title}</h3>
         <div className={styles.priceContainer}>
-          {product.preco_promocional && (
-            <span className={styles.oldPrice}>R$ {product.preco.toFixed(2)}</span>
+          {numericComparePrice && !isNaN(numericPrice) && (
+            <span className={styles.oldPrice}>R$ {numericPrice.toFixed(2)}</span>
           )}
-          <span className={styles.price}>R$ {displayPrice.toFixed(2)}</span>
+          {!isNaN(displayPrice) && (
+            <span className={styles.price}>R$ {displayPrice.toFixed(2)}</span>
+          )}
         </div>
       </CustomLink>
     </div>
@@ -30,3 +35,4 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
+

@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './NovoProduto.module.css';
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import styles from '../../novo/NovoProduto.module.css'; // Reusing the same styles
 import ImageUpload from '@/components/ui/ImageUpload';
 import VariationsManager from '@/components/admin/VariationsManager';
 
-export default function NovoProdutoPage() {
+export default function EditarProdutoPage() {
   const router = useRouter();
+  const params = useParams();
+  const { id } = params;
+
   const [product, setProduct] = useState({
     title: '',
     description: '',
@@ -27,8 +30,29 @@ export default function NovoProdutoPage() {
     brand: '',
     tags: '',
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    if (id) {
+      const fetchProduct = async () => {
+        try {
+          const response = await fetch(`/api/produtos/${id}`);
+          if (!response.ok) {
+            throw new Error('Falha ao buscar produto');
+          }
+          const data = await response.json();
+          setProduct(data);
+        } catch (error) {
+          console.error(error);
+          setMessage('Erro ao carregar produto.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProduct();
+    }
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -65,8 +89,8 @@ export default function NovoProdutoPage() {
     setMessage('');
 
     try {
-      const response = await fetch('/api/produtos', {
-        method: 'POST',
+      const response = await fetch(`/api/produtos/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -74,24 +98,28 @@ export default function NovoProdutoPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Falha ao criar produto');
+        throw new Error('Falha ao atualizar produto');
       }
 
-      setMessage('Produto criado com sucesso!');
+      setMessage('Produto atualizado com sucesso!');
       setTimeout(() => {
         router.push('/admin/produtos');
       }, 2000);
     } catch (error) {
       console.error(error);
-      setMessage('Erro ao criar produto.');
+      setMessage('Erro ao atualizar produto.');
     } finally {
       setLoading(false);
     }
   };
 
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
+
   return (
     <div className={styles.novoProdutoContainer}>
-      <h1>Adicionar Produto</h1>
+      <h1>Editar Produto</h1>
       {message && <p>{message}</p>}
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.card}>
@@ -223,7 +251,7 @@ export default function NovoProdutoPage() {
         </div>
         <div className={styles.actions}>
           <button type="submit" className={styles.saveButton} disabled={loading}>
-            {loading ? 'Salvando...' : 'Salvar Produto'}
+            {loading ? 'Salvando...' : 'Salvar Alterações'}
           </button>
         </div>
       </form>

@@ -18,10 +18,13 @@
   width: 90%;
   max-width: 1400px;
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
   align-items: center;
+  gap: 1rem;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas:
+    "hamburger logo icons"
+    "search search search";
 }
 
 /* --- ESTADOS (SCROLLED) --- */
@@ -34,10 +37,8 @@
 
 /* --- Logo --- */
 .logoWrapper {
-  order: 2;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  grid-area: logo;
+  justify-self: center;
 }
 .logoLink {
   display: block;
@@ -52,7 +53,8 @@
 
 /* --- Hamburger --- */
 .hamburger {
-  order: 1;
+  grid-area: hamburger;
+  justify-self: start;
   display: flex;
   cursor: pointer;
   flex-direction: column;
@@ -77,10 +79,9 @@
 
 /* --- Barra de Busca --- */
 .searchWrapper {
-  order: 4;
+  grid-area: search;
   display: flex;
   width: 100%;
-  margin-top: 1rem;
   border: 1px solid var(--white);
   border-radius: 1.5625rem;
   overflow: hidden;
@@ -126,7 +127,8 @@
 
 /* --- Ícones --- */
 .iconsWrapper {
-  order: 3;
+  grid-area: icons;
+  justify-self: end;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -180,10 +182,9 @@
     padding: 0.75rem 0;
   }
   .container {
-    display: grid;
     grid-template-columns: auto auto 1fr auto;
+    grid-template-areas: "logo mainNav search icons";
     gap: 2rem;
-    align-items: center;
   }
 
   .hamburger {
@@ -191,9 +192,6 @@
   }
 
   .logoWrapper {
-    order: 1;
-    position: static;
-    transform: none;
     justify-self: start;
   }
   .logoLink {
@@ -202,7 +200,7 @@
   }
 
   .mainNav {
-    order: 2;
+    grid-area: mainNav;
     display: flex;
     gap: 2rem;
   }
@@ -227,7 +225,6 @@
   }
 
   .searchWrapper {
-    order: 3;
     margin-top: 0;
     max-width: 700px;
     justify-self: center;
@@ -237,9 +234,7 @@
   }
 
   .iconsWrapper {
-    order: 4;
     gap: 1.25rem;
-    justify-self: end;
   }
   .iconsWrapper a:hover .icon,
   .iconsWrapper button:hover .icon {

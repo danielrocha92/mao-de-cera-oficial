@@ -1,0 +1,121 @@
+.container {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+.addTypeContainer {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.addTypeContainer input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+}
+
+.addTypeContainer button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.variationType {
+    background-color: white;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+}
+
+.variationTypeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.variationTypeHeader h3 {
+    margin: 0;
+}
+
+.removeButton {
+    background: none;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    padding: 0.3rem 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.addValueContainer {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.addValueContainer input {
+    flex: 1;
+}
+
+.valuesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.valueTag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ecf0f1;
+    color: #34495e;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+
+.valueTag button {
+    background: none;
+    border: none;
+    color: #95a5a6;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0;
+}
+
+.skuTableContainer {
+    margin-top: 2rem;
+}
+
+.skuTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.skuTable th,
+.skuTable td {
+    padding: 0.8rem;
+    text-align: left;
+    border: 1px solid #dee2e6;
+}
+
+.skuTable th {
+    background-color: #f8f9fa;
+}
+
+.skuTable input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
