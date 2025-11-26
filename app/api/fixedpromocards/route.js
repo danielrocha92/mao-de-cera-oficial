@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db, admin } from '../../../../lib/firebaseAdmin';
+import { db, admin } from '../../../lib/firebaseAdmin';
 
 const collectionName = 'fixedPromoCards';
 
@@ -76,5 +76,5 @@ export async function DELETE(request) {
     console.error("Error deleting fixed promotional card:", error);
     return NextResponse.json({ error: "Failed to delete fixed promotional card" }, { status: 500 });
   }
-  
+
 }

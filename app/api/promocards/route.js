@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db, admin } from '../../../../lib/firebaseAdmin';
+import { db, admin } from '../../../lib/firebaseAdmin';
 
 // GET all promotional cards
 export async function GET(request) {
