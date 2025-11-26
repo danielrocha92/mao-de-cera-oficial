@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from '../Login.module.css'; // Re-using styles for consistency
+import styles from '../login/Login.module.css'; // Re-using styles for consistency
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { registerSchema } from '@/lib/validationSchemas';
