@@ -1,34 +1,22 @@
 import { NextResponse } from 'next/server';
-import { calcularFreteBling } from '@/lib/bling';
+import { getShippingQuote } from '@/lib/bling';
 
 export async function POST(request) {
-  const { cep_destino, peso_kg, dimensoes_cm } = await request.json();
-
-  // TODO:
-  // 1. Get origin CEP from store settings in Firestore.
-  // 2. Format the data as required by the Bling/Correios API.
-  
-  const shippingInfo = {
-    cep_destino,
-    peso_kg,
-    ...dimensoes_cm
-    // ... other required fields
-  };
-
   try {
-    // const shippingOptions = await calcularFreteBling(shippingInfo);
-    // return NextResponse.json(shippingOptions);
+    const { cep, itens } = await request.json();
 
-    console.log('Calculating shipping for:', shippingInfo);
+    // Chama o helper do Bling (ou Correios)
+    // const quote = await getShippingQuote(cep, itens);
 
-    // Placeholder response
-    return NextResponse.json([
-        { name: 'PAC', cost: 25.50, deadline: '10 dias úteis' },
-        { name: 'SEDEX', cost: 45.80, deadline: '5 dias úteis' },
-    ]);
+    // Mock de resposta
+    const quote = [
+      { nome: 'PAC', valor: 25.00, prazo: 5 },
+      { nome: 'SEDEX', valor: 45.00, prazo: 2 }
+    ];
 
+    return NextResponse.json(quote);
   } catch (error) {
-    console.error('Failed to calculate shipping:', error);
-    return NextResponse.json({ error: 'Failed to calculate shipping' }, { status: 500 });
+    console.error('Erro ao calcular frete:', error);
+    return NextResponse.json({ error: 'Erro ao calcular frete' }, { status: 500 });
   }
 }

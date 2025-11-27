@@ -1,28 +1,40 @@
 import { NextResponse } from 'next/server';
-import { createPaymentPreference } from '@/lib/mercadopago';
+import { preference } from '@/lib/mercadopago';
 
 export async function POST(request) {
-  const { items, payer } = await request.json();
-  
-  // TODO: Format the preference data according to Mercado Pago's documentation
-  const preferenceData = {
-    items: items, // e.g., [{ title: 'Meu produto', unit_price: 100, quantity: 1 }]
-    payer: payer,
-    back_urls: {
-      success: `${request.nextUrl.origin}/compra-aprovada`,
-      failure: `${request.nextUrl.origin}/compra-falhou`,
-      pending: `${request.nextUrl.origin}/compra-pendente`,
-    },
-    auto_return: 'approved',
-    notification_url: `${request.nextUrl.origin}/api/webhook/mercadopago`,
-  };
-
   try {
-    const preference = await createPaymentPreference(preferenceData);
-    // Return the sandbox_init_point or init_point to the frontend
-    return NextResponse.json({ id: preference.id, init_point: preference.init_point });
+    const { items, payer } = await request.json();
+
+    const result = await preference.create({
+      body: {
+        items: items.map(item => ({
+          id: item.id,
+          title: item.nome,
+          quantity: Number(item.quantity),
+          unit_price: Number(item.preco),
+          currency_id: 'BRL',
+        })),
+        payer: {
+          email: payer.email,
+          name: payer.nome,
+          identification: {
+            type: 'CPF',
+            number: payer.cpf,
+          },
+        },
+        back_urls: {
+          success: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/sucesso`,
+          failure: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/erro`,
+          pending: `${process.env.NEXT_PUBLIC_BASE_URL}/checkout/pendente`,
+        },
+        auto_return: 'approved',
+        notification_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/webhook/mercadopago`,
+      }
+    });
+
+    return NextResponse.json({ url: result.init_point, id: result.id });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Failed to create payment preference' }, { status: 500 });
+    console.error('Erro ao criar preferência MP:', error);
+    return NextResponse.json({ error: 'Erro ao processar pagamento' }, { status: 500 });
   }
 }

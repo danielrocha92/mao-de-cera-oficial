@@ -1,43 +1,30 @@
 import { NextResponse } from 'next/server';
-import { emitirNFeBling } from '@/lib/bling';
-// import { adminDb } from '@/lib/firebaseAdmin';
+import { createNFe } from '@/lib/bling';
+import { db } from '@/lib/firebaseAdmin';
 
 export async function POST(request) {
-  const { pedidoId } = await request.json();
-
-  if (!pedidoId) {
-    return NextResponse.json({ error: 'pedidoId is required' }, { status: 400 });
-  }
-
   try {
-    // 1. Fetch the order from Firestore
-    // const orderDoc = await adminDb.collection('pedidos').doc(pedidoId).get();
-    // if (!orderDoc.exists) {
-    //   return NextResponse.json({ error: 'Order not found' }, { status: 404 });
-    // }
-    // const orderData = orderDoc.data();
+    const { pedidoId } = await request.json();
 
-    // 2. Format data for Bling's API (this is complex and requires careful mapping)
-    const blingOrderData = {
-      // ... map fields from orderData to what Bling expects
-    };
+    const pedidoDoc = await db.collection('pedidos').doc(pedidoId).get();
+    if (!pedidoDoc.exists) {
+      return NextResponse.json({ error: 'Pedido não encontrado' }, { status: 404 });
+    }
 
-    // 3. Call the Bling helper to send the NFe request
-    // const nfeResponse = await emitirNFeBling(blingOrderData);
+    const pedido = pedidoDoc.data();
 
-    // 4. Update the order in Firestore with the NFe status/ID
-    // await adminDb.collection('pedidos').doc(pedidoId).update({
-    //   status_nfe: nfeResponse.status,
-    //   id_nfe: nfeResponse.id,
-    // });
+    // Chama o helper do Bling
+    const nfe = await createNFe(pedido);
 
-    console.log(`NFe emission process triggered for order: ${pedidoId}`);
-    
-    // Placeholder response
-    return NextResponse.json({ message: 'NFe emission process started', pedidoId: pedidoId });
+    // Atualiza pedido com dados da NF-e (mockado por enquanto pois createNFe é placeholder)
+    await db.collection('pedidos').doc(pedidoId).update({
+      id_nfe: 'pendente-bling', // nfe.id
+      status: 'processando_nfe'
+    });
 
+    return NextResponse.json({ message: 'Solicitação de NF-e enviada' });
   } catch (error) {
-    console.error('Failed to emit NFe:', error);
-    return NextResponse.json({ error: 'Failed to emit NFe' }, { status: 500 });
+    console.error('Erro ao emitir NF-e:', error);
+    return NextResponse.json({ error: 'Erro ao emitir NF-e' }, { status: 500 });
   }
 }

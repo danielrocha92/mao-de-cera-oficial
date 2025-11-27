@@ -1,231 +1,177 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './NovoProduto.module.css';
-import ImageUpload from '@/components/ui/ImageUpload';
-import VariationsManager from '@/components/admin/VariationsManager';
 
-export default function NovoProdutoPage() {
+export default function NewProductPage() {
   const router = useRouter();
-  const [product, setProduct] = useState({
-    title: '',
-    description: '',
-    price: '',
-    comparePrice: '',
-    sku: '',
-    stock: '',
-    allowPurchaseWithoutStock: false,
-    weight: '',
-    length: '',
-    width: '',
-    height: '',
-    images: [],
-    variations: [],
-    skus: {},
-    category: '',
-    brand: '',
-    tags: '',
-  });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [formData, setFormData] = useState({
+    nome: '',
+    slug: '',
+    descricao: '',
+    preco: '',
+    preco_promocional: '',
+    custo: '',
+    sku: '',
+    estoque: '',
+    peso_kg: '',
+    comprimento: '',
+    largura: '',
+    altura: '',
+    categorias: '',
+    tags_busca: '',
+    seo_titulo: '',
+    seo_descricao: '',
+    imagens: [], // URLs
+    isLancamento: false,
+    isOferta: false
+  });
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
-  const handleImageUpload = (url) => {
-    setProduct((prev) => ({
-      ...prev,
-      images: [...prev.images, url],
-    }));
+  const handleImageUpload = async (e) => {
+    // Placeholder for Cloudinary upload
+    // In a real app, we would upload to Cloudinary and get the URL
+    const file = e.target.files[0];
+    if (file) {
+      // Mock URL for now
+      const mockUrl = URL.createObjectURL(file);
+      setFormData(prev => ({ ...prev, imagens: [...prev.imagens, mockUrl] }));
+    }
   };
-
-  const handleVariationsChange = useCallback((variations) => {
-    setProduct((prev) => ({
-        ...prev,
-        variations: variations,
-    }));
-  }, []);
-
-  const handleSkusChange = useCallback((skus) => {
-    setProduct((prev) => ({
-        ...prev,
-        skus: skus,
-    }));
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
 
     try {
-      const response = await fetch('/api/produtos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Prepare data
+      const productData = {
+        ...formData,
+        preco: Number(formData.preco),
+        preco_promocional: Number(formData.preco_promocional),
+        custo: Number(formData.custo),
+        estoque: Number(formData.estoque),
+        peso_kg: Number(formData.peso_kg),
+        dimensoes_cm: {
+          comprimento: Number(formData.comprimento),
+          largura: Number(formData.largura),
+          altura: Number(formData.altura)
         },
-        body: JSON.stringify(product),
+        categorias: formData.categorias.split(',').map(s => s.trim()),
+        tags_busca: formData.tags_busca.split(',').map(s => s.trim()),
+        seo: {
+          titulo: formData.seo_titulo,
+          meta_descricao: formData.seo_descricao
+        }
+      };
+
+      // Remove flat fields that are now nested
+      delete productData.comprimento;
+      delete productData.largura;
+      delete productData.altura;
+      delete productData.seo_titulo;
+      delete productData.seo_descricao;
+
+      const res = await fetch('/api/produtos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData)
       });
 
-      if (!response.ok) {
-        throw new Error('Falha ao criar produto');
+      if (res.ok) {
+        alert('Produto criado com sucesso!');
+        router.push('/admin/dashboard');
+      } else {
+        alert('Erro ao criar produto');
       }
 
-      setMessage('Produto criado com sucesso!');
-      setTimeout(() => {
-        router.push('/admin/produtos');
-      }, 2000);
     } catch (error) {
       console.error(error);
-      setMessage('Erro ao criar produto.');
+      alert('Erro ao criar produto');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={styles.novoProdutoContainer}>
-      <h1>Adicionar Produto</h1>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.card}>
-          <h2>Informações Principais</h2>
-          <div className={styles.formGroup}>
-            <label htmlFor="title">Título</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={product.title}
-              onChange={handleChange}
-              required
-              autoComplete="off"
-            />
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+      <h1>Novo Produto</h1>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
+
+        <section>
+          <h3>Informações Básicas</h3>
+          <input name="nome" placeholder="Nome do Produto" value={formData.nome} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem' }} />
+          <input name="slug" placeholder="Slug (URL)" value={formData.slug} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem' }} />
+          <textarea name="descricao" placeholder="Descrição" value={formData.descricao} onChange={handleChange} rows={5} style={{ width: '100%', padding: '0.5rem' }} />
+          <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <input type="checkbox" name="isLancamento" checked={formData.isLancamento} onChange={handleChange} />
+              Lançamento
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <input type="checkbox" name="isOferta" checked={formData.isOferta} onChange={handleChange} />
+              Oferta Sazonal
+            </label>
           </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="description">Descrição</label>
-            <textarea
-              id="description"
-              name="description"
-              value={product.description}
-              onChange={handleChange}
-              autoComplete="off"
-            />
+        </section>
+
+        <section>
+          <h3>Preço e Estoque</h3>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <input name="preco" type="number" placeholder="Preço (R$)" value={formData.preco} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
+            <input name="preco_promocional" type="number" placeholder="Preço Promocional (R$)" value={formData.preco_promocional} onChange={handleChange} style={{ flex: 1, padding: '0.5rem' }} />
+            <input name="custo" type="number" placeholder="Custo (R$)" value={formData.custo} onChange={handleChange} style={{ flex: 1, padding: '0.5rem' }} />
           </div>
-        </div>
-
-        <div className={styles.card}>
-            <h2>Imagens</h2>
-            <ImageUpload onUpload={handleImageUpload} />
-        </div>
-        
-        <div className={styles.card}>
-            <VariationsManager 
-                initialVariations={product.variations} 
-                onChange={handleVariationsChange} 
-                onSkuChange={handleSkusChange}
-            />
-        </div>
-
-        <div className={styles.card}>
-          <h2>Preços</h2>
-          <div className={styles.formGrid}>
-            <div className={styles.formGroup}>
-              <label htmlFor="price">Preço de Venda</label>
-              <input
-                type="number"
-                id="price"
-                name="price"
-                value={product.price}
-                onChange={handleChange}
-                required
-                autoComplete="off"
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="comparePrice">Preço de Comparação (Opcional)</label>
-              <input
-                type="number"
-                id="comparePrice"
-                name="comparePrice"
-                value={product.comparePrice}
-                onChange={handleChange}
-                autoComplete="off"
-              />
-            </div>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+            <input name="sku" placeholder="SKU" value={formData.sku} onChange={handleChange} style={{ flex: 1, padding: '0.5rem' }} />
+            <input name="estoque" type="number" placeholder="Estoque" value={formData.estoque} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
           </div>
-        </div>
+        </section>
 
-        <div className={styles.card}>
-            <h2>Organização</h2>
-            <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="category">Categoria</label>
-                    <input type="text" id="category" name="category" value={product.category} onChange={handleChange} autoComplete="off" />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="brand">Marca</label>
-                    <input type="text" id="brand" name="brand" value={product.brand} onChange={handleChange} autoComplete="off" />
-                </div>
-            </div>
-            <div className={styles.formGroup}>
-                <label htmlFor="tags">Tags (separadas por vírgula)</label>
-                <input type="text" id="tags" name="tags" value={product.tags} onChange={handleChange} autoComplete="off" />
-            </div>
-        </div>
+        <section>
+          <h3>Frete (Dimensões e Peso)</h3>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <input name="peso_kg" type="number" step="0.001" placeholder="Peso (kg)" value={formData.peso_kg} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
+            <input name="comprimento" type="number" placeholder="Comp (cm)" value={formData.comprimento} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
+            <input name="largura" type="number" placeholder="Larg (cm)" value={formData.largura} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
+            <input name="altura" type="number" placeholder="Alt (cm)" value={formData.altura} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
+          </div>
+        </section>
 
-        <div className={styles.card}>
-            <h2>Inventário</h2>
-            <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="sku">SKU (Código)</label>
-                    <input type="text" id="sku" name="sku" value={product.sku} onChange={handleChange} autoComplete="off" />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="stock">Estoque</label>
-                    <input type="number" id="stock" name="stock" value={product.stock} onChange={handleChange} autoComplete="off" />
-                </div>
-            </div>
-            <div className={styles.formGroup}>
-                <label className={styles.checkboxLabel}>
-                    <input type="checkbox" name="allowPurchaseWithoutStock" checked={product.allowPurchaseWithoutStock} onChange={handleChange} />
-                    <span>Permitir compra mesmo sem estoque</span>
-                </label>
-            </div>
-        </div>
+        <section>
+          <h3>Categorias e SEO</h3>
+          <input name="categorias" placeholder="Categorias (separadas por vírgula)" value={formData.categorias} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="tags_busca" placeholder="Tags de Busca (separadas por vírgula)" value={formData.tags_busca} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="seo_titulo" placeholder="Título SEO" value={formData.seo_titulo} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="seo_descricao" placeholder="Meta Descrição" value={formData.seo_descricao} onChange={handleChange} style={{ width: '100%', padding: '0.5rem' }} />
+        </section>
 
-        <div className={styles.card}>
-            <h2>Envio</h2>
-            <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="weight">Peso (kg)</label>
-                    <input type="number" id="weight" name="weight" value={product.weight} onChange={handleChange} autoComplete="off" />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="length">Comprimento (cm)</label>
-                    <input type="number" id="length" name="length" value={product.length} onChange={handleChange} autoComplete="off" />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="width">Largura (cm)</label>
-                    <input type="number" id="width" name="width" value={product.width} onChange={handleChange} autoComplete="off" />
-                </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="height">Altura (cm)</label>
-                    <input type="number" id="height" name="height" value={product.height} onChange={handleChange} autoComplete="off" />
-                </div>
-            </div>
-        </div>
-        <div className={styles.actions}>
-          <button type="submit" className={styles.saveButton} disabled={loading}>
-            {loading ? 'Salvando...' : 'Salvar Produto'}
-          </button>
-        </div>
+        <section>
+          <h3>Imagens</h3>
+          <input type="file" onChange={handleImageUpload} accept="image/*" />
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+            {formData.imagens.map((img, idx) => (
+              <img key={idx} src={img} alt="Preview" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+            ))}
+          </div>
+        </section>
+
+        <button type="submit" disabled={loading} style={{
+          padding: '1rem',
+          backgroundColor: 'var(--primary)',
+          color: 'white',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '1.1rem',
+          marginTop: '1rem'
+        }}>
+          {loading ? 'Salvando...' : 'Salvar Produto'}
+        </button>
       </form>
     </div>
   );

@@ -1,41 +1,87 @@
-import HeroCarousel from '@/components/ui/HeroCarousel';
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { db } from '@/lib/firebaseAdmin';
+import ProductCard from '@/components/shop/ProductCard';
+import CategoryCarousel from '@/components/shop/CategoryCarousel';
+import ProductCarousel from '@/components/shop/ProductCarousel';
+import GoogleReviews from '@/components/shop/GoogleReviews';
+import styles from './page.module.css';
 
-import OffersCarousel from '@/components/shop/OffersCarousel';
-import CategoriesCarousel from '@/components/shop/CategoriesCarousel';
-import InfoCards from '@/components/shop/InfoCards';
-import PromotionalCards from '@/components/shop/PromotionalCards';
-import FixedPromotionalCards from '@/components/shop/FixedPromotionalCards';
-import GoogleReviewsStatic from '@/components/shop/GoogleReviewsStatic'; // Novo import
-import styles from './Home.module.css';
+// Fetch products directly from Firestore (Server Component)
+async function getProducts() {
+  try {
+    const snapshot = await db.collection('produtos').limit(8).get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error("Erro ao buscar produtos:", error);
+    return [];
+  }
+}
 
-export default function HomePage() {
-  const slides = [
-    {
-      type: 'video',
-      src: '/videos/Colecao_Cera_e_Frutas.mp4',
-      alt: 'Vela Aromática',
-      title: 'Nossas Velas',
-      subtitle: 'Feitas com cera de coco e essências premium.',
-    },
-    {
-      type: 'video',
-      src: '/videos/Colecaoo_Mar.mp4',
-      alt: 'Vela Aromática',
-      title: 'Nossas Velas',
-      subtitle: 'Feitas com cera de coco e essências premium.',
-    },
-  ];
+export default async function Home() {
+  const products = await getProducts();
 
   return (
-    <>
-      <HeroCarousel slides={slides} />
+    <div className={styles.homeContainer}>
+      {/* Hero Section */}
+      {/* Hero Section with Video Background */}
+      <section className={styles.hero}>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className={styles.videoBackground}
+          // poster="/images/hero-poster.jpg" // Removed to avoid 404
+        >
+          <source src="https://res.cloudinary.com/demo/video/upload/v1687253549/samples/sea-turtle.mp4" type="video/mp4" />
+          Seu navegador não suporta vídeos HTML5.
+        </video>
+        <div className={styles.heroOverlay}></div>
 
-      <OffersCarousel />
-      <CategoriesCarousel />
-      <InfoCards />
-      <FixedPromotionalCards />
-      <GoogleReviewsStatic /> {/* Novo componente */}
-      <PromotionalCards />
-    </>
+        <div className={styles.heroContent}>
+          <h1>Ilumine seus momentos</h1>
+          <p>Velas aromáticas artesanais feitas com amor e cera 100% vegetal.</p>
+          <Link href="/produtos" className={styles.ctaButton}>
+            Ver Coleção
+          </Link>
+        </div>
+      </section>
+
+      {/* Category Carousel */}
+      <CategoryCarousel />
+
+      {/* Lançamentos */}
+      <ProductCarousel
+        title="Lançamentos"
+        products={products.filter(p => p.isLancamento)}
+      />
+
+      {/* Ofertas Sazonais */}
+      <ProductCarousel
+        title="Ofertas Sazonais"
+        products={products.filter(p => p.isOferta)}
+      />
+
+      {/* Avaliações */}
+      <GoogleReviews />
+
+      {/* Featured Products (Mantendo como fallback ou seção geral) */}
+      <section className={styles.featured}>
+        <h2>Todos os Produtos</h2>
+        <div className={styles.grid}>
+          {products.length > 0 ? (
+            products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          ) : (
+            <p>Nenhum produto encontrado.</p>
+          )}
+        </div>
+      </section>
+
+
+    </div>
   );
 }

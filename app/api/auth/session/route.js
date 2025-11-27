@@ -1,41 +1,38 @@
-// app/api/auth/session/route.js
-import { adminAuth } from '@/lib/firebaseAdmin';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { auth } from '@/lib/firebaseAdmin';
 
-// POST: Cria a sessão
 export async function POST(request) {
-  const { idToken } = await request.json();
-
-  if (!idToken) {
-    return NextResponse.json({ error: 'ID token não fornecido' }, { status: 400 });
-  }
-
-  // Define a validade do cookie (ex: 7 dias)
-  const expiresIn = 60 * 60 * 24 * 7 * 1000; // 7 dias em milissegundos
-
   try {
-    // Cria o cookie de sessão
-    const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
+    const { idToken } = await request.json();
 
-    // Define o cookie no navegador
-    cookies().set('session', sessionCookie, {
+    // Set session expiration to 5 days
+    const expiresIn = 60 * 60 * 24 * 5 * 1000;
+
+    // Create the session cookie. This will also verify the ID token.
+    const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
+
+    // Set cookie options
+    const options = {
+      name: 'session',
+      value: sessionCookie,
       maxAge: expiresIn,
-      httpOnly: true, // Importante para segurança
-      secure: process.env.NODE_ENV === 'production', // Use 'secure' em produção
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
       path: '/',
-    });
+    };
 
-    return NextResponse.json({ status: 'success' }, { status: 200 });
+    const response = NextResponse.json({ status: 'success' });
+    response.cookies.set(options);
+
+    return response;
   } catch (error) {
-    console.error('Erro ao criar cookie de sessão:', error);
-    return NextResponse.json({ error: 'Falha na autenticação' }, { status: 401 });
+    console.error('Error creating session cookie:', error);
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 }
 
-// DELETE: Destroi a sessão (Logout)
 export async function DELETE() {
-  // Exclui o cookie
-  cookies().delete('session');
-  return NextResponse.json({ status: 'logout success' }, { status: 200 });
+  const response = NextResponse.json({ status: 'success' });
+  response.cookies.delete('session');
+  return response;
 }

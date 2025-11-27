@@ -1,0 +1,113 @@
+.reviewsSection {
+    padding: 4rem 0;
+    background-color: #f9f9f9;
+    width: 100%;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.googleLogo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ratingScore {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.stars {
+    color: #fbbc04;
+    font-size: 1.25rem;
+    display: flex;
+    gap: 0.25rem;
+}
+
+.totalReviews {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.title {
+    font-size: 1.75rem;
+    color: var(--text-primary);
+    margin-top: 1rem;
+}
+
+.reviewsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.reviewCard {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.reviewCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.avatar {
+    border-radius: 50%;
+}
+
+.authorInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.authorName {
+    font-weight: 600;
+    color: #333;
+}
+
+.reviewDate {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.gIcon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.8;
+}
+
+.cardRating {
+    color: #fbbc04;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.reviewText {
+    color: #555;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}

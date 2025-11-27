@@ -1,90 +1,124 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import styles from './Configuracoes.module.css';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
+import React, { useState, useEffect } from 'react';
+import { db } from '@/lib/firebase'; // Client SDK for reading settings
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-export default function ConfiguracoesPage() {
-  const [settings, setSettings] = useState({
-    nome_loja: '', cnpj: '', email_contato: '', telefone_contato: '',
-    endereco_loja: { rua: '', numero: '', cidade: '', estado: '', cep: '' },
-    codigos_externos: { gtm_id: '', ga4_id: '', fb_pixel_id: '' },
-    meios_pagamento: { mercado_pago_keys: { public_key: '', access_token: '' } }
+export default function SettingsPage() {
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    nome_loja: '',
+    cnpj: '',
+    email_contato: '',
+    telefone_contato: '',
+    endereco_loja: '',
+    gtm_id: '',
+    ga4_id: '',
+    fb_pixel_id: '',
+    mercado_pago_public_key: '',
+    mercado_pago_access_token: ''
   });
 
-  // TODO: Fetch current settings from Firestore on component mount
   useEffect(() => {
-    // const fetchSettings = async () => {
-    //   // const res = await fetch('/api/configuracoes');
-    //   // const data = await res.json();
-    //   // setSettings(data);
-    // }
-    // fetchSettings();
+    const fetchSettings = async () => {
+      try {
+        const docRef = doc(db, 'configuracoes', 'loja');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setFormData({
+            ...data,
+            gtm_id: data.codigos_externos?.gtm_id || '',
+            ga4_id: data.codigos_externos?.ga4_id || '',
+            fb_pixel_id: data.codigos_externos?.fb_pixel_id || '',
+            mercado_pago_public_key: data.meios_pagamento?.mercado_pago_keys?.public_key || '',
+            mercado_pago_access_token: data.meios_pagamento?.mercado_pago_keys?.access_token || ''
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao buscar configurações:", error);
+      }
+    };
+    fetchSettings();
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    const keys = name.split('.');
-    
-    if (keys.length > 1) {
-      setSettings(prev => {
-        const newState = { ...prev };
-        let current = newState;
-        for (let i = 0; i < keys.length - 1; i++) {
-          current = current[keys[i]];
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const settingsData = {
+        nome_loja: formData.nome_loja,
+        cnpj: formData.cnpj,
+        email_contato: formData.email_contato,
+        telefone_contato: formData.telefone_contato,
+        endereco_loja: formData.endereco_loja,
+        codigos_externos: {
+          gtm_id: formData.gtm_id,
+          ga4_id: formData.ga4_id,
+          fb_pixel_id: formData.fb_pixel_id
+        },
+        meios_pagamento: {
+          mercado_pago_keys: {
+            public_key: formData.mercado_pago_public_key,
+            access_token: formData.mercado_pago_access_token
+          }
         }
-        current[keys[keys.length - 1]] = value;
-        return newState;
-      });
-    } else {
-      setSettings(prev => ({ ...prev, [name]: value }));
+      };
+
+      await setDoc(doc(db, 'configuracoes', 'loja'), settingsData);
+      alert('Configurações salvas com sucesso!');
+
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao salvar configurações');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TODO: Make a POST/PUT request to an API endpoint to save the settings
-    console.log('Saving settings:', settings);
-    alert('Configurações salvas!');
-  };
-
   return (
-    <div>
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
       <h1>Configurações da Loja</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <fieldset>
-          <legend>Informações de Contato</legend>
-          <Input name="nome_loja" label="Nome da Loja" value={settings.nome_loja} onChange={handleChange} />
-          <Input name="cnpj" label="CNPJ" value={settings.cnpj} onChange={handleChange} />
-          <Input name="email_contato" label="Email de Contato" value={settings.email_contato} onChange={handleChange} />
-          <Input name="telefone_contato" label="Telefone de Contato" value={settings.telefone_contato} onChange={handleChange} />
-        </fieldset>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
 
-        <fieldset>
-          <legend>Endereço da Loja</legend>
-          <Input name="endereco_loja.rua" label="Rua" value={settings.endereco_loja.rua} onChange={handleChange} />
-          <Input name="endereco_loja.numero" label="Número" value={settings.endereco_loja.numero} onChange={handleChange} />
-          <Input name="endereco_loja.cidade" label="Cidade" value={settings.endereco_loja.cidade} onChange={handleChange} />
-          <Input name="endereco_loja.estado" label="Estado" value={settings.endereco_loja.estado} onChange={handleChange} />
-          <Input name="endereco_loja.cep" label="CEP" value={settings.endereco_loja.cep} onChange={handleChange} />
-        </fieldset>
+        <section>
+          <h3>Dados da Empresa</h3>
+          <input name="nome_loja" placeholder="Nome da Loja" value={formData.nome_loja} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="cnpj" placeholder="CNPJ" value={formData.cnpj} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="email_contato" placeholder="E-mail de Contato" value={formData.email_contato} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="telefone_contato" placeholder="Telefone" value={formData.telefone_contato} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="endereco_loja" placeholder="Endereço Completo" value={formData.endereco_loja} onChange={handleChange} style={{ width: '100%', padding: '0.5rem' }} />
+        </section>
 
-        <fieldset>
-          <legend>Códigos Externos (Tracking)</legend>
-          <Input name="codigos_externos.gtm_id" label="Google Tag Manager ID" value={settings.codigos_externos.gtm_id} onChange={handleChange} />
-          <Input name="codigos_externos.ga4_id" label="Google Analytics 4 ID" value={settings.codigos_externos.ga4_id} onChange={handleChange} />
-          <Input name="codigos_externos.fb_pixel_id" label="Facebook Pixel ID" value={settings.codigos_externos.fb_pixel_id} onChange={handleChange} />
-        </fieldset>
+        <section>
+          <h3>Códigos Externos</h3>
+          <input name="gtm_id" placeholder="Google Tag Manager ID" value={formData.gtm_id} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="ga4_id" placeholder="Google Analytics 4 ID" value={formData.ga4_id} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="fb_pixel_id" placeholder="Facebook Pixel ID" value={formData.fb_pixel_id} onChange={handleChange} style={{ width: '100%', padding: '0.5rem' }} />
+        </section>
 
-        <fieldset>
-          <legend>Chaves de API</legend>
-          <Input name="meios_pagamento.mercado_pago_keys.public_key" label="Mercado Pago - Public Key" value={settings.meios_pagamento.mercado_pago_keys.public_key} onChange={handleChange} />
-          <Input name="meios_pagamento.mercado_pago_keys.access_token" label="Mercado Pago - Access Token" value={settings.meios_pagamento.mercado_pago_keys.access_token} onChange={handleChange} />
-          {/* TODO: Add fields for Bling, EmailJS keys */}
-        </fieldset>
+        <section>
+          <h3>Meios de Pagamento (Mercado Pago)</h3>
+          <input name="mercado_pago_public_key" placeholder="Public Key" value={formData.mercado_pago_public_key} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
+          <input name="mercado_pago_access_token" placeholder="Access Token" value={formData.mercado_pago_access_token} onChange={handleChange} style={{ width: '100%', padding: '0.5rem' }} />
+        </section>
 
-        <Button type="submit">Salvar Configurações</Button>
+        <button type="submit" disabled={loading} style={{
+          padding: '1rem',
+          backgroundColor: 'var(--primary)',
+          color: 'white',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '1.1rem',
+          marginTop: '1rem'
+        }}>
+          {loading ? 'Salvando...' : 'Salvar Configurações'}
+        </button>
       </form>
     </div>
   );

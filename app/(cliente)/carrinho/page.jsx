@@ -1,95 +1,82 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import styles from './Carrinho.module.css';
-import Button from '@/components/ui/Button';
-import TrashIcon from '@/components/ui/icons/TrashIcon';
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useCart } from '@/app/context/CartContext';
+import styles from './page.module.css'; // Assuming you will create CSS
 
-// Mock data to be used as a fallback
-const mockItems = [
-    { id: 1, name: 'Vela Aromática de Lavanda', price: 49.90, quantity: 1 },
-    { id: 2, name: 'Sabonete Artesanal de Alecrim', price: 19.90, quantity: 2 },
-];
+export default function CartPage() {
+  const { cart, total, removeItem, updateQuantity } = useCart();
 
-export default function CarrinhoPage() {
-    const [items, setItems] = useState([]);
-
-    // Load cart from localStorage on component mount
-    useEffect(() => {
-        const storedCart = localStorage.getItem('cart');
-        if (storedCart) {
-            setItems(JSON.parse(storedCart));
-        } else {
-            setItems(mockItems);
-            localStorage.setItem('cart', JSON.stringify(mockItems));
-        }
-    }, []);
-
-    const updateCart = (newItems) => {
-        setItems(newItems);
-        localStorage.setItem('cart', JSON.stringify(newItems));
-    };
-
-    const handleRemoveItem = (idToRemove) => {
-        const updatedItems = items.filter(item => item.id !== idToRemove);
-        updateCart(updatedItems);
-    };
-
-    const increaseQuantity = (id) => {
-        const updatedItems = items.map(item => 
-            item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-        updateCart(updatedItems);
-    };
-
-    const decreaseQuantity = (id) => {
-        const itemToDecrease = items.find(item => item.id === id);
-        let updatedItems;
-
-        if (itemToDecrease.quantity > 1) {
-            updatedItems = items.map(item => 
-                item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-            );
-        } else {
-            // If quantity is 1, remove the item
-            updatedItems = items.filter(item => item.id !== id);
-        }
-        updateCart(updatedItems);
-    };
-
-    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
+  if (cart.length === 0) {
     return (
-        <div className={styles.container}>
-            <h1>Carrinho de Compras</h1>
-            {items.length === 0 ? (
-                <p>Seu carrinho está vazio.</p>
-            ) : (
-                <>
-                    <div className={styles.itemsList}>
-                        {items.map(item => (
-                            <div key={item.id} className={styles.item}>
-                                <div className={styles.itemDetails}>
-                                    <span className={styles.itemName}>{item.name}</span>
-                                    <span className={styles.itemPrice}>R$ {(item.price * item.quantity).toFixed(2)}</span>
-                                </div>
-                                <div className={styles.quantityControls}>
-                                    <button onClick={() => decreaseQuantity(item.id)} className={styles.quantityButton}>-</button>
-                                    <span className={styles.quantityText}>{item.quantity}</span>
-                                    <button onClick={() => increaseQuantity(item.id)} className={styles.quantityButton}>+</button>
-                                    <button onClick={() => handleRemoveItem(item.id)} className={styles.trashButton} aria-label={`Remover ${item.name}`}>
-                                        <TrashIcon />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className={styles.summary}>
-                        <h3>Total: R$ {total.toFixed(2)}</h3>
-                        <Button>Finalizar Compra</Button>
-                    </div>
-                </>
-            )}
-        </div>
+      <div style={{ padding: '4rem', textAlign: 'center' }}>
+        <h1>Seu carrinho está vazio</h1>
+        <Link href="/produtos" style={{ color: 'var(--primary)', textDecoration: 'underline' }}>
+          Voltar para a loja
+        </Link>
+      </div>
     );
+  }
+
+  return (
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+      <h1>Carrinho de Compras</h1>
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', marginTop: '2rem' }}>
+
+        {/* Cart Items */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {cart.map((item) => (
+            <div key={item.id} style={{ display: 'flex', gap: '1rem', border: '1px solid #eee', padding: '1rem' }}>
+              <div style={{ position: 'relative', width: '100px', height: '100px' }}>
+                <Image
+                  src={item.imagens?.[0] || "https://via.placeholder.com/100"}
+                  alt={item.nome}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h3>{item.nome}</h3>
+                <p>R$ {Number(item.preco_promocional || item.preco).toFixed(2)}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+                  <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                  <span>{item.quantity}</span>
+                  <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                  <button onClick={() => removeItem(item.id)} style={{ color: 'red', marginLeft: 'auto' }}>Remover</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Summary */}
+        <div style={{ border: '1px solid #eee', padding: '2rem', height: 'fit-content' }}>
+          <h2>Resumo</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
+            <span>Subtotal</span>
+            <span>R$ {total.toFixed(2)}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 0', fontWeight: 'bold' }}>
+            <span>Total</span>
+            <span>R$ {total.toFixed(2)}</span>
+          </div>
+          <Link href="/checkout">
+            <button style={{
+              width: '100%',
+              padding: '1rem',
+              backgroundColor: 'var(--primary)',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '1.1rem'
+            }}>
+              Finalizar Compra
+            </button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }

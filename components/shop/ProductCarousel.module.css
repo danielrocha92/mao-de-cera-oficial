@@ -1,0 +1,81 @@
+.carouselSection {
+    padding: 2rem 0;
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.title {
+    font-size: 1.75rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.arrowButton {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+}
+
+.arrowButton:hover {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.carouselContainer {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.carouselContainer::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.cardWrapper {
+    flex: 0 0 auto;
+    width: 300px;
+    /* Largura fixa para o card no carrossel */
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .cardWrapper {
+        width: 260px;
+    }
+
+    .controls {
+        display: none;
+        /* Oculta setas no mobile, usa scroll nativo */
+    }
+}

@@ -9,6 +9,8 @@ import SearchIcon from '@/components/ui/icons/SearchIcon';
 import UserIcon from '@/components/ui/icons/UserIcon';
 import CartIcon from '@/components/ui/icons/CartIcon';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
+import { useAuth } from '@/app/context/AuthContext';
+import { useCart } from '@/app/context/CartContext';
 
 async function getStoreSettings() {
     console.log("Fetching store settings... (placeholder)");
@@ -25,6 +27,8 @@ const Header = () => {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isScrolled, setScrolled] = useState(false);
     const pathname = usePathname();
+    const { user } = useAuth();
+    const { cart } = useCart();
 
     const isHomePage = pathname === '/';
 
@@ -54,6 +58,17 @@ const Header = () => {
     // O header é sólido se não for a home, ou se for a home e o usuário rolou a página.
     const headerClasses = `${styles.headerWrapper} ${!isHomePage || isScrolled ? styles.scrolled : ''}`;
     const hamburgerClasses = `${styles.hamburger} ${isMenuOpen ? styles.open : ''}`;
+
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    useEffect(() => {
+        if (cart.length === 0) return;
+        setIsAnimating(true);
+        const timer = setTimeout(() => {
+            setIsAnimating(false);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [cart]);
 
     return (
         <header className={headerClasses}>
@@ -95,11 +110,14 @@ const Header = () => {
                     </div>
 
                     <div className={styles.iconsWrapper}>
-                        <Link href="/conta/login" aria-label="Minha Conta">
+                        <Link href="/conta/login" aria-label={user ? "Minha Conta" : "Login"}>
                             <UserIcon className={styles.icon} />
                         </Link>
-                        <Link href="/carrinho" aria-label="Carrinho">
+                        <Link href="/carrinho" aria-label="Carrinho" className={`${styles.cartLink} ${isAnimating ? styles.bump : ''}`}>
                             <CartIcon className={styles.icon} />
+                            {cart.length > 0 && (
+                                <span className={styles.cartCount}>{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>
+                            )}
                         </Link>
                         <ThemeToggleButton className={styles.themeToggle} />
                     </div>

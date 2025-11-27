@@ -14,20 +14,20 @@ const ProductCard = ({ product }) => {
     <div className={styles.card}>
       <CustomLink href={`/produtos/${product.slug}`}>
         <Image
-          src={product.images?.[0] || "https://via.placeholder.com/300"}
-          alt={product.title}
+          src={product.imagens?.[0] || product.images?.[0] || "https://placehold.co/300"}
+          alt={product.nome || product.title}
           width={300}
           height={300}
           className={styles.image}
         />
-        <h3 className={styles.name}>{product.title}</h3>
+        <h3 className={styles.name}>{product.nome || product.title}</h3>
         <div className={styles.priceContainer}>
-          {numericComparePrice && !isNaN(numericPrice) && (
-            <span className={styles.oldPrice}>R$ {numericPrice.toFixed(2)}</span>
+          {(product.preco_promocional || product.comparePrice) && (
+            <span className={styles.oldPrice}>R$ {Number(product.preco || product.price).toFixed(2)}</span>
           )}
-          {!isNaN(displayPrice) && (
-            <span className={styles.price}>R$ {displayPrice.toFixed(2)}</span>
-          )}
+          <span className={styles.price}>
+            R$ {Number(product.preco_promocional || product.comparePrice || product.preco || product.price).toFixed(2)}
+          </span>
         </div>
       </CustomLink>
     </div>

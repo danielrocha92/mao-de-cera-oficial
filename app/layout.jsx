@@ -9,6 +9,8 @@ import PageTransition from '@/components/animations/PageTransition';
 import { CartAnimationProvider } from '@/app/context/CartAnimationContext';
 import FlyToCartAnimation from '@/components/animations/FlyToCartAnimation';
 import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from '@/app/context/AuthContext';
+import { CartProvider } from '@/app/context/CartContext';
 import { usePathname } from 'next/navigation';
 import MainContent from './MainContent';
 
@@ -25,16 +27,20 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
-          <TransitionProvider>
-            <CartAnimationProvider>
-              <PageTransition>
-                {!isAdmin && <Header />}
-                <MainContent>{children}</MainContent>
-                {!isAdmin && <Footer />}
-              </PageTransition>
-              <FlyToCartAnimation />
-            </CartAnimationProvider>
-          </TransitionProvider>
+          <AuthProvider>
+            <CartProvider>
+              <TransitionProvider>
+                <CartAnimationProvider>
+                  <PageTransition>
+                    {!isAdmin && <Header />}
+                    <MainContent>{children}</MainContent>
+                    {!isAdmin && <Footer />}
+                  </PageTransition>
+                  <FlyToCartAnimation />
+                </CartAnimationProvider>
+              </TransitionProvider>
+            </CartProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

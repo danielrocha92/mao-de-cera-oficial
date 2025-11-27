@@ -1,157 +1,85 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import styles from './Login.module.css';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
-import { auth } from '@/lib/firebase';
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from 'firebase/auth';
-import GoogleIcon from '@/components/ui/icons/GoogleIcon';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login, user } = useAuth();
   const router = useRouter();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setErrorMessage(''); // Clear previous errors
+  // Estado para verificar se é admin
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken();
+  React.useEffect(() => {
+    if (user) {
+      user.getIdTokenResult().then(idTokenResult => {
+        const adminStatus = !!idTokenResult.claims.admin;
+        setIsAdmin(adminStatus);
 
-      // Send ID token to your backend for session cookie creation
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: idToken }),
+        // Redirecionamento automático
+        if (adminStatus) {
+          router.push('/admin/dashboard');
+        } else {
+          router.push('/conta/pedidos');
+        }
       });
-
-      if (response.ok) {
-        console.log('Login bem-sucedido! Redirecionando...');
-        router.push('/admin/dashboard');
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error || 'Falha no login. Tente novamente.');
-      }
-    } catch (error) {
-      console.error('Erro ao tentar logar:', error);
-      setErrorMessage('Erro ao logar. Verifique suas credenciais.');
     }
-  };
+  }, [user, router]);
 
-  const handleRegister = async (e) => {
+  // Se já estiver logado, exibe loading enquanto redireciona
+  if (user) {
+    return <div style={{ padding: '4rem', textAlign: 'center' }}>Redirecionando...</div>;
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Clear previous errors
-
+    setLoading(true);
+    setError('');
     try {
-      const trimmedEmail = email.trim();
-      if (!trimmedEmail || !trimmedEmail.includes('@') || trimmedEmail.indexOf('@') === 0 || trimmedEmail.indexOf('@') === trimmedEmail.length - 1) {
-        setErrorMessage('Por favor, insira um e-mail válido.');
-        return;
-      }
-
-      const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-      const idToken = await userCredential.user.getIdToken();
-
-      // Optionally, send ID token to backend if registration also requires session cookie
-      // For now, just log in the user after registration
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: idToken }),
-      });
-
-      if (response.ok) {
-        console.log('Registro e login bem-sucedidos! Redirecionando...');
-        router.push('/admin/dashboard');
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error || 'Falha no registro e login. Tente novamente.');
-      }
-    } catch (error) {
-      console.error('Erro ao tentar registrar:', error);
-      if (error.code === 'auth/invalid-email') {
-        setErrorMessage('O formato do e-mail é inválido. Por favor, verifique.');
-      } else if (error.code === 'auth/weak-password') {
-        setErrorMessage('A senha é muito fraca. Ela deve ter pelo menos 6 caracteres.');
-      }
-      else if (error.code === 'auth/email-already-in-use') {
-        setErrorMessage('Este e-mail já está em uso. Tente fazer login ou use outro e-mail.');
-      }
-      else {
-        setErrorMessage('Erro ao registrar. Tente novamente mais tarde.');
-      }
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    setErrorMessage(''); // Clear previous errors
-
-    try {
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(auth, provider);
-      const idToken = await userCredential.user.getIdToken();
-
-      // Send ID token to your backend for session cookie creation
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: idToken }),
-      });
-
-      if (response.ok) {
-        console.log('Login com Google bem-sucedido! Redirecionando...');
-        router.push('/admin/dashboard');
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error || 'Falha no login com Google. Tente novamente.');
-      }
-    } catch (error) {
-      console.error('Erro ao tentar logar com Google:', error);
-      setErrorMessage('Erro ao logar com Google. Tente novamente.');
+      await login(email, password);
+      // Redirection handled by useEffect after user state updates
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className={styles.container}>
-      <form className={styles.form}>
-        <h2>Login ou Cadastro</h2>
-        {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-        <Input
-          label="Email"
+    <div style={{ maxWidth: '400px', margin: '4rem auto', padding: '2rem', border: '1px solid #eee' }}>
+      <h1>Login</h1>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+        <input
           type="email"
-          name="email"
+          placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="seu@email.com"
+          required
+          style={{ padding: '0.5rem' }}
         />
-        <Input
-          label="Senha"
+        <input
           type="password"
-          name="password"
+          placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="********"
+          required
+          style={{ padding: '0.5rem' }}
         />
-        <div className={styles.actions}>
-          <Button onClick={handleLogin} type="submit">Entrar</Button>
-          <Button onClick={handleRegister} type="button" variant="secondary">Cadastrar</Button>
-        </div>
-        <div className={styles.socialLogin}>
-          <p>Ou entre com:</p>
-          <Button onClick={handleGoogleLogin} type="button" variant="social">
-            <GoogleIcon /> Entrar com Google
-          </Button>
-        </div>
+        <button type="submit" disabled={loading} style={{
+          padding: '0.75rem',
+          backgroundColor: 'var(--primary)',
+          color: 'white',
+          border: 'none',
+          cursor: 'pointer'
+        }}>
+          {loading ? 'Entrando...' : 'Entrar'}
+        </button>
       </form>
     </div>
   );

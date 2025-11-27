@@ -1,12 +1,12 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  onAuthStateChanged, 
-  signOut, 
-  signInWithEmailAndPassword 
+import {
+  onAuthStateChanged,
+  signOut,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
-import { auth } from '@/firebase/config';
+import { auth } from '@/lib/firebase';
 import Loading from '@/components/Loading/Loading';
 import { useRouter } from 'next/navigation';
 
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // 1. Faz login no cliente (Firebase Auth)
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      
+
       // 2. Pega o ID Token do usuário
       const idToken = await userCredential.user.getIdToken();
 
@@ -46,14 +46,9 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ idToken }),
       });
 
-      // 4. Se o usuário for admin, o layout.jsx vai permitir o acesso.
-      // Podemos checar o token aqui também se quisermos redirecionar
+      // 4. Retorna se é admin para quem chamou decidir o redirect
       const tokenResult = await userCredential.user.getIdTokenResult();
-      if (tokenResult.claims.admin === true) {
-        router.push('/admin/dashboard'); // Redireciona para o dashboard
-      } else {
-        router.push('/'); // Redireciona para a home (não é admin)
-      }
+      return tokenResult.claims.admin === true;
 
     } catch (error) {
       console.error("Erro no login:", error);
@@ -67,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // 1. Faz logout no cliente (Firebase Auth)
       await signOut(auth);
-      
+
       // 2. Envia para a API destruir o cookie de sessão
       await fetch('/api/auth/session', {
         method: 'DELETE',
@@ -76,7 +71,7 @@ export const AuthProvider = ({ children }) => {
       // Limpa o estado local
       setUser(null);
       router.push('/login'); // Redireciona para o login
-      
+
     } catch (error) {
       console.error("Erro no logout:", error);
     } finally {

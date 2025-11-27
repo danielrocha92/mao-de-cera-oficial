@@ -7,9 +7,11 @@ export default function ContatoPage() {
             <div className={styles.content}>
                 <p>Tem alguma dúvida, sugestão ou reclamação? Entre em contato conosco através dos nossos canais de atendimento.</p>
                 <h2>E-mail</h2>
-                <p>Envie um e-mail para: <a href="mailto:contato@maodecera.com.br">contato@maodecera.com.br</a></p>
-                <h2>Telefone</h2>
-                <p>Ligue para: (00) 12345-6789</p>
+                <p>Envie um e-mail para: <a href="mailto:maodeceraoficial@gmail.com">maodeceraoficial@gmail.com</a></p>
+                <h2>Telefone/WhatsApp</h2>
+                <p>Ligue para: (11) 96130-9680</p>
+                <h2>Endereço</h2>
+                <p>Rua Padre José Antonio Romano 300</p>
             </div>
         </div>
     );

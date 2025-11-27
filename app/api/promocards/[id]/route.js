@@ -1,24 +1,5 @@
 import { NextResponse } from 'next/server';
-import * as admin from 'firebase-admin';
-
-// Initialize Firebase Admin if not already initialized
-if (!admin.apps.length) {
-  const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
-  if (!serviceAccountString) {
-    throw new Error('The FIREBASE_SERVICE_ACCOUNT environment variable is not defined.');
-  }
-  try {
-    const serviceAccount = JSON.parse(serviceAccountString);
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
-  } catch (e) {
-    console.error('Error initializing Firebase Admin:', e.message);
-    throw new Error('Could not initialize Firebase Admin.');
-  }
-}
-
-const db = admin.firestore();
+import { db, admin } from '@/lib/firebaseAdmin';
 
 // UPDATE a promotional card
 export async function PUT(request, { params }) {
