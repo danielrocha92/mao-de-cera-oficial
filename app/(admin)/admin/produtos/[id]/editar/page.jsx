@@ -13,6 +13,7 @@ export default function EditarProdutoPage() {
 
   const [product, setProduct] = useState({
     title: '',
+    slug: '',
     description: '',
     price: '',
     comparePrice: '',
@@ -29,6 +30,8 @@ export default function EditarProdutoPage() {
     category: '',
     brand: '',
     tags: '',
+    isLancamento: false,
+    isOferta: false,
   });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
@@ -42,7 +45,26 @@ export default function EditarProdutoPage() {
             throw new Error('Falha ao buscar produto');
           }
           const data = await response.json();
-          setProduct(data);
+
+          // Normalize data to handle both schemas (English/Portuguese)
+          setProduct({
+            ...data,
+            title: data.title || data.nome || '',
+            slug: data.slug || '',
+            description: data.description || data.descricao || '',
+            price: data.price || data.preco || '',
+            comparePrice: data.comparePrice || data.preco_promocional || '',
+            stock: data.stock || data.estoque || '',
+            images: (data.images || data.imagens || []).filter(url => !url.startsWith('blob:')),
+            weight: data.weight || data.peso_kg || '',
+            length: data.length || data.dimensoes_cm?.comprimento || '',
+            width: data.width || data.dimensoes_cm?.largura || '',
+            height: data.height || data.dimensoes_cm?.altura || '',
+            category: data.category || (Array.isArray(data.categorias) ? data.categorias.join(', ') : data.categorias) || '',
+            tags: data.tags || (Array.isArray(data.tags_busca) ? data.tags_busca.join(', ') : data.tags_busca) || '',
+            isLancamento: !!data.isLancamento,
+            isOferta: !!data.isOferta,
+          });
         } catch (error) {
           console.error(error);
           setMessage('Erro ao carregar produto.');
@@ -89,12 +111,42 @@ export default function EditarProdutoPage() {
     setMessage('');
 
     try {
+      // Prepare data mapping to BOTH schemas to ensure compatibility
+      const productData = {
+        ...product,
+        // English schema
+        title: product.title,
+        price: Number(product.price),
+        comparePrice: product.comparePrice ? Number(product.comparePrice) : null,
+        stock: Number(product.stock),
+        weight: Number(product.weight),
+        length: Number(product.length),
+        width: Number(product.width),
+        height: Number(product.height),
+
+        // Portuguese schema (syncing)
+        nome: product.title,
+        descricao: product.description,
+        preco: Number(product.price),
+        preco_promocional: product.comparePrice ? Number(product.comparePrice) : null,
+        estoque: Number(product.stock),
+        peso_kg: Number(product.weight),
+        dimensoes_cm: {
+            comprimento: Number(product.length),
+            largura: Number(product.width),
+            altura: Number(product.height)
+        },
+        imagens: product.images,
+        categorias: product.category.split(',').map(s => s.trim()),
+        tags_busca: product.tags.split(',').map(s => s.trim()),
+      };
+
       const response = await fetch(`/api/produtos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(product),
+        body: JSON.stringify(productData),
       });
 
       if (!response.ok) {
@@ -137,6 +189,18 @@ export default function EditarProdutoPage() {
             />
           </div>
           <div className={styles.formGroup}>
+            <label htmlFor="slug">Slug (URL)</label>
+            <input
+              type="text"
+              id="slug"
+              name="slug"
+              value={product.slug}
+              onChange={handleChange}
+              required
+              autoComplete="off"
+            />
+          </div>
+          <div className={styles.formGroup}>
             <label htmlFor="description">Descrição</label>
             <textarea
               id="description"
@@ -146,17 +210,32 @@ export default function EditarProdutoPage() {
               autoComplete="off"
             />
           </div>
+          <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <input type="checkbox" name="isLancamento" checked={product.isLancamento} onChange={handleChange} />
+              Lançamento
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <input type="checkbox" name="isOferta" checked={product.isOferta} onChange={handleChange} />
+              Oferta Sazonal
+            </label>
+          </div>
         </div>
 
         <div className={styles.card}>
             <h2>Imagens</h2>
             <ImageUpload onUpload={handleImageUpload} />
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+                {product.images.map((img, idx) => (
+                    <img key={idx} src={img} alt={`Imagem ${idx + 1}`} style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+                ))}
+            </div>
         </div>
-        
+
         <div className={styles.card}>
-            <VariationsManager 
-                initialVariations={product.variations} 
-                onChange={handleVariationsChange} 
+            <VariationsManager
+                initialVariations={product.variations}
+                onChange={handleVariationsChange}
                 onSkuChange={handleSkusChange}
             />
         </div>

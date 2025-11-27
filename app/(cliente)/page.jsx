@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { db } from '@/lib/firebaseAdmin';
 import ProductCard from '@/components/shop/ProductCard';
 import CategoryCarousel from '@/components/shop/CategoryCarousel';
+import PaymentIcons from '@/components/shop/PaymentIcons';
 import ProductCarousel from '@/components/shop/ProductCarousel';
 import GoogleReviews from '@/components/shop/GoogleReviews';
 import styles from './page.module.css';
@@ -51,6 +52,9 @@ export default async function Home() {
 
       {/* Category Carousel */}
       <CategoryCarousel />
+
+      {/* Payment Icons */}
+      <PaymentIcons />
 
       {/* Lançamentos */}
       <ProductCarousel

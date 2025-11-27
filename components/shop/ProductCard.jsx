@@ -10,11 +10,14 @@ const ProductCard = ({ product }) => {
 
   const displayPrice = numericComparePrice || numericPrice;
 
+  const images = (product.imagens || product.images || []).filter(url => !url.startsWith('blob:'));
+  const mainImage = images[0] || "https://placehold.co/300";
+
   return (
     <div className={styles.card}>
-      <CustomLink href={`/produtos/${product.slug}`}>
+      <CustomLink href={`/produtos/${product.slug || product.id}`}>
         <Image
-          src={product.imagens?.[0] || product.images?.[0] || "https://placehold.co/300"}
+          src={mainImage}
           alt={product.nome || product.title}
           width={300}
           height={300}

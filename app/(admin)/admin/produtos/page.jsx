@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './Produtos.module.css';
-import Modal from '@/components/ui/Modal'; 
+import Modal from '@/components/ui/Modal';
 
 export default function ProdutosPage() {
   const [products, setProducts] = useState([]);
@@ -58,9 +58,10 @@ export default function ProdutosPage() {
       setProductToDelete(null);
     }
   };
-  
+
   const getStatus = (product) => {
-      if(product.stock > 0) return 'Ativo';
+      const stock = product.stock !== undefined ? product.stock : product.estoque;
+      if(stock > 0) return 'Ativo';
       return 'Esgotado';
   }
 
@@ -90,9 +91,9 @@ export default function ProdutosPage() {
               <tbody>
                 {products.map((product) => (
                   <tr key={product.id}>
-                    <td>{product.title}</td>
-                    <td>{`R$ ${product.price}`}</td>
-                    <td>{product.stock}</td>
+                    <td>{product.title || product.nome}</td>
+                    <td>{`R$ ${Number(product.price || product.preco).toFixed(2)}`}</td>
+                    <td>{product.stock !== undefined ? product.stock : product.estoque}</td>
                     <td>
                       <span className={`${styles.status} ${styles[getStatus(product).toLowerCase()]}`}>
                         {getStatus(product)}

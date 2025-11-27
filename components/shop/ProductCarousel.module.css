@@ -12,19 +12,34 @@
     margin-bottom: 1.5rem;
 }
 
+.carouselSection {
+    padding: 2rem 0;
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
 .title {
     font-size: 1.75rem;
     color: var(--text-primary);
     font-weight: 600;
 }
 
-.controls {
+.carouselWrapper {
+    position: relative;
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
 }
 
 .arrowButton {
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid var(--border-color);
     border-radius: 50%;
     width: 40px;
@@ -35,6 +50,17 @@
     cursor: pointer;
     transition: all 0.3s ease;
     color: var(--text-secondary);
+    position: absolute;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.leftArrow {
+    left: -20px;
+}
+
+.rightArrow {
+    right: -20px;
 }
 
 .arrowButton:hover {
@@ -48,10 +74,12 @@
     gap: 1.5rem;
     overflow-x: auto;
     scroll-behavior: smooth;
-    padding-bottom: 1rem;
+    padding: 1rem 0.5rem;
+    /* Added padding to avoid cutting off shadows */
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     /* Firefox */
+    width: 100%;
 }
 
 .carouselContainer::-webkit-scrollbar {
@@ -77,5 +105,15 @@
     .controls {
         display: none;
         /* Oculta setas no mobile, usa scroll nativo */
+    }
+
+    .arrowButton {
+        display: none;
+        /* Hide arrows on mobile */
+    }
+
+    .leftArrow,
+    .rightArrow {
+        display: none;
     }
 }

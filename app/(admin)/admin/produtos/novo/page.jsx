@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import ImageUpload from '@/components/ui/ImageUpload';
+
 export default function NewProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -33,16 +35,7 @@ export default function NewProductPage() {
     setFormData({ ...formData, [e.target.name]: value });
   };
 
-  const handleImageUpload = async (e) => {
-    // Placeholder for Cloudinary upload
-    // In a real app, we would upload to Cloudinary and get the URL
-    const file = e.target.files[0];
-    if (file) {
-      // Mock URL for now
-      const mockUrl = URL.createObjectURL(file);
-      setFormData(prev => ({ ...prev, imagens: [...prev.imagens, mockUrl] }));
-    }
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,7 +146,7 @@ export default function NewProductPage() {
 
         <section>
           <h3>Imagens</h3>
-          <input type="file" onChange={handleImageUpload} accept="image/*" />
+          <ImageUpload onUpload={(url) => setFormData(prev => ({ ...prev, imagens: [...prev.imagens, url] }))} />
           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             {formData.imagens.map((img, idx) => (
               <img key={idx} src={img} alt="Preview" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />

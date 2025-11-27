@@ -26,22 +26,23 @@ const ProductCarousel = ({ title, products }) => {
     <section className={styles.carouselSection}>
       <div className={styles.header}>
         <h2 className={styles.title}>{title}</h2>
-        <div className={styles.controls}>
-          <button onClick={scrollLeft} className={styles.arrowButton} aria-label="Anterior">
-            <FaChevronLeft />
-          </button>
-          <button onClick={scrollRight} className={styles.arrowButton} aria-label="Próximo">
-            <FaChevronRight />
-          </button>
-        </div>
       </div>
+      <div className={styles.carouselWrapper}>
+        <button onClick={scrollLeft} className={`${styles.arrowButton} ${styles.leftArrow}`} aria-label="Anterior">
+          <FaChevronLeft />
+        </button>
 
-      <div className={styles.carouselContainer} ref={carouselRef}>
-        {products.map(product => (
-          <div key={product.id} className={styles.cardWrapper}>
-            <ProductCard product={product} />
-          </div>
-        ))}
+        <div className={styles.carouselContainer} ref={carouselRef}>
+          {products.map(product => (
+            <div key={product.id} className={styles.cardWrapper}>
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+
+        <button onClick={scrollRight} className={`${styles.arrowButton} ${styles.rightArrow}`} aria-label="Próximo">
+          <FaChevronRight />
+        </button>
       </div>
     </section>
   );

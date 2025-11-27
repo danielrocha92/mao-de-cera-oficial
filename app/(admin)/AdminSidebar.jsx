@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { MdDashboard, MdShoppingBag, MdAddCircleOutline, MdListAlt, MdSettings, MdStore } from 'react-icons/md';
 import styles from './AdminLayout.module.css';
 
 export default function AdminSidebar() {
@@ -29,17 +30,36 @@ export default function AdminSidebar() {
       </button>
       <aside className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}>
         <div className={styles.sidebarHeader}>
-            <h2>Admin</h2>
+            {!isCollapsed && <h2>Admin</h2>}
             <button className={styles.collapseButton} onClick={toggleSidebar}>
             {isCollapsed ? '»' : '«'}
             </button>
         </div>
         <nav>
-          <Link href="/admin/dashboard">Dashboard</Link>
-          <Link href="/admin/produtos/novo">Novo Produto</Link>
-          <Link href="/admin/pedidos">Pedidos</Link>
-          <Link href="/admin/configuracoes">Configurações</Link>
-          <Link href="/">Voltar para Loja</Link>
+          <Link href="/admin/dashboard" title="Dashboard">
+            <MdDashboard size={24} />
+            <span className={styles.linkText}>Dashboard</span>
+          </Link>
+          <Link href="/admin/produtos" title="Produtos">
+            <MdShoppingBag size={24} />
+            <span className={styles.linkText}>Produtos</span>
+          </Link>
+          <Link href="/admin/produtos/novo" title="Novo Produto">
+            <MdAddCircleOutline size={24} />
+            <span className={styles.linkText}>Novo Produto</span>
+          </Link>
+          <Link href="/admin/pedidos" title="Pedidos">
+            <MdListAlt size={24} />
+            <span className={styles.linkText}>Pedidos</span>
+          </Link>
+          <Link href="/admin/configuracoes" title="Configurações">
+            <MdSettings size={24} />
+            <span className={styles.linkText}>Configurações</span>
+          </Link>
+          <Link href="/" title="Voltar para Loja">
+            <MdStore size={24} />
+            <span className={styles.linkText}>Voltar para Loja</span>
+          </Link>
         </nav>
       </aside>
       {isMobileMenuOpen && (

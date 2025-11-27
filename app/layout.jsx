@@ -13,13 +13,14 @@ import { AuthProvider } from '@/app/context/AuthContext';
 import { CartProvider } from '@/app/context/CartContext';
 import { usePathname } from 'next/navigation';
 import MainContent from './MainContent';
+import GlobalLoader from '@/components/ui/GlobalLoader';
 
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith('/admin');
 
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <title>Mão de Cera Oficial</title>
         <meta name="description" content="E-commerce da Mão de Cera Oficial" />
@@ -32,6 +33,7 @@ export default function RootLayout({ children }) {
               <TransitionProvider>
                 <CartAnimationProvider>
                   <PageTransition>
+                    <GlobalLoader />
                     {!isAdmin && <Header />}
                     <MainContent>{children}</MainContent>
                     {!isAdmin && <Footer />}

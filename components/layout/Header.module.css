@@ -156,6 +156,164 @@
   transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
 }
 
+/* === ESTRUTURA GERAL === */
+.headerWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+  background-color: transparent;
+  box-shadow: none;
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.mainHeader {
+  padding: 1rem 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas:
+    "hamburger logo icons"
+    "search search search";
+}
+
+/* --- ESTADOS (SCROLLED) --- */
+.scrolled {
+  background-color: var(--surface);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* --- COMPONENTES DO HEADER (MOBILE-FIRST) --- */
+
+/* --- Logo --- */
+.logoWrapper {
+  grid-area: logo;
+  justify-self: center;
+}
+
+.logoLink {
+  display: block;
+  position: relative;
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.logoImage {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* --- Hamburger --- */
+.hamburger {
+  grid-area: hamburger;
+  justify-self: start;
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 0.375rem;
+  z-index: 1010;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+}
+
+.line {
+  width: 1.75rem;
+  height: 0.15rem;
+  background-color: var(--white);
+  transition: all 0.3s ease-in-out;
+}
+
+.scrolled .line {
+  background-color: var(--text-primary);
+}
+
+.hamburger.open .line:nth-child(1) {
+  transform: translateY(0.5rem) rotate(45deg);
+}
+
+.hamburger.open .line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open .line:nth-child(3) {
+  transform: translateY(-0.5rem) rotate(-45deg);
+}
+
+/* --- Barra de Busca --- */
+.searchWrapper {
+  grid-area: search;
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--white);
+  border-radius: 1.5625rem;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.2);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.scrolled .searchWrapper {
+  border-color: var(--border-color);
+  background-color: var(--background);
+}
+
+.searchInput {
+  width: 100%;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9375rem;
+  outline: none;
+  background-color: transparent;
+  color: var(--white);
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.scrolled .searchInput {
+  color: var(--text-primary);
+}
+
+
+.scrolled .icon {
+  color: var(--text-primary);
+}
+
+.themeToggle {
+  border-color: var(--white);
+}
+
+.scrolled .themeToggle {
+  border-color: var(--border-color);
+}
+
+/* --- Navegação --- */
+.mainNav {
+  display: none;
+  /* Oculta no mobile por padrão */
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  background-color: var(--surface);
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+}
+
 .mobileNav.active {
   max-height: 20rem;
   padding: 1.5rem 0;
@@ -175,7 +333,7 @@
   }
 
   .container {
-    grid-template-columns: auto auto 1fr auto;
+    grid-template-columns: auto max-content 1fr auto;
     grid-template-areas: "logo mainNav search icons";
     gap: 2rem;
   }
@@ -197,6 +355,7 @@
     grid-area: mainNav;
     display: flex;
     gap: 2rem;
+    align-items: center;
   }
 
   .mainNav a {
@@ -207,6 +366,7 @@
     padding-bottom: 0.25rem;
     border-bottom: 2px solid transparent;
     transition: color 0.3s ease, border-color 0.3s ease;
+    white-space: nowrap;
   }
 
   .scrolled .mainNav a {
@@ -223,8 +383,10 @@
   }
 
   .searchWrapper {
+    grid-area: search;
     margin-top: 0;
-    max-width: 700px;
+    width: 100%;
+    max-width: 600px;
     justify-self: center;
   }
 
@@ -233,7 +395,11 @@
   }
 
   .iconsWrapper {
+    grid-area: icons;
+    display: flex;
     gap: 1.25rem;
+    justify-self: end;
+    align-items: center;
   }
 
   .iconsWrapper a:hover .icon,
