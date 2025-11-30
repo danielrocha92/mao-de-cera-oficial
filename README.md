@@ -107,4 +107,4 @@ npm run dev
 <h2>🌐 Link da Demonstração (Deploy)</h2>
 
 <p>Você pode interagir com a versão pública e final do portal aqui:</p>
-<p><b>[INSERIR LINK DO SITE PUBLICADO AQUI]</b></p>
+<p><b>https://mao-de-cera-oficial.vercel.app/</b></p>
