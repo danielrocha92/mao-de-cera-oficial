@@ -1,4 +1,4 @@
-<h1 align="center">💅 Mão de Cera Oficial - Portal de Serviços e Leads <img src="https://vercelbadge.vercel.app/api/danielrocha92/mao-de-cera-oficial" alt="Vercel Status"></h1>
+<h1 align="center"> 🕯️ Mão de Cera Oficial - Portal de Serviços e Leads <img src="https://vercelbadge.vercel.app/api/danielrocha92/mao-de-cera-oficial" alt="Vercel Status"></h1>
 
 <p><strong>Plataforma institucional e sistema de captação de leads para serviços estéticos.</strong><br>
 💡 Projeto Full-Stack desenvolvido para modernizar a marca e criar um sistema de vendas digitais eficiente.</p>
