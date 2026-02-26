@@ -149,6 +149,36 @@
   color: var(--text-primary);
 }
 
+.iconsWrapper {
+  grid-area: icons;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  justify-self: end;
+  align-items: center;
+}
+
+.cartLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cartCount {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background-color: var(--primary);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .scrolled .icon {
   color: var(--text-primary);
