@@ -34,6 +34,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       // 1. Faz login no cliente (Firebase Auth)
+      if (auth.isMock) {
+        throw new Error("Firebase keys missing. Check your .env.local file.");
+      }
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
       // 2. Pega o ID Token do usuário
