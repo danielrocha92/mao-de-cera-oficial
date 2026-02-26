@@ -2,7 +2,7 @@
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem 1rem;
-    background-color: #fff;
+    background-color: var(--background);
 }
 
 .breadcrumbs {
@@ -28,8 +28,8 @@
     position: relative;
     width: 100%;
     aspect-ratio: 1;
-    background-color: #fff;
-    border: 1px solid #eee;
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     overflow: hidden;
     display: flex;
@@ -53,7 +53,7 @@
 .thumbnail {
     width: 80px;
     height: 80px;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     cursor: pointer;
     overflow: hidden;
@@ -80,18 +80,19 @@
     font-size: 1.75rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: var(--text-primary);
     line-height: 1.2;
 }
 
 .sku {
     font-size: 0.875rem;
-    color: #999;
+    color: var(--text-secondary);
     margin-bottom: 1.5rem;
 }
 
 .priceBox {
-    background: #f8f9fa;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 2rem;
@@ -107,7 +108,7 @@
 .oldPrice {
     font-size: 1rem;
     text-decoration: line-through;
-    color: #999;
+    color: var(--text-secondary);
 }
 
 .price {
@@ -119,7 +120,7 @@
 
 .installments {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 .pixDiscount {
@@ -140,17 +141,17 @@
 .description {
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color);
 }
 
 .description h2 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .description p {
-    color: #555;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 

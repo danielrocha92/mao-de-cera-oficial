@@ -94,170 +94,33 @@
 .searchWrapper {
   grid-area: search;
   display: flex;
+  align-items: center;
   width: 100%;
-  border: 1px solid var(--white);
+  /* Pega toda a largura disponível de 'search' grid-area */
+  border: 1px solid var(--border-color);
   border-radius: 1.5625rem;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.2);
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.scrolled .searchWrapper {
-  border-color: var(--border-color);
-  background-color: var(--background);
-}
-
-.searchInput {
-  width: 100%;
-  border: none;
-  padding: 0.6rem 1.25rem;
-  font-size: 0.9375rem;
-  outline: none;
-  background-color: transparent;
-  color: var(--white);
-}
-
-.searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.scrolled .searchInput {
-  color: var(--text-primary);
-}
-
-
-.scrolled .icon {
-  color: var(--text-primary);
-}
-
-.themeToggle {
-  border-color: var(--white);
-}
-
-.scrolled .themeToggle {
-  border-color: var(--border-color);
-}
-
-/* --- Navegação --- */
-.mainNav {
-  display: none;
-  /* Oculta no mobile por padrão */
-}
-
-.mobileNav {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-  background-color: var(--surface);
-  padding: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
-}
-
-/* === ESTRUTURA GERAL === */
-.headerWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  width: 100%;
-  background-color: transparent;
-  box-shadow: none;
-  transition: background-color 0.4s ease, box-shadow 0.4s ease;
-}
-
-.mainHeader {
-  padding: 1rem 0;
-}
-
-.container {
-  width: 90%;
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  align-items: center;
-  gap: 1rem;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-areas:
-    "hamburger logo icons"
-    "search search search";
-}
-
-/* --- ESTADOS (SCROLLED) --- */
-.scrolled {
-  background-color: var(--surface);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* --- COMPONENTES DO HEADER (MOBILE-FIRST) --- */
-
-/* --- Logo --- */
-.logoWrapper {
-  grid-area: logo;
-  justify-self: center;
-}
-
-.logoLink {
-  display: block;
-  position: relative;
-  width: 4.5rem;
-  height: 4.5rem;
-}
-
-.logoImage {
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* --- Hamburger --- */
-.hamburger {
-  grid-area: hamburger;
-  justify-self: start;
-  display: flex;
-  cursor: pointer;
-  flex-direction: column;
-  gap: 0.375rem;
-  z-index: 1010;
-  padding: 0.5rem;
+.searchButton {
   background: transparent;
   border: none;
-}
-
-.line {
-  width: 1.75rem;
-  height: 0.15rem;
-  background-color: var(--white);
-  transition: all 0.3s ease-in-out;
-}
-
-.scrolled .line {
-  background-color: var(--text-primary);
-}
-
-.hamburger.open .line:nth-child(1) {
-  transform: translateY(0.5rem) rotate(45deg);
-}
-
-.hamburger.open .line:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger.open .line:nth-child(3) {
-  transform: translateY(-0.5rem) rotate(-45deg);
-}
-
-/* --- Barra de Busca --- */
-.searchWrapper {
-  grid-area: search;
+  padding: 0 1rem;
   display: flex;
-  width: 100%;
-  border: 1px solid var(--white);
-  border-radius: 1.5625rem;
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.2);
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  cursor: pointer;
+  height: 100%;
+  /* Garantir que pegue toda a altura do wrapper pra não ficar invisível */
+  min-height: 48px;
+  /* Target mínimo pro mobile */
+}
+
+.scrolled .searchButton {
+  color: var(--text-primary);
 }
 
 .scrolled .searchWrapper {
@@ -266,9 +129,12 @@
 }
 
 .searchInput {
-  width: 100%;
+  flex: 1;
+  /* Pega tudo que sobrar, empurrando o botão pro lado mas sem esticar */
+  min-width: 0;
+  /* IMPEDIR OVERFLOW: permite que input encolha no flex layout no mobile */
   border: none;
-  padding: 0.6rem 1.25rem;
+  padding: 0.6rem 0.5rem 0.6rem 1.25rem;
   font-size: 0.9375rem;
   outline: none;
   background-color: transparent;
@@ -313,6 +179,8 @@
   overflow: hidden;
   transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
 }
+
+
 
 .mobileNav.active {
   max-height: 20rem;

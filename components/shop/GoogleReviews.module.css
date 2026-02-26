@@ -1,6 +1,7 @@
 .reviewsSection {
     padding: 4rem 0;
-    background-color: #f9f9f9;
+    background-color: var(--surface);
+    border-top: 1px solid var(--border-color);
     width: 100%;
 }
 
@@ -23,7 +24,7 @@
 .ratingScore {
     font-size: 2.5rem;
     font-weight: bold;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .stars {
@@ -35,7 +36,7 @@
 
 .totalReviews {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 .title {
@@ -54,10 +55,11 @@
 }
 
 .reviewCard {
-    background-color: white;
+    background-color: var(--background);
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
     transition: transform 0.3s ease;
 }
 
@@ -85,12 +87,12 @@
 
 .authorName {
     font-weight: 600;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .reviewDate {
     font-size: 0.8rem;
-    color: #888;
+    color: var(--text-secondary);
 }
 
 .gIcon {
@@ -107,7 +109,7 @@
 }
 
 .reviewText {
-    color: #555;
+    color: var(--text-secondary);
     line-height: 1.5;
     font-size: 0.95rem;
 }

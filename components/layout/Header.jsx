@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import styles from './Header.module.css';
 import SearchIcon from '@/components/ui/icons/SearchIcon';
 import UserIcon from '@/components/ui/icons/UserIcon';
@@ -13,7 +13,14 @@ import { useAuth } from '@/app/context/AuthContext';
 import { useCart } from '@/app/context/CartContext';
 
 async function getStoreSettings() {
-    console.log("Fetching store settings... (placeholder)");
+    try {
+        const res = await fetch('/api/configuracoes/loja', { cache: 'no-store' });
+        if (res.ok) {
+            return await res.json();
+        }
+    } catch(e) {
+        console.error("Erro no fetch config do header", e);
+    }
     return {
         nome_loja: "Mão de Cera Oficial",
         logo: {
@@ -27,8 +34,10 @@ const Header = () => {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isScrolled, setScrolled] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
     const { user } = useAuth();
     const { cart } = useCart();
+    const [searchQuery, setSearchQuery] = useState('');
 
     const isHomePage = pathname === '/';
 
@@ -70,6 +79,19 @@ const Header = () => {
         return () => clearTimeout(timer);
     }, [cart]);
 
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            router.push(`/produtos?pesquisa=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchQuery(''); // Opcional: limpa após buscar
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     return (
         <header className={headerClasses}>
             <div className={styles.mainHeader}>
@@ -103,8 +125,15 @@ const Header = () => {
                     </nav>
 
                     <div className={styles.searchWrapper}>
-                        <input type="text" placeholder="O que você procura?" className={styles.searchInput} />
-                        <button className={styles.searchButton} aria-label="Buscar">
+                        <input
+                           type="text"
+                           placeholder="O que você procura?"
+                           className={styles.searchInput}
+                           value={searchQuery}
+                           onChange={(e) => setSearchQuery(e.target.value)}
+                           onKeyDown={handleKeyDown}
+                        />
+                        <button className={styles.searchButton} aria-label="Buscar" onClick={handleSearch}>
                             <SearchIcon className={styles.searchIcon} />
                         </button>
                     </div>

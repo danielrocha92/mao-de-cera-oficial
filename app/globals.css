@@ -1,10 +1,13 @@
 /* Reset some basic styles */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 :root {
-  --primary: hsl(15, 70%, 60%); /* Soft Terracotta */
+  --primary: hsl(15, 70%, 60%);
+  /* Soft Terracotta */
   --primary-dark: hsl(15, 70%, 50%);
   --background: hsl(20, 33%, 98%);
   --surface: hsl(0, 0%, 100%);
@@ -12,6 +15,16 @@
   --text-secondary: hsl(20, 10%, 40%);
   --border-color: hsl(20, 20%, 88%);
   --white: hsl(0, 0%, 100%);
+
+  /* Semantic Colors */
+  --danger: hsl(354, 70%, 54%);
+  /* Red */
+  --success: hsl(134, 61%, 41%);
+  /* Green */
+  --warning: hsl(45, 100%, 51%);
+  /* Yellow */
+  --info: hsl(188, 78%, 41%);
+  /* Blue */
 
   /* Breakpoints */
   --breakpoint-sm: 576px;
@@ -30,22 +43,36 @@
   --text-secondary: hsl(20, 10%, 70%);
   --border-color: hsl(220, 15%, 30%);
   --white: hsl(0, 0%, 100%);
+
+  --danger: hsl(354, 70%, 60%);
+  --success: hsl(134, 61%, 50%);
+  --warning: hsl(45, 100%, 60%);
+  --info: hsl(188, 78%, 50%);
 }
 
 /* Reset some basic styles */
-body, h1, h2, h3, p, ul, li, a {
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li,
+a {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 html {
-  font-size: 16px; /* Base font size */
+  font-size: 16px;
+  /* Base font size */
 }
 
 @media (max-width: 768px) {
   html {
-    font-size: 14px; /* Smaller base font size for mobile */
+    font-size: 14px;
+    /* Smaller base font size for mobile */
   }
 }
 
@@ -56,8 +83,29 @@ body {
   color: var(--text-secondary);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--text-primary);
+}
+
+/* Ensure form elements inherit the correct colors especially in Dark Mode */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-secondary);
 }
 
 a {
@@ -67,22 +115,25 @@ a {
 
 a:hover {
   color: var(--primary-dark);
-  text-decoration: none; /* Removing underline for a cleaner look */
+  text-decoration: none;
+  /* Removing underline for a cleaner look */
 }
 
 /* Add any other global styles, font imports, etc. here */
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensure body takes at least full viewport height */
+  min-height: 100vh;
+  /* Ensure body takes at least full viewport height */
 }
 
 main {
-  flex-grow: 1; /* Allow main content to expand and push footer down */
+  flex-grow: 1;
+  /* Allow main content to expand and push footer down */
 }
-

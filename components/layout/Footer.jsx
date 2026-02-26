@@ -8,7 +8,7 @@ import CustomLink from '../ui/CustomLink';
 import styles from './Footer.module.css';
 import { useTheme } from '@/app/context/ThemeContext';
 
-const storeSettings = {
+const initialStoreSettings = {
     codigos_externos: {
         gtm_id: "GTM-XXXXXX",
         ga4_id: "G-XXXXXX",
@@ -18,14 +18,41 @@ const storeSettings = {
     email_contato: "maodeceraoficial@gmail.com",
     telefone_contato: "(11) 96130-9680",
     endereco: "Rua Padre José Antonio Romano 300",
-    cnpj: "61.802.466/0001-03",
+    cnpj: "00.000.000/0000-00",
     horario_atendimento: "Seg. a Sex. das 9h às 18h"
 };
 
 const Footer = () => {
   const [openSection, setOpenSection] = useState(null);
   const { theme } = useTheme();
-  const settings = storeSettings;
+  const [settings, setSettings] = useState(initialStoreSettings);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch('/api/configuracoes/loja', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Fallback manual checks
+          if(Object.keys(data).length > 0) {
+              setSettings(prev => ({
+                ...prev,
+                ...data,
+                // Fallback caso a chave venha ligeiramente diferente
+                endereco: data.endereco_loja || data.endereco || prev.endereco
+              }));
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao buscar configurações no rodapé:", error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const toggleSection = (section) => {
     if (window.innerWidth < 768) {

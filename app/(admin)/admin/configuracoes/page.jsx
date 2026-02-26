@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase'; // Client SDK for reading settings
-import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(false);
@@ -22,21 +20,26 @@ export default function SettingsPage() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const docRef = doc(db, 'configuracoes', 'loja');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setFormData({
-            ...data,
-            gtm_id: data.codigos_externos?.gtm_id || '',
-            ga4_id: data.codigos_externos?.ga4_id || '',
-            fb_pixel_id: data.codigos_externos?.fb_pixel_id || '',
-            mercado_pago_public_key: data.meios_pagamento?.mercado_pago_keys?.public_key || '',
-            mercado_pago_access_token: data.meios_pagamento?.mercado_pago_keys?.access_token || ''
-          });
+        const res = await fetch('/api/configuracoes/loja');
+        if (res.ok) {
+          const data = await res.json();
+          if(Object.keys(data).length > 0) {
+              setFormData({
+                nome_loja: data.nome_loja || '',
+                cnpj: data.cnpj || '',
+                email_contato: data.email_contato || '',
+                telefone_contato: data.telefone_contato || '',
+                endereco_loja: data.endereco_loja || '',
+                gtm_id: data.codigos_externos?.gtm_id || '',
+                ga4_id: data.codigos_externos?.ga4_id || '',
+                fb_pixel_id: data.codigos_externos?.fb_pixel_id || '',
+                mercado_pago_public_key: data.meios_pagamento?.mercado_pago_keys?.public_key || '',
+                mercado_pago_access_token: data.meios_pagamento?.mercado_pago_keys?.access_token || ''
+              });
+          }
         }
       } catch (error) {
-        console.error("Erro ao buscar configurações:", error);
+        console.error("Erro ao buscar configurações no painel admin:", error);
       }
     };
     fetchSettings();
@@ -52,25 +55,32 @@ export default function SettingsPage() {
 
     try {
       const settingsData = {
-        nome_loja: formData.nome_loja,
-        cnpj: formData.cnpj,
-        email_contato: formData.email_contato,
-        telefone_contato: formData.telefone_contato,
-        endereco_loja: formData.endereco_loja,
+        nome_loja: formData.nome_loja || '',
+        cnpj: formData.cnpj || '',
+        email_contato: formData.email_contato || '',
+        telefone_contato: formData.telefone_contato || '',
+        endereco_loja: formData.endereco_loja || '',
         codigos_externos: {
-          gtm_id: formData.gtm_id,
-          ga4_id: formData.ga4_id,
-          fb_pixel_id: formData.fb_pixel_id
+          gtm_id: formData.gtm_id || '',
+          ga4_id: formData.ga4_id || '',
+          fb_pixel_id: formData.fb_pixel_id || ''
         },
         meios_pagamento: {
           mercado_pago_keys: {
-            public_key: formData.mercado_pago_public_key,
-            access_token: formData.mercado_pago_access_token
+            public_key: formData.mercado_pago_public_key || '',
+            access_token: formData.mercado_pago_access_token || ''
           }
         }
       };
 
-      await setDoc(doc(db, 'configuracoes', 'loja'), settingsData);
+      const res = await fetch('/api/configuracoes/loja', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(settingsData)
+      });
+
+      if (!res.ok) throw new Error('Falha ao salvar. Verifique conexão.');
+
       alert('Configurações salvas com sucesso!');
 
     } catch (error) {

@@ -28,11 +28,14 @@
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
 }
 
 .produtosTable {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
+    /* Garante que as colunas não fiquem esmagadas */
 }
 
 .produtosTable th,
@@ -72,7 +75,9 @@
     cursor: pointer;
     font-weight: bold;
     margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
     transition: opacity 0.3s ease;
+    white-space: nowrap;
 }
 
 .actions button:hover {
