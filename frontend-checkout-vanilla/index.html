@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout de Venda</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <main class="checkout-container">
+
+    <!-- LADO ESQUERDO: Dados e Pagamento -->
+    <section class="checkout-forms">
+
+      <!-- Bloco de Identificação e Entrega -->
+      <article class="data-block">
+        <h2 class="section-title">Dados de Entrega</h2>
+        <div class="user-info-card">
+          <p class="user-name">Daniel Sousa</p>
+          <p class="user-email">danpsyero@gmail.com</p>
+          <hr class="divider">
+          <p class="user-address">
+            Av. Paulista, 1578 - Bela Vista<br>
+            São Paulo, SP - CEP 01310-200<br>
+            Apto. 12 (Prédio Comercial)
+          </p>
+          <a href="#" class="edit-link">Corrigir endereço</a>
+        </div>
+      </article>
+
+      <!-- Bloco de Métodos de Pagamento (Tabs/Accordion) -->
+      <article class="payment-block">
+        <h2 class="section-title">Método de Pagamento</h2>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="pix">❖ Pix</button>
+          <button class="tab-btn" data-tab="credit-card">💳 Cartão de Crédito</button>
+        </div>
+
+        <div class="tab-content-container">
+
+          <!-- Aba 1: PIX -->
+          <div id="pix" class="tab-content active">
+            <div class="pix-notice">
+              <span class="pix-discount">🎟️ Você ganha 5% de Desconto pagando no Pix!</span>
+              <p class="pix-instructions">
+                Ao clicar em finalizar, o <strong>QR Code</strong> e a opção <strong>"Copia e Cola"</strong> aparecerão na próxima tela. A confirmação do pagamento costuma ser instantânea.
+              </p>
+            </div>
+          </div>
+
+          <!-- Aba 2: Cartão de Crédito -->
+          <div id="credit-card" class="tab-content">
+            <form class="cc-form" id="creditCardForm">
+
+              <div class="input-group full-width">
+                <label for="cardNumber">Número do Cartão</label>
+                <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="cardName">Nome impresso no cartão</label>
+                <input type="text" id="cardName" placeholder="NOME DO TITULAR" required>
+              </div>
+
+              <div class="input-row">
+                <div class="input-group half-width">
+                  <label for="cardExpiry">Validade</label>
+                  <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
+                </div>
+
+                <div class="input-group half-width">
+                  <label for="cardCvv">CVV</label>
+                  <input type="text" id="cardCvv" placeholder="123" maxlength="4" required>
+                </div>
+              </div>
+
+              <div class="input-group full-width">
+                <label for="installments">Parcelamento</label>
+                <select id="installments" required>
+                  <option value="" disabled selected>Escolha o número de parcelas...</option>
+                  <option value="1">1x de R$ 250,00 sem juros</option>
+                  <option value="2">2x de R$ 125,00 sem juros</option>
+                  <option value="3">3x de R$ 83,33 sem juros</option>
+                  <option value="4">4x de R$ 68,00 com juros (R$ 272,00)</option>
+                  <option value="5">5x de R$ 56,00 com juros (R$ 280,00)</option>
+                </select>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- LADO DIREITO: Resumo do Pedido -->
+    <aside class="checkout-summary">
+      <h2 class="section-title">Resumo da Compra</h2>
+
+      <div class="items-list">
+        <!-- Item -->
+        <div class="order-item">
+          <div class="item-image-placeholder"></div>
+          <div class="item-details">
+            <h3 class="item-name">Vela Aromática Premium de Lavanda</h3>
+            <p class="item-qty">Qtd: 1 un</p>
+          </div>
+          <div class="item-price">R$ 130,00</div>
+        </div>
+        <!-- Item -->
+        <div class="order-item">
+          <div class="item-image-placeholder"></div>
+          <div class="item-details">
+            <h3 class="item-name">Kit Acessórios Bambu</h3>
+            <p class="item-qty">Qtd: 1 un</p>
+          </div>
+          <div class="item-price">R$ 120,00</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="totals">
+        <div class="totals-row">
+          <span>Subtotal</span>
+          <span>R$ 250,00</span>
+        </div>
+        <div class="totals-row">
+          <span>Frete (Sedex)</span>
+          <span>R$ 25,00</span>
+        </div>
+        <div class="totals-row grand-total" id="grandTotalRow">
+          <span>Total</span>
+          <span id="grandTotalValue">R$ 275,00</span>
+        </div>
+      </div>
+
+      <button type="submit" class="cta-button" id="submitOrderBtn">Finalizar Compra</button>
+      <p class="secure-badge">🔒 Pagamento 100% cifrado e seguro</p>
+
+    </aside>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
