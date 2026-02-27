@@ -4,29 +4,35 @@ import React, { useState } from 'react';
 import { useCart } from '@/app/context/CartContext';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import styles from './Checkout.module.css';
 
 export default function CheckoutPage() {
   const { cart, total } = useCart();
   const { user } = useAuth();
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('pix');
 
   const [formData, setFormData] = useState({
-    nome: user?.displayName || '',
-    email: user?.email || '',
-    cpf: '',
-    telefone: '',
-    cep: '',
-    endereco: '',
-    numero: '',
-    complemento: '',
-    bairro: '',
-    cidade: '',
-    estado: ''
+    cardNumber: '',
+    cardName: '',
+    cardExpiry: '',
+    cardCvv: '',
+    installments: ''
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const calculateTotal = () => {
+    // Exemplo: se for Pix, aplica -5%
+    if (activeTab === 'pix') {
+      return total * 0.95;
+    }
+    return total;
   };
 
   const handleSubmit = async (e) => {
@@ -34,34 +40,36 @@ export default function CheckoutPage() {
     setLoading(true);
 
     try {
-      // 1. Create Order in Firestore (via API or direct if allowed, but API is safer for logic)
-      // For now, we'll send everything to the checkout endpoint which creates the preference
+      // Cria o payload para o Roteador de Pagamentos (Backend Strategy)
+      const payload = {
+        items: cart,
+        payer: {
+          email: user?.email || 'convidado@email.com',
+          nome: user?.displayName || 'Convidado',
+          cpf: '000.000.000-00' // O user preencheu antes / placeholder
+        },
+        paymentMethod: activeTab,
+        creditCard: activeTab === 'credit-card' ? formData : null
+      };
 
-      const response = await fetch('/api/checkout/mercadopago', {
+      const response = await fetch('/api/checkout/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart,
-          payer: {
-            email: formData.email,
-            nome: formData.nome,
-            cpf: formData.cpf
-          }
-        })
+        body: JSON.stringify(payload)
       });
 
       const data = await response.json();
 
-      if (data.url) {
-        // Redirect to Mercado Pago
-        window.location.href = data.url;
+      if (data.success) {
+        // Redireciona pra uma página de sucesso fictícia
+        alert(`Transação Aprovada!\nGateway Usado: ${data.gateway || 'Transparente'}\nID: ${data.transactionId}`);
+        router.push('/conta/pedidos');
       } else {
-        alert('Erro ao iniciar pagamento');
+        alert(`Erro: ${data.error}`);
       }
-
     } catch (error) {
       console.error(error);
-      alert('Erro ao processar checkout');
+      alert('Erro inesperado ao processar checkout.');
     } finally {
       setLoading(false);
     }
@@ -72,52 +80,202 @@ export default function CheckoutPage() {
     return null;
   }
 
+  // Desconto UI Logic
+  const desconto = activeTab === 'pix' ? total * 0.05 : 0;
+  const valorFinal = total - desconto; // Sem considerar frete para mockup
+
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-      <h1>Checkout</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
+    <div className={styles.checkoutContainer}>
 
-        <section>
-          <h2>Dados Pessoais</h2>
-          <input name="nome" placeholder="Nome Completo" value={formData.nome} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <input name="email" placeholder="E-mail" type="email" value={formData.email} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <input name="cpf" placeholder="CPF" value={formData.cpf} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <input name="telefone" placeholder="Telefone" value={formData.telefone} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-        </section>
+      {/* LADO ESQUERDO: Dados e Pagamento */}
+      <section>
 
-        <section>
-          <h2>Endereço de Entrega</h2>
-          <input name="cep" placeholder="CEP" value={formData.cep} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <input name="endereco" placeholder="Endereço" value={formData.endereco} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <input name="numero" placeholder="Número" value={formData.numero} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
-            <input name="complemento" placeholder="Complemento" value={formData.complemento} onChange={handleChange} style={{ flex: 1, padding: '0.5rem' }} />
+        {/* Bloco de Identificação e Entrega */}
+        <article className={styles.dataBlock}>
+          <h2 className={styles.sectionTitle}>Dados de Entrega</h2>
+          <div className={styles.userInfoCard}>
+            <p className={styles.userName}>{user?.displayName || 'Convidado'}</p>
+            <p className={styles.userEmail}>{user?.email || 'Nenhum email'}</p>
+            <hr className={styles.divider} />
+            <p className={styles.userAddress}>
+              Av. Paulista, 1578 - Bela Vista<br />
+              São Paulo, SP - CEP 01310-200<br />
+              Apto. 12 (Prédio Comercial)
+            </p>
+            <a href="/conta/perfil" className={styles.editLink}>Corrigir informações</a>
           </div>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-             <input name="bairro" placeholder="Bairro" value={formData.bairro} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
-             <input name="cidade" placeholder="Cidade" value={formData.cidade} onChange={handleChange} required style={{ flex: 1, padding: '0.5rem' }} />
-             <input name="estado" placeholder="UF" value={formData.estado} onChange={handleChange} required style={{ width: '60px', padding: '0.5rem' }} />
-          </div>
-        </section>
+        </article>
 
-        <div style={{ marginTop: '2rem', padding: '1rem', border: '1px solid #eee' }}>
-          <h3>Resumo do Pedido</h3>
-          <p>Total: <strong>R$ {total.toFixed(2)}</strong></p>
-          <button type="submit" disabled={loading} style={{
-            width: '100%',
-            padding: '1rem',
-            backgroundColor: 'var(--primary)',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '1.2rem',
-            marginTop: '1rem'
-          }}>
-            {loading ? 'Processando...' : 'Pagar com Mercado Pago'}
-          </button>
+        {/* Bloco de Métodos de Pagamento */}
+        <article className={styles.paymentBlock}>
+          <h2 className={styles.sectionTitle}>Método de Pagamento</h2>
+
+          <div className={styles.tabs}>
+            <button
+              type="button"
+              className={`${styles.tabBtn} ${activeTab === 'pix' ? styles.active : ''}`}
+              onClick={() => setActiveTab('pix')}
+            >
+              ❖ Pix
+            </button>
+            <button
+              type="button"
+              className={`${styles.tabBtn} ${activeTab === 'credit-card' ? styles.active : ''}`}
+              onClick={() => setActiveTab('credit-card')}
+            >
+              💳 Cartão de Crédito
+            </button>
+          </div>
+
+          <div className={styles.tabContentContainer}>
+
+            {/* Aba 1: PIX */}
+            {activeTab === 'pix' && (
+              <div className={`${styles.tabContent} ${styles.active}`}>
+                <div className={styles.pixNotice}>
+                  <span className={styles.pixDiscount}>🎟️ Você ganha 5% de Desconto pagando no Pix!</span>
+                  <p className={styles.pixInstructions}>
+                    Ao clicar em finalizar, a integração via ASAAS gerará o QR Code e o "Copia e Cola" automaticamente. Liberação instantânea!
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Aba 2: Cartão de Crédito */}
+            {activeTab === 'credit-card' && (
+              <div className={`${styles.tabContent} ${styles.active}`}>
+                <div className={styles.ccForm}>
+
+                  <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
+                    <label htmlFor="cardNumber">Número do Cartão (Simule erro: ERRO_MP)</label>
+                    <input
+                      type="text"
+                      id="cardNumber"
+                      name="cardNumber"
+                      value={formData.cardNumber}
+                      onChange={handleChange}
+                      placeholder="0000 0000 0000 0000"
+                      maxLength={19}
+                    />
+                  </div>
+
+                  <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
+                    <label htmlFor="cardName">Nome impresso no cartão</label>
+                    <input
+                      type="text"
+                      id="cardName"
+                      name="cardName"
+                      value={formData.cardName}
+                      onChange={handleChange}
+                      placeholder="NOME DO TITULAR"
+                    />
+                  </div>
+
+                  <div className={styles.inputRow}>
+                    <div className={`${styles.inputGroup} ${styles.halfWidth}`}>
+                      <label htmlFor="cardExpiry">Validade</label>
+                      <input
+                        type="text"
+                        id="cardExpiry"
+                        name="cardExpiry"
+                        value={formData.cardExpiry}
+                        onChange={handleChange}
+                        placeholder="MM/AA"
+                        maxLength={5}
+                      />
+                    </div>
+
+                    <div className={`${styles.inputGroup} ${styles.halfWidth}`}>
+                      <label htmlFor="cardCvv">CVV</label>
+                      <input
+                        type="text"
+                        id="cardCvv"
+                        name="cardCvv"
+                        value={formData.cardCvv}
+                        onChange={handleChange}
+                        placeholder="123"
+                        maxLength={4}
+                      />
+                    </div>
+                  </div>
+
+                  <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
+                    <label htmlFor="installments">Parcelamento</label>
+                    <select
+                      id="installments"
+                      name="installments"
+                      value={formData.installments}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>Escolha o número de parcelas...</option>
+                      <option value="1">1x de R$ {total.toFixed(2)} sem juros</option>
+                      <option value="2">2x de R$ {(total/2).toFixed(2)} sem juros</option>
+                    </select>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+          </div>
+
+        </article>
+
+      </section>
+
+      {/* LADO DIREITO: Resumo do Pedido */}
+      <aside className={styles.checkoutSummary}>
+        <h2 className={styles.sectionTitle}>Resumo da Compra</h2>
+
+        <div className={styles.itemsList}>
+          {cart.map((item, idx) => (
+            <div key={idx} className={styles.orderItem}>
+              <div className={styles.itemImagePlaceholder}>
+                {item.imagemDestaque && (
+                  <Image src={item.imagemDestaque} alt={item.nome} fill style={{ objectFit: 'cover' }} sizes="60px" />
+                )}
+              </div>
+              <div className={styles.itemDetails}>
+                <h3 className={styles.itemName}>{item.nome}</h3>
+                <p className={styles.itemQty}>Qtd: {item.quantity} un</p>
+              </div>
+              <div className={styles.itemPrice}>R$ {(item.preco * item.quantity).toFixed(2)}</div>
+            </div>
+          ))}
         </div>
 
-      </form>
+        <hr className={styles.divider} />
+
+        <div className={styles.totals}>
+          <div className={styles.totalsRow}>
+            <span>Subtotal</span>
+            <span>R$ {total.toFixed(2)}</span>
+          </div>
+          <div className={styles.totalsRow}>
+            <span>Desconto (Pix)</span>
+            {desconto > 0 ? (
+              <span style={{ color: 'var(--primary)' }}>- R$ {desconto.toFixed(2)}</span>
+            ) : (
+              <span>R$ 0,00</span>
+            )}
+          </div>
+          <div className={`${styles.totalsRow} ${styles.grandTotal}`}>
+            <span>Total</span>
+            <span>R$ {valorFinal.toFixed(2)}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          className={styles.ctaButton}
+        >
+          {loading ? 'Processando...' : activeTab === 'pix' ? 'Gerar QR Code Pix' : `Pagar R$ ${valorFinal.toFixed(2)}`}
+        </button>
+        <p className={styles.secureBadge}>🔒 Pagamento 100% cifrado e seguro</p>
+
+      </aside>
+
     </div>
   );
 }
