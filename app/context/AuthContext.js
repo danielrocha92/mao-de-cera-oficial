@@ -4,7 +4,9 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import {
   onAuthStateChanged,
   signOut,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import Loading from '@/components/Loading/Loading';
@@ -29,6 +31,31 @@ export const AuthProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
+
+  const loginWithGoogle = async () => {
+    setLoading(true);
+    try {
+      if (auth.isMock) {
+        throw new Error("Firebase keys missing. Check your .env.local file.");
+      }
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+
+      const idToken = await userCredential.user.getIdToken();
+      await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      });
+
+      const tokenResult = await userCredential.user.getIdTokenResult();
+      return tokenResult.claims.admin === true;
+    } catch (error) {
+      console.error("Erro no login com Google:", error);
+      setLoading(false);
+      throw error;
+    }
+  };
 
   const login = async (email, password) => {
     setLoading(true);
@@ -87,6 +114,7 @@ export const AuthProvider = ({ children }) => {
     // isAdmin não é mais necessário aqui
     loading,
     login,
+    loginWithGoogle,
     logout,
   };
 

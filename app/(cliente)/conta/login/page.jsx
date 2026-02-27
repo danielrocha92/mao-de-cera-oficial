@@ -3,25 +3,22 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { FaGoogle, FaEnvelope, FaLock } from 'react-icons/fa';
+import styles from './Login.module.css';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, user } = useAuth();
+  const { login, loginWithGoogle, user } = useAuth();
   const router = useRouter();
-
-  // Estado para verificar se é admin
-  const [isAdmin, setIsAdmin] = useState(false);
 
   React.useEffect(() => {
     if (user) {
       user.getIdTokenResult().then(idTokenResult => {
         const adminStatus = !!idTokenResult.claims.admin;
-        setIsAdmin(adminStatus);
-
-        // Redirecionamento automático
         if (adminStatus) {
           router.push('/admin/dashboard');
         } else {
@@ -31,9 +28,13 @@ export default function LoginPage() {
     }
   }, [user, router]);
 
-  // Se já estiver logado, exibe loading enquanto redireciona
   if (user) {
-    return <div style={{ padding: '4rem', textAlign: 'center' }}>Redirecionando...</div>;
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
+        <p>Acessando sua conta...</p>
+      </div>
+    );
   }
 
   const handleSubmit = async (e) => {
@@ -42,45 +43,90 @@ export default function LoginPage() {
     setError('');
     try {
       await login(email, password);
-      // Redirection handled by useEffect after user state updates
     } catch (err) {
-      setError(err.message);
+      setError('Email ou senha inválidos. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      setError('Falha ao autenticar com o Google.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '4rem auto', padding: '2rem', border: '1px solid #eee' }}>
-      <h1>Login</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-        <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ padding: '0.5rem' }}
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ padding: '0.5rem' }}
-        />
-        <button type="submit" disabled={loading} style={{
-          padding: '0.75rem',
-          backgroundColor: 'var(--primary)',
-          color: 'white',
-          border: 'none',
-          cursor: 'pointer'
-        }}>
-          {loading ? 'Entrando...' : 'Entrar'}
+    <div className={styles.pageContainer}>
+      <div className={styles.loginCard}>
+        <div className={styles.header}>
+          <h1>Bem-vindo(a)</h1>
+          <p>Acesse ou crie sua conta para continuar</p>
+        </div>
+
+        {error && <div className={styles.errorAlert}>{error}</div>}
+
+        <button
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className={styles.googleButton}
+        >
+          <FaGoogle /> Continuar com Google
         </button>
-      </form>
+
+        <div className={styles.divider}>
+          <span>ou use seu email</span>
+        </div>
+
+        <form onSubmit={handleSubmit} className={styles.formContainer}>
+          <div className={styles.inputGroup}>
+            <FaEnvelope className={styles.inputIcon} />
+            <input
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              className={styles.input}
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <FaLock className={styles.inputIcon} />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.forgotPassword}>
+            {/* Opcional: Adicionar Link para Recuperar Senha depois */}
+            <a href="#" onClick={(e) => e.preventDefault()}>Esqueceu a senha?</a>
+          </div>
+
+          <button type="submit" disabled={loading} className={styles.mainButton}>
+            {loading ? 'Aguarde...' : 'Entrar'}
+          </button>
+        </form>
+
+        <div className={styles.footer}>
+          <p>Não tem uma conta?</p>
+          <Link href="/conta/cadastro" className={styles.registerLink}>
+            Criar minha conta agora
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

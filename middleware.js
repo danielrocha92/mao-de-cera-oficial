@@ -5,16 +5,11 @@ export async function middleware(request) {
 
   // Proteção de rotas Admin
   if (pathname.startsWith('/admin')) {
-    // Verifica se é a página de login do admin para não entrar em loop
-    if (pathname === '/admin/login') {
-      return NextResponse.next();
-    }
-
     // Verifica a presença do cookie de sessão
     const session = request.cookies.get('session');
 
     if (!session) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+      return NextResponse.redirect(new URL('/conta/login', request.url));
     }
 
     // Para validação completa do token, faremos no Server Component (layout)

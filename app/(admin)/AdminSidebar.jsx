@@ -11,9 +11,7 @@ export default function AdminSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  if (pathname === '/admin/login') {
-    return null;
-  }
+
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
