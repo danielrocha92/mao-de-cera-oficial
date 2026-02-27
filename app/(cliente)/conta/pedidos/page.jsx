@@ -49,33 +49,29 @@ export default function OrdersPage() {
   if (authLoading || loading) return <p style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</p>;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1>Minha Conta</h1>
-        <button onClick={() => auth.signOut()} style={{ padding: '0.5rem 1rem', border: '1px solid #ccc', background: 'transparent', cursor: 'pointer' }}>
-          Sair
-        </button>
-      </div>
-
-      <section style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
-        <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Meus Dados</h2>
-        <p><strong>Email:</strong> {user?.email}</p>
-        <p><strong>ID do Cliente:</strong> {user?.uid}</p>
-      </section>
-
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Meus Pedidos</h2>
+    <div>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Meus Pedidos</h2>
       {orders.length === 0 ? (
-        <p>Você ainda não fez nenhum pedido.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Você ainda não fez nenhum pedido.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
           {orders.map(order => (
-            <div key={order.id} style={{ border: '1px solid #eee', padding: '1rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <strong>Pedido #{order.id.slice(0, 8)}</strong>
-                <span>{order.status}</span>
+            <div key={order.id} style={{ border: '1px solid var(--border-color)', padding: '1rem', borderRadius: '8px', backgroundColor: 'var(--surface)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <strong style={{ color: 'var(--text-primary)' }}>Pedido #{order.id.slice(0, 8)}</strong>
+                <span style={{
+                  padding: '4px 8px',
+                  borderRadius: '12px',
+                  fontSize: '0.85rem',
+                  fontWeight: '500',
+                  backgroundColor: order.status === 'pendente' ? '#fff3cd' : order.status === 'entregue' ? '#d1e7dd' : '#f8d7da',
+                  color: order.status === 'pendente' ? '#856404' : order.status === 'entregue' ? '#0f5132' : '#842029'
+                }}>
+                  {order.status || 'Pendente'}
+                </span>
               </div>
-              <p>Total: R$ {order.total?.toFixed(2)}</p>
-              <p>Data: {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</p>
+              <p style={{ margin: '0 0 0.5rem 0', color: 'var(--text-secondary)' }}>Total: <strong>R$ {order.total?.toFixed(2) || '0.00'}</strong></p>
+              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Data: {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</p>
             </div>
           ))}
         </div>

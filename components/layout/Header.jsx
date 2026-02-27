@@ -16,7 +16,12 @@ async function getStoreSettings() {
     try {
         const res = await fetch('/api/configuracoes/loja', { cache: 'no-store' });
         if (res.ok) {
-            return await res.json();
+            const data = await res.json();
+            // Merge response with defaults so the logo never vanishes
+            return {
+                nome_loja: data.nome_loja || "Mão de Cera Oficial",
+                logo: data.logo || { url: "/imagens/mao-de-cera-oficial-logo-claro.png" }
+            };
         }
     } catch(e) {
         console.error("Erro no fetch config do header", e);
@@ -30,7 +35,10 @@ async function getStoreSettings() {
 }
 
 const Header = () => {
-    const [settings, setSettings] = useState(null);
+    const [settings, setSettings] = useState({
+        nome_loja: "Mão de Cera Oficial",
+        logo: { url: "/imagens/mao-de-cera-oficial-logo-claro.png" }
+    });
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isScrolled, setScrolled] = useState(false);
     const pathname = usePathname();
@@ -139,7 +147,7 @@ const Header = () => {
                     </div>
 
                     <div className={styles.iconsWrapper}>
-                        <Link href="/conta/login" aria-label={user ? "Minha Conta" : "Login"}>
+                        <Link href={user ? "/conta" : "/conta/login"} aria-label={user ? "Minha Conta" : "Login"}>
                             <UserIcon className={styles.icon} />
                         </Link>
                         <Link href="/carrinho" aria-label="Carrinho" className={`${styles.cartLink} ${isAnimating ? styles.bump : ''}`}>

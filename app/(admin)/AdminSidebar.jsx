@@ -21,6 +21,15 @@ export default function AdminSidebar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const getLinkStyle = (path) => {
+    // Exact match for the dashboard, startsWith for the rest (unless the rest are root folders)
+    const isActive = path === '/admin/dashboard' ? pathname === path : pathname.startsWith(path);
+    return {
+      borderColor: isActive ? 'var(--primary)' : 'transparent',
+      color: isActive ? 'var(--primary)' : 'var(--text-primary)'
+    };
+  };
+
   return (
     <>
       <button className={styles.hamburger} onClick={toggleMobileMenu}>
@@ -34,27 +43,23 @@ export default function AdminSidebar() {
             </button>
         </div>
         <nav>
-          <Link href="/admin/dashboard" title="Dashboard">
+          <Link href="/admin/dashboard" title="Dashboard" style={getLinkStyle('/admin/dashboard')}>
             <MdDashboard size={24} />
             <span className={styles.linkText}>Dashboard</span>
           </Link>
-          <Link href="/admin/produtos" title="Produtos">
+          <Link href="/admin/produtos" title="Produtos" style={getLinkStyle('/admin/produtos')}>
             <MdShoppingBag size={24} />
             <span className={styles.linkText}>Produtos</span>
           </Link>
-          <Link href="/admin/produtos/novo" title="Novo Produto">
-            <MdAddCircleOutline size={24} />
-            <span className={styles.linkText}>Novo Produto</span>
-          </Link>
-          <Link href="/admin/pedidos" title="Pedidos">
+          <Link href="/admin/pedidos" title="Pedidos" style={getLinkStyle('/admin/pedidos')}>
             <MdListAlt size={24} />
             <span className={styles.linkText}>Pedidos</span>
           </Link>
-          <Link href="/admin/configuracoes" title="Configurações">
+          <Link href="/admin/configuracoes" title="Configurações" style={getLinkStyle('/admin/configuracoes')}>
             <MdSettings size={24} />
             <span className={styles.linkText}>Configurações</span>
           </Link>
-          <Link href="/" title="Voltar para Loja">
+          <Link href="/" title="Voltar para Loja" style={{ color: 'var(--text-secondary)' }}>
             <MdStore size={24} />
             <span className={styles.linkText}>Voltar para Loja</span>
           </Link>

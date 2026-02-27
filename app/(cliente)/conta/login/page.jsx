@@ -22,7 +22,7 @@ export default function LoginPage() {
         if (adminStatus) {
           router.push('/admin/dashboard');
         } else {
-          router.push('/conta/pedidos');
+          router.push('/conta');
         }
       });
     }

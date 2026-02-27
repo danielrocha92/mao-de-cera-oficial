@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }) => {
 
       // Limpa o estado local
       setUser(null);
-      router.push('/login'); // Redireciona para o login
+      router.push('/conta/login'); // Redireciona para o login
 
     } catch (error) {
       console.error("Erro no logout:", error);

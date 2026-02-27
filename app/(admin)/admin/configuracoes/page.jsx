@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function SettingsPage() {
+  const { logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nome_loja: '',
@@ -130,6 +132,27 @@ export default function SettingsPage() {
           {loading ? 'Salvando...' : 'Salvar Configurações'}
         </button>
       </form>
+
+      <div style={{ marginTop: '3rem', borderTop: '1px solid #ddd', paddingTop: '2rem' }}>
+        <button
+          onClick={() => {
+            if(window.confirm('Deseja realmente sair do painel administrador?')) {
+               logout();
+            }
+          }}
+          style={{
+            padding: '0.8rem 1.5rem',
+            backgroundColor: '#e74c3c',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          Deslogar do Painel Admin
+        </button>
+      </div>
     </div>
   );
 }

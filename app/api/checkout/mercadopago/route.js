@@ -3,6 +3,11 @@ import { preference } from '@/lib/mercadopago';
 
 export async function POST(request) {
   try {
+    if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
+      console.error('MERCADOPAGO_ACCESS_TOKEN não está configurado.');
+      return NextResponse.json({ error: 'Gateway de pagamento não configurado no servidor.' }, { status: 500 });
+    }
+
     const { items, payer } = await request.json();
 
     const result = await preference.create({
