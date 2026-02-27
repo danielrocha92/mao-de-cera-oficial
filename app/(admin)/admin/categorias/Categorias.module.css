@@ -134,6 +134,24 @@
     opacity: 0.8;
 }
 
+.editButton {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+    margin-right: 0.5rem;
+}
+
+.editButton:hover {
+    opacity: 0.8;
+}
+
+
 /* Responsividade */
 @media (max-width: 768px) {
     .formRow {

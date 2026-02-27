@@ -93,7 +93,7 @@ export default function AdminDashboard() {
            {metrics.alertas.estoqueBaixo.map((prod, idx) => (
                <div key={`estoque-${idx}`} className={`${styles.alertItem} ${styles.alertWarning}`}>
                   <FaExclamationCircle className={styles.alertIcon}/>
-                  <span>O estoque de <strong>"{prod.nome}"</strong> está acabando (Apenas {prod.estoque} restantes).</span>
+                  <span>O estoque de <strong>&quot;{prod.nome}&quot;</strong> está acabando (Apenas {prod.estoque} restantes).</span>
                </div>
            ))}
 

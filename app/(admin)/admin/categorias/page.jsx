@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FaTrash, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import { FaTrash, FaCheckCircle, FaExclamationCircle, FaEdit } from 'react-icons/fa';
 import Modal from '@/components/ui/Modal';
 import styles from './Categorias.module.css';
 
@@ -14,6 +14,11 @@ export default function CategoriasPage() {
   // Modal de Exclusão
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+  // Modal de Edição
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState(null);
+  const [editCatName, setEditCatName] = useState('');
 
   const fetchCategories = async () => {
     try {
@@ -91,6 +96,46 @@ export default function CategoriasPage() {
     }
   };
 
+  const openEditModal = (cat) => {
+    setCategoryToEdit(cat);
+    setEditCatName(cat.nome);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditCategory = async (e) => {
+    e.preventDefault();
+    if (!editCatName.trim() || !categoryToEdit) return;
+
+    setIsSubmitting(true);
+    try {
+      const slug = editCatName.toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      const response = await fetch(`/api/categorias/${categoryToEdit.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nome: editCatName, slug }),
+      });
+
+      if (response.ok) {
+        await fetchCategories();
+        setIsEditModalOpen(false);
+        setCategoryToEdit(null);
+        setEditCatName('');
+      } else {
+        alert("Falha ao atualizar categoria.");
+      }
+    } catch (error) {
+      console.error("Erro", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -139,6 +184,9 @@ export default function CategoriasPage() {
                      <td><strong>{cat.nome}</strong></td>
                      <td><span style={{backgroundColor: 'var(--background)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem'}}>{cat.slug}</span></td>
                      <td style={{textAlign: 'right'}}>
+                       <button onClick={() => openEditModal(cat)} className={styles.editButton} title="Editar Categoria">
+                          <FaEdit size={14} /> Editar
+                       </button>
                        <button onClick={() => openDeleteModal(cat)} className={styles.deleteButton} title="Excluir Categoria">
                           <FaTrash size={14} /> Excluir
                        </button>
@@ -161,6 +209,26 @@ export default function CategoriasPage() {
         <p style={{fontSize: '0.85rem', color: '#e74c3c', marginTop: '10px'}}>
            <FaExclamationCircle /> Os produtos atrelados não serão deletados, mas ficarão sem essa categoria visível.
         </p>
+      </Modal>
+
+      <Modal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onConfirm={handleEditCategory}
+        title="Editar Categoria"
+      >
+        <form className={styles.formRow} style={{ marginTop: '1rem' }} onSubmit={handleEditCategory}>
+          <input
+            type="text"
+            className={styles.inputField}
+            placeholder="Nome da Categoria"
+            value={editCatName}
+            onChange={(e) => setEditCatName(e.target.value)}
+            required
+            disabled={isSubmitting}
+            style={{ width: '100%' }}
+          />
+        </form>
       </Modal>
     </div>
   );
