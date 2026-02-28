@@ -18,26 +18,26 @@ export default function OrdersPage() {
     } else if (user) {
       const fetchOrders = async () => {
         try {
+          // Removemos o orderBy no Firebase para não depender de Composite Indexes do Firestore.
+          // Faremos o filtro principal no Firebase (apenas uid) e ordenamos em Javascript (client-side)
           const q = query(
             collection(db, 'pedidos'),
-            where('clienteId', '==', user.uid),
-            orderBy('createdAt', 'desc') // Requires index
+            where('clienteId', '==', user.uid)
           );
-          // Fallback if index missing: client-side sort or remove orderBy
-          // For now, let's try without orderBy if it fails, or just handle error
 
           const querySnapshot = await getDocs(q);
           const userOrders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+          // Ordena pelo mais recente usando JS
+          userOrders.sort((a, b) => {
+             const dateA = new Date(a.createdAt || 0).getTime();
+             const dateB = new Date(b.createdAt || 0).getTime();
+             return dateB - dateA;
+          });
+
           setOrders(userOrders);
         } catch (error) {
           console.error("Erro ao buscar pedidos:", error);
-          // Fallback for missing index error
-          if (error.code === 'failed-precondition') {
-             console.warn("Index missing, trying without sort");
-             const q2 = query(collection(db, 'pedidos'), where('clienteId', '==', user.uid));
-             const qs2 = await getDocs(q2);
-             setOrders(qs2.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-          }
         } finally {
           setLoading(false);
         }
