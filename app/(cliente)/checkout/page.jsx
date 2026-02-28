@@ -15,6 +15,7 @@ export default function CheckoutPage() {
 
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('pix');
+  const [successData, setSuccessData] = useState(null);
 
   const [formData, setFormData] = useState({
     cardNumber: '',
@@ -62,16 +63,18 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (data.success) {
-        // Redireciona pra uma página de sucesso fictícia
-        alert(`Transação Aprovada!\nGateway Usado: ${data.gateway || 'Transparente'}\nID: ${data.transactionId}`);
-        router.push('/conta/pedidos');
+        // Redireciona pra uma página de sucesso fictícia usando state com UX melhor do que alert
+        setSuccessData(data);
+        setTimeout(() => {
+          router.push('/conta/pedidos');
+        }, 4000);
       } else {
         alert(`Erro: ${data.error}`);
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
       alert('Erro inesperado ao processar checkout.');
-    } finally {
       setLoading(false);
     }
   };
@@ -91,7 +94,28 @@ export default function CheckoutPage() {
   const valorFinal = total - desconto; // Sem considerar frete para mockup
 
   return (
-    <div className={styles.checkoutContainer}>
+    <>
+      {successData && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)', zIndex: 9999,
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'
+        }}>
+          <div style={{
+            backgroundColor: '#27ae60', color: 'white', padding: '1.5rem', borderRadius: '50%',
+            marginBottom: '1.5rem', fontSize: '3rem', width: '80px', height: '80px', display: 'flex',
+            alignItems: 'center', justifyContent: 'center'
+          }}>✓</div>
+          <h2 style={{ fontSize: '2rem', color: '#2c3e50', marginBottom: '0.5rem' }}>Pedido Aprovado!</h2>
+          <p style={{ color: '#7f8c8d', fontSize: '1.1rem', marginBottom: '1rem' }}>Sua transação ({successData.gateway || 'Transparente'}) foi processada com sucesso.</p>
+          <div style={{ backgroundColor: '#f8f9fa', padding: '1rem 2rem', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+             <p style={{ color: '#9b59b6', fontWeight: 'bold', margin: 0 }}>ID do Pedido: {successData.transactionId}</p>
+          </div>
+          <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#bdc3c7' }}>Redirecionando para seus pedidos...</p>
+        </div>
+      )}
+
+      <div className={styles.checkoutContainer}>
 
       {/* LADO ESQUERDO: Dados e Pagamento */}
       <section>
@@ -283,5 +307,6 @@ export default function CheckoutPage() {
       </aside>
 
     </div>
+    </>
   );
 }
