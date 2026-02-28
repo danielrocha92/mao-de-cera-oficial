@@ -11,6 +11,17 @@
     color: var(--text-secondary);
 }
 
+.breadcrumbs a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumbs a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
 .grid {
     display: grid;
     grid-template-columns: 55% 40%;

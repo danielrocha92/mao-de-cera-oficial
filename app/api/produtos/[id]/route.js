@@ -29,8 +29,24 @@ export async function PUT(request, { params }) {
         }
 
         const body = await request.json();
+
+        // Sanitize slug precisely
+        let safeSlug = body.slug || '';
+        if (safeSlug.includes('http')) {
+          const parts = safeSlug.split('/').filter(Boolean);
+          safeSlug = parts[parts.length - 1] || '';
+        }
+        safeSlug = safeSlug.toString().toLowerCase()
+          .trim()
+          .replace(/\s+/g, '-')     // replace spaces with -
+          .replace(/[^\w\-]+/g, '') // remove non-words
+          .replace(/\-\-+/g, '-')   // replace multiple - with single -
+          .replace(/^-+/, '')       // trim - from start
+          .replace(/-+$/, '');      // trim - from end
+
         const updatedProduct = {
             ...body,
+            slug: safeSlug || body.sku || body.id || 'produto-sem-slug',
             updatedAt: new Date().toISOString(),
         };
 

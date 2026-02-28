@@ -5,8 +5,24 @@ import { db } from '@/lib/firebaseAdmin';
 export async function POST(request) {
   try {
     const body = await request.json();
+
+    // Sanitize slug precisely
+    let safeSlug = body.slug || '';
+    if (safeSlug.includes('http')) {
+      const parts = safeSlug.split('/').filter(Boolean);
+      safeSlug = parts[parts.length - 1] || '';
+    }
+    safeSlug = safeSlug.toString().toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')     // replace spaces with -
+      .replace(/[^\w\-]+/g, '') // remove non-words
+      .replace(/\-\-+/g, '-')   // replace multiple - with single -
+      .replace(/^-+/, '')       // trim - from start
+      .replace(/-+$/, '');      // trim - from end
+
     const newProduct = {
       ...body,
+      slug: safeSlug || body.sku || 'produto-sem-slug',
       createdAt: new Date().toISOString(),
     };
     const docRef = await db.collection('produtos').add(newProduct);

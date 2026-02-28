@@ -13,15 +13,23 @@ const ProductCard = ({ product }) => {
   const images = (product.imagens || product.images || []).filter(url => !url.startsWith('blob:'));
   const mainImage = images[0] || "https://placehold.co/300";
 
+  let safeSlug = product.slug || product.id;
+  if (safeSlug && typeof safeSlug === 'string' && safeSlug.includes('http')) {
+    const parts = safeSlug.split('/').filter(Boolean);
+    safeSlug = parts[parts.length - 1] || product.id;
+  }
+
   return (
     <div className={styles.card}>
-      <CustomLink href={`/produtos/${product.slug || product.id}`}>
-        <Image
+      <CustomLink href={`/produtos/${safeSlug}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src={mainImage}
           alt={product.nome || product.title}
           width={300}
           height={300}
           className={styles.image}
+          style={{ objectFit: 'cover' }}
         />
         <h3 className={styles.name}>{product.nome || product.title}</h3>
         <div className={styles.priceContainer}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/firebaseAdmin';
 import AddToCartButton from '@/components/shop/AddToCartButton'; // We'll create this component
@@ -62,9 +63,9 @@ export default async function ProductPage({ params }) {
 
   return (
     <div className={styles.container}>
-      {/* Breadcrumbs Placeholder */}
+      {/* Breadcrumbs */}
       <div className={styles.breadcrumbs}>
-        Home / Produtos / {product.nome || product.title}
+        <Link href="/">Home</Link> / <Link href="/produtos">Produtos</Link> / <span>{product.nome || product.title}</span>
       </div>
 
       <div className={styles.grid}>
