@@ -46,6 +46,7 @@ export default function CheckoutPage() {
       const payload = {
         items: cart,
         payer: {
+          uid: user?.uid || null,
           email: user?.email || 'convidado@email.com',
           nome: user?.displayName || 'Convidado',
           cpf: '000.000.000-00' // O user preencheu antes / placeholder
