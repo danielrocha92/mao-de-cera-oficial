@@ -66,9 +66,11 @@ export default function CheckoutPage() {
       if (data.success) {
         // Redireciona pra uma página de sucesso fictícia usando state com UX melhor do que alert
         setSuccessData(data);
-        setTimeout(() => {
-          router.push('/conta/pedidos');
-        }, 4000);
+        if (!data.qrCode) {
+          setTimeout(() => {
+            router.push('/conta/pedidos');
+          }, 4000);
+        }
       } else {
         alert(`Erro: ${data.error}`);
         setLoading(false);
@@ -110,9 +112,29 @@ export default function CheckoutPage() {
           <h2 style={{ fontSize: '2rem', color: '#2c3e50', marginBottom: '0.5rem' }}>Pedido Aprovado!</h2>
           <p style={{ color: '#7f8c8d', fontSize: '1.1rem', marginBottom: '1rem' }}>Sua transação ({successData.gateway || 'Transparente'}) foi processada com sucesso.</p>
           <div style={{ backgroundColor: '#f8f9fa', padding: '1rem 2rem', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
-             <p style={{ color: '#9b59b6', fontWeight: 'bold', margin: 0 }}>ID do Pedido: {successData.transactionId}</p>
+             <p style={{ color: '#9b59b6', fontWeight: 'bold', margin: '0' }}>ID do Pedido: {successData.transactionId}</p>
+             {successData.qrCode && (
+               <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e9ecef' }}>
+                 <p style={{ fontSize: '0.9rem', color: '#555', marginBottom: '0.5rem'}}>Escaneie o QR Code abaixo para pagar via Pix:</p>
+                 <img src={successData.qrCode} alt="QR Code Pix" style={{ width: '150px', height: '150px', margin: '0 auto', display: 'block', padding: '5px', background: 'white', border: '1px solid #ddd', borderRadius: '8px' }} />
+                 <p style={{ fontSize: '0.9rem', color: '#555', marginTop: '1rem', marginBottom: '0.5rem' }}>Ou utilize o recurso Copia e Cola:</p>
+                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                   <input type="text" readOnly value={successData.copyPaste} style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid #ccc', fontSize: '0.8rem', width: '250px', background: '#fff' }} />
+                   <button onClick={() => {
+                     navigator.clipboard.writeText(successData.copyPaste);
+                     alert("Código PIX copiado!");
+                   }} style={{ padding: '0.5rem 1rem', background: '#9b59b6', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}>Copiar</button>
+                 </div>
+               </div>
+             )}
           </div>
-          <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#bdc3c7' }}>Redirecionando para seus pedidos...</p>
+          {successData.qrCode ? (
+             <button onClick={() => router.push('/conta/pedidos')} style={{ marginTop: '2rem', padding: '0.8rem 2rem', background: '#2c3e50', color: 'white', border: 'none', borderRadius: '6px', fontSize: '1rem', cursor: 'pointer', transition: 'background 0.2s', fontWeight: 'bold' }} onMouseOver={(e) => e.target.style.background = '#34495e'} onMouseOut={(e) => e.target.style.background = '#2c3e50'}>
+               Ok, ir para Meus Pedidos
+             </button>
+          ) : (
+             <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#bdc3c7' }}>Redirecionando para seus pedidos...</p>
+          )}
         </div>
       )}
 
