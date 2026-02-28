@@ -227,6 +227,7 @@ export default function EditarProdutoPage() {
             <ImageUpload onUpload={handleImageUpload} />
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                 {product.images.map((img, idx) => (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img key={idx} src={img} alt={`Imagem ${idx + 1}`} style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
                 ))}
             </div>

@@ -4,11 +4,12 @@ import React, { useState } from 'react';
 import { useCart } from '@/app/context/CartContext';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Checkout.module.css';
 
 export default function CheckoutPage() {
-  const { cart, total } = useCart();
+  const { cart, total, isLoaded } = useCart();
   const { user } = useAuth();
   const router = useRouter();
 
@@ -75,6 +76,11 @@ export default function CheckoutPage() {
     }
   };
 
+  // Previne Hydration mismatch e que o carrinho esvazie indevidamente
+  if (!isLoaded) {
+    return <p style={{ padding: '2rem', textAlign: 'center' }}>Carregando seu carrinho...</p>;
+  }
+
   if (cart.length === 0) {
     router.push('/carrinho');
     return null;
@@ -102,7 +108,7 @@ export default function CheckoutPage() {
               São Paulo, SP - CEP 01310-200<br />
               Apto. 12 (Prédio Comercial)
             </p>
-            <a href="/conta/perfil" className={styles.editLink}>Corrigir informações</a>
+            <Link href="/conta/perfil" className={styles.editLink}>Corrigir informações</Link>
           </div>
         </article>
 
@@ -135,7 +141,7 @@ export default function CheckoutPage() {
                 <div className={styles.pixNotice}>
                   <span className={styles.pixDiscount}>🎟️ Você ganha 5% de Desconto pagando no Pix!</span>
                   <p className={styles.pixInstructions}>
-                    Ao clicar em finalizar, a integração via ASAAS gerará o QR Code e o "Copia e Cola" automaticamente. Liberação instantânea!
+                    Ao clicar em finalizar, a integração via ASAAS gerará o QR Code e o &quot;Copia e Cola&quot; automaticamente. Liberação instantânea!
                   </p>
                 </div>
               </div>

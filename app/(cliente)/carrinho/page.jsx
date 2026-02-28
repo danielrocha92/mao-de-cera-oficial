@@ -7,7 +7,11 @@ import { useCart } from '@/app/context/CartContext';
 import styles from './page.module.css'; // Assuming you will create CSS
 
 export default function CartPage() {
-  const { cart, total, removeItem, updateQuantity } = useCart();
+  const { cart, total, removeItem, updateQuantity, isLoaded } = useCart();
+
+  if (!isLoaded) {
+    return <p style={{ padding: '4rem', textAlign: 'center' }}>Carregando seu carrinho...</p>;
+  }
 
   if (cart.length === 0) {
     return (

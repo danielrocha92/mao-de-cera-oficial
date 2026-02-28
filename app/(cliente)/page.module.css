@@ -14,7 +14,8 @@
     text-align: center;
 }
 
-.videoBackground {
+.videoBackground,
+.imageBackground {
     position: absolute;
     top: 0;
     left: 0;

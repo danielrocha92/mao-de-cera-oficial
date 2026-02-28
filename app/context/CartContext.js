@@ -9,6 +9,7 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false); // Previne que o estado inicial vazio sobrescreva o localStorage
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -20,14 +21,21 @@ export const CartProvider = ({ children }) => {
         console.error('Failed to parse cart from localStorage', e);
       }
     }
+    setIsLoaded(true);
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  // Save cart to localStorage whenever it changes (mas só depois de carregar inicialmente)
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-    const newTotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    if (isLoaded) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    // Sempre recalcula o total garantindo a propriedade preco (ou price)
+    const newTotal = cart.reduce((acc, item) => {
+      const itemPrice = Number(item.preco || item.price || 0);
+      return acc + itemPrice * item.quantity;
+    }, 0);
     setTotal(newTotal);
-  }, [cart]);
+  }, [cart, isLoaded]);
 
   const addItem = (product, quantity = 1) => {
     setCart((prevCart) => {
@@ -62,6 +70,7 @@ export const CartProvider = ({ children }) => {
   const value = {
     cart,
     total,
+    isLoaded,
     addItem,
     removeItem,
     updateQuantity,

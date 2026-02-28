@@ -47,7 +47,7 @@ export default function OfertasAdminPage() {
       if (!response.ok) {
         throw new Error('Falha ao criar oferta');
       }
-      
+
       const createdOffer = await response.json();
       // Optimistically add the new offer to the list
       setOffers(prev => [{ ...newOffer, id: createdOffer.id }, ...prev]);
@@ -110,6 +110,7 @@ export default function OfertasAdminPage() {
           <ul className={styles.offerList}>
             {offers.map(offer => (
               <li key={offer.id} className={styles.offerItem}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={offer.image} alt={offer.name} className={styles.offerImage} />
                 <div className={styles.offerInfo}>
                   <strong>{offer.name}</strong>

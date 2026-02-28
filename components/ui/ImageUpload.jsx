@@ -28,6 +28,7 @@ export default function ImageUpload({ onUpload }) {
       <div className={styles.previews}>
         {previews.map((url, index) => (
           <div key={index} className={styles.preview}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt={`Preview ${index + 1}`} />
           </div>
         ))}

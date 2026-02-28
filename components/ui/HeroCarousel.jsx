@@ -45,6 +45,7 @@ const HeroCarousel = ({ slides }) => {
                 className={styles.slideMedia}
               />
             ) : (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img
                 src={slide.src}
                 alt={slide.alt || `Slide ${index + 1}`}

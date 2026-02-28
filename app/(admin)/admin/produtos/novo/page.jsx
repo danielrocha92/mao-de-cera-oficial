@@ -149,6 +149,7 @@ export default function NewProductPage() {
           <ImageUpload onUpload={(url) => setFormData(prev => ({ ...prev, imagens: [...prev.imagens, url] }))} />
           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             {formData.imagens.map((img, idx) => (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img key={idx} src={img} alt="Preview" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
             ))}
           </div>

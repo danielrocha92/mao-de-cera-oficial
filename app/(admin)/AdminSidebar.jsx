@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { MdDashboard, MdShoppingBag, MdAddCircleOutline, MdListAlt, MdSettings, MdStore } from 'react-icons/md';
+import { MdDashboard, MdShoppingBag, MdAddCircleOutline, MdListAlt, MdSettings, MdStore, MdImage } from 'react-icons/md';
 import styles from './AdminLayout.module.css';
 
 export default function AdminSidebar() {
@@ -50,6 +50,10 @@ export default function AdminSidebar() {
           <Link href="/admin/produtos" title="Produtos" style={getLinkStyle('/admin/produtos')}>
             <MdShoppingBag size={24} />
             <span className={styles.linkText}>Produtos</span>
+          </Link>
+          <Link href="/admin/banners" title="Banners" style={getLinkStyle('/admin/banners')}>
+            <MdImage size={24} />
+            <span className={styles.linkText}>Banners</span>
           </Link>
           <Link href="/admin/pedidos" title="Pedidos" style={getLinkStyle('/admin/pedidos')}>
             <MdListAlt size={24} />

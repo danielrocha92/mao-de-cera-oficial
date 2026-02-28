@@ -6,7 +6,8 @@ import {
   FaBoxOpen, FaClipboardList, FaCog, FaMoneyBillWave,
   FaChartLine, FaUsers, FaExclamationCircle,
   FaShoppingCart, FaUndo, FaTruck, FaTags,
-  FaStar, FaSitemap, FaStopwatch, FaStoreSlash
+  FaStar, FaSitemap, FaStopwatch, FaStoreSlash,
+  FaImage
 } from 'react-icons/fa';
 import styles from './Dashboard.module.css';
 
@@ -171,6 +172,13 @@ export default function AdminDashboard() {
             <div className={styles.statInfo}>
               <h3>Categorias</h3>
               <p>Árvore de navegação e departamentos.</p>
+            </div>
+          </Link>
+          <Link href="/admin/banners" className={styles.statCard}>
+            <div className={styles.iconWrapper}><FaImage className={styles.icon} /></div>
+            <div className={styles.statInfo}>
+              <h3>Banners e Vídeos</h3>
+              <p>Gerencie os banners da página inicial.</p>
             </div>
           </Link>
           <Link href="/admin/estoque" className={styles.statCard}>
