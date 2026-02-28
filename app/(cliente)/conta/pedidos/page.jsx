@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { db, auth } from '@/lib/firebase'; // Client SDK for reading own orders
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 export default function OrdersPage() {
   const { user, loading: authLoading } = useAuth();
@@ -46,6 +46,18 @@ export default function OrdersPage() {
     }
   }, [user, authLoading, router]);
 
+  const handleDeleteOrder = async (orderId) => {
+    if (window.confirm("Tem certeza que deseja cancelar e excluir este pedido? Esta ação é irreversível.")) {
+      try {
+        await deleteDoc(doc(db, 'pedidos', orderId));
+        setOrders(orders.filter(order => order.id !== orderId));
+      } catch (error) {
+        console.error("Erro ao excluir pedido:", error);
+        alert("Não foi possível excluir o pedido. Tente novamente mais tarde.");
+      }
+    }
+  };
+
   if (authLoading || loading) return <p style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</p>;
 
   return (
@@ -70,8 +82,26 @@ export default function OrdersPage() {
                   {order.status || 'Pendente'}
                 </span>
               </div>
-              <p style={{ margin: '0 0 0.5rem 0', color: 'var(--text-secondary)' }}>Total: <strong>R$ {order.total?.toFixed(2) || '0.00'}</strong></p>
-              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Data: {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p style={{ margin: '0 0 0.5rem 0', color: 'var(--text-secondary)' }}>Total: <strong>R$ {order.total?.toFixed(2) || '0.00'}</strong></p>
+                  <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Data: {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}</p>
+                </div>
+                <button
+                  onClick={() => handleDeleteOrder(order.id)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#e74c3c',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    textDecoration: 'underline',
+                    padding: '0.5rem'
+                  }}
+                >
+                  Excluir
+                </button>
+              </div>
             </div>
           ))}
         </div>
