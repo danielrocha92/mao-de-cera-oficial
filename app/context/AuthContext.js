@@ -18,14 +18,25 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  // Não precisamos mais do 'isAdmin' aqui, o layout do servidor cuida disso
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     // onAuthStateChanged apenas monitora o estado do *cliente*
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      if (user) {
+        try {
+          const tokenResult = await user.getIdTokenResult();
+          setIsAdmin(tokenResult.claims.admin === true);
+        } catch (e) {
+          console.error("Erro ao obter claims:", e);
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
       setLoading(false);
     });
 
@@ -111,7 +122,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    // isAdmin não é mais necessário aqui
+    isAdmin,
     loading,
     login,
     loginWithGoogle,

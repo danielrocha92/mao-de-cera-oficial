@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import styles from '../Banners.module.css';
+import styles from './Banners.module.css';
 
 export default function BannerForm({ isEditing = false, bannerId = null }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [formData, setFormData] = useState({
     titulo: '',
     descricao: '',
@@ -55,14 +57,59 @@ export default function BannerForm({ isEditing = false, bannerId = null }) {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({
-           ...prev,
-           mediaUrl: reader.result
-        }));
-      };
-      reader.readAsDataURL(file);
+      setIsUploading(true);
+      setUploadProgress(0);
+
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      // Se o Cloudinary estiver configurado, usa a API deles (evitando erro 500 de Base64 muito longo)
+      if (cloudName && uploadPreset) {
+        const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', uploadPreset);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            setUploadProgress(Math.round((event.loaded / event.total) * 100));
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            setFormData((prev) => ({ ...prev, mediaUrl: response.secure_url }));
+          } else {
+            console.error('Erro Cloudinary:', xhr.responseText);
+            alert('Falha ao fazer upload da mídia.');
+          }
+          setIsUploading(false);
+        };
+
+        xhr.onerror = () => {
+          alert('Falha na comunicação com servidor de upload.');
+          setIsUploading(false);
+        };
+
+        xhr.send(fd);
+      } else {
+        // Fallback antigo (pode causar erro 500 caso o arquivo seja grande)
+        const reader = new FileReader();
+        reader.onprogress = (event) => {
+          if (event.lengthComputable) {
+            setUploadProgress(Math.round((event.loaded / event.total) * 100));
+          }
+        };
+        reader.onloadend = () => {
+          setFormData((prev) => ({ ...prev, mediaUrl: reader.result }));
+          setIsUploading(false);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -71,6 +118,13 @@ export default function BannerForm({ isEditing = false, bannerId = null }) {
     setLoading(true);
 
     try {
+      // Evita o erro 500 do Firestore caso não use Cloudinary e envie um base64 gigante
+      if (formData.mediaUrl && formData.mediaUrl.startsWith('data:') && formData.mediaUrl.length > 900000) {
+        alert('A mídia é muito grande para ser salva diretamente no banco de dados. Configure o Cloudinary no arquivo .env.local (NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME e NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET) para permitir mídias maiores.');
+        setLoading(false);
+        return;
+      }
+
       const url = isEditing ? `/api/admin/banners/${bannerId}` : '/api/admin/banners';
       const method = isEditing ? 'PUT' : 'POST';
 
@@ -81,7 +135,8 @@ export default function BannerForm({ isEditing = false, bannerId = null }) {
       });
 
       if (!response.ok) {
-        throw new Error('Falha ao salvar banner');
+        const errData = await response.json();
+        throw new Error(`Falha ao salvar banner: ${errData.details || errData.error || response.statusText}`);
       }
 
       router.push('/admin/banners');
@@ -113,11 +168,23 @@ export default function BannerForm({ isEditing = false, bannerId = null }) {
                type="file"
                accept={formData.tipo === 'video' ? "video/*" : "image/*"}
                onChange={handleImageUpload}
+               disabled={isUploading}
             />
-            {formData.mediaUrl && formData.tipo === 'imagem' && (
+
+            {isUploading && (
+              <div style={{ width: '100%', marginTop: '10px' }}>
+                <progress value={uploadProgress} max="100" style={{ width: '100%', height: '20px' }}></progress>
+                <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-color)' }}>
+                  Carregando mídia: {uploadProgress}%
+                </div>
+              </div>
+            )}
+
+            {formData.mediaUrl && formData.tipo === 'imagem' && !isUploading && (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img src={formData.mediaUrl} alt="Preview" className={styles.imagePreview} />
             )}
-            {formData.mediaUrl && formData.tipo === 'video' && (
+            {formData.mediaUrl && formData.tipo === 'video' && !isUploading && (
               <video src={formData.mediaUrl} className={styles.imagePreview} autoPlay muted loop />
             )}
           </div>

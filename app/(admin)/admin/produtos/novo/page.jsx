@@ -136,12 +136,21 @@ export default function NewProductPage() {
           </div>
         </section>
 
-        <section>
-          <h3>Categorias e SEO</h3>
-          <input name="categorias" placeholder="Categorias (separadas por vírgula)" value={formData.categorias} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <input name="tags_busca" placeholder="Tags de Busca (separadas por vírgula)" value={formData.tags_busca} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <input name="seo_titulo" placeholder="Título SEO" value={formData.seo_titulo} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }} />
-          <input name="seo_descricao" placeholder="Meta Descrição" value={formData.seo_descricao} onChange={handleChange} style={{ width: '100%', padding: '0.5rem' }} />
+        <section style={{ backgroundColor: '#f9f9f9', padding: '1.5rem', borderRadius: '8px', border: '1px solid #ddd' }}>
+          <h3 style={{ marginBottom: '0.5rem' }}>Categorias e SEO</h3>
+          <div style={{ backgroundColor: '#eef2ff', color: '#312e81', padding: '1rem', borderRadius: '6px', fontSize: '0.9rem', marginBottom: '1.5rem', borderLeft: '4px solid #4f46e5' }}>
+            <p style={{ margin: 0, fontWeight: 'bold', marginBottom: '0.5rem' }}>💡 Dicas para preenchimento (Crucial para buscas e Google):</p>
+            <ul style={{ margin: 0, paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              <li><strong>Categorias:</strong> Use termos amplos separados por vírgula (Ex: <code>Velas Aromáticas, Kits, Acessórios</code>). O sistema usará isso para agrupar produtos no site.</li>
+              <li><strong>Tags de Busca:</strong> Palavras-chave que os clientes usariam na barra de pesquisa (Ex: <code>vela de lavanda, relaxante, presente, dia das mães</code>).</li>
+              <li><strong>Título SEO:</strong> O título que vai aparecer na aba do navegador e no Google (máx ~60 caracteres).</li>
+              <li><strong>Meta Descrição:</strong> O resuminho que aparece debaixo do título no Google. Seja persuasivo! (máx ~160 caracteres).</li>
+            </ul>
+          </div>
+          <input name="categorias" placeholder="Categorias (separadas por vírgula)" value={formData.categorias} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />
+          <input name="tags_busca" placeholder="Tags de Busca (separadas por vírgula)" value={formData.tags_busca} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />
+          <input name="seo_titulo" placeholder="Título SEO" value={formData.seo_titulo} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />
+          <input name="seo_descricao" placeholder="Meta Descrição" value={formData.seo_descricao} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />
         </section>
 
         <section>

@@ -13,7 +13,7 @@ export async function POST(request) {
     return NextResponse.json({ id: docRef.id, ...newBanner }, { status: 201 });
   } catch (error) {
     console.error('Erro ao criar banner:', error);
-    return NextResponse.json({ error: 'Erro ao criar banner' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao criar banner', details: error.message }, { status: 500 });
   }
 }
 

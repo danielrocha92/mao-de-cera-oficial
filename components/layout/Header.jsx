@@ -43,7 +43,7 @@ const Header = () => {
     const [isScrolled, setScrolled] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
     const { cart } = useCart();
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -147,7 +147,7 @@ const Header = () => {
                     </div>
 
                     <div className={styles.iconsWrapper}>
-                        <Link href={user ? "/conta" : "/conta/login"} aria-label={user ? "Minha Conta" : "Login"}>
+                        <Link href={user ? (isAdmin ? "/admin/dashboard" : "/conta") : "/conta/login"} aria-label={user ? "Minha Conta" : "Login"}>
                             <UserIcon className={styles.icon} />
                         </Link>
                         <Link href="/carrinho" aria-label="Carrinho" className={`${styles.cartLink} ${isAnimating ? styles.bump : ''}`}>
@@ -165,7 +165,9 @@ const Header = () => {
                 <Link href="/produtos" onClick={toggleMenu}>Produtos</Link>
                 <Link href="/quem-somos" onClick={toggleMenu}>Quem Somos</Link>
                 <Link href="/contato" onClick={toggleMenu}>Contato</Link>
-                <Link href="/conta/login" onClick={toggleMenu}>Minha Conta</Link>
+                <Link href={user ? (isAdmin ? "/admin/dashboard" : "/conta") : "/conta/login"} onClick={toggleMenu}>
+                    {user ? (isAdmin ? "Painel Admin" : "Minha Conta") : "Login / Cadastrar"}
+                </Link>
             </nav>
         </header>
     );
