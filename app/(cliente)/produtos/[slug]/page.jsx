@@ -8,6 +8,8 @@ import FreightCalculator from '@/components/shop/FreightCalculator'; // We'll cr
 import ProductGallery from '@/components/shop/ProductGallery';
 import styles from './page.module.css';
 
+export const dynamic = 'force-dynamic';
+
 async function getProduct(slugOrId) {
   try {
     const decodedSlug = decodeURIComponent(slugOrId).trim();

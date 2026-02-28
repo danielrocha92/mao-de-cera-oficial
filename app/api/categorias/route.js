@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebaseAdmin';
 
+export const dynamic = 'force-dynamic';
+
 // GET all categories
 export async function GET() {
   try {

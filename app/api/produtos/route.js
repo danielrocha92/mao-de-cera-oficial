@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/firebaseAdmin';
 
+export const dynamic = 'force-dynamic';
+
 // CREATE a new product
 export async function POST(request) {
   try {
