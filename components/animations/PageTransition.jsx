@@ -1,45 +1,32 @@
 "use client";
 
-import React, { useContext, useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-const Lottie = dynamic(() => import('lottie-react').then(mod => mod.default), { ssr: false });
+import React, { useContext } from 'react';
 import { TransitionContext } from '../../app/context/TransitionContext';
 import styles from './PageTransition.module.css';
-import animationData from '../../public/animation.json';
-
-const DESKTOP_SIZE = 418;
-const MOBILE_SIZE = 150;
 
 const PageTransition = ({ children }) => {
     const { isTransitioning } = useContext(TransitionContext);
-    const [size, setSize] = useState(DESKTOP_SIZE);
-
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 768) {
-                setSize(MOBILE_SIZE);
-            } else {
-                setSize(DESKTOP_SIZE);
-            }
-        };
-
-        // Set initial size
-        handleResize();
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
 
     return (
         <>
             {isTransitioning && (
-                <div className={styles.transitionOverlay}>
-                    <Lottie
-                        animationData={animationData}
-                        loop={false}
-                        autoplay={true}
-                        style={{ width: size, height: size }}
-                    />
+                <div className={styles.transitionOverlay} style={{
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                }}>
+                    <div style={{
+                        width: '50px',
+                        height: '50px',
+                        border: '4px solid #f3f3f3',
+                        borderTop: '4px solid #9b59b6',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite'
+                    }} />
+                    <style>{`
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    `}</style>
                 </div>
             )}
             {children}

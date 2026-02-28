@@ -1,20 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Lottie from 'lottie-react';
-
 export default function PageLoader() {
-  const [animationData, setAnimationData] = useState(null);
-
-  useEffect(() => {
-    fetch('/animation.json')
-      .then((res) => res.json())
-      .then((data) => setAnimationData(data))
-      .catch((err) => console.error('Error loading animation:', err));
-  }, []);
-
-  if (!animationData) return null;
-
   return (
     <div style={{
       position: 'fixed',
@@ -23,14 +9,26 @@ export default function PageLoader() {
       width: '100%',
       height: '100%',
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'rgba(255, 255, 255, 0.9)',
       zIndex: 9999,
     }}>
-      <div style={{ width: '300px', maxWidth: '80%', height: 'auto' }}>
-        <Lottie animationData={animationData} loop={true} />
-      </div>
+      <div style={{
+        width: '50px',
+        height: '50px',
+        border: '4px solid #f3f3f3',
+        borderTop: '4px solid #9b59b6',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite'
+      }} />
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }
