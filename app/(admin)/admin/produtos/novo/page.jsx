@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import ImageUpload from '@/components/ui/ImageUpload';
@@ -21,7 +21,7 @@ export default function NewProductPage() {
     comprimento: '',
     largura: '',
     altura: '',
-    categorias: '',
+    categorias: [],
     tags_busca: '',
     seo_titulo: '',
     seo_descricao: '',
@@ -35,7 +35,34 @@ export default function NewProductPage() {
     setFormData({ ...formData, [e.target.name]: value });
   };
 
+  const [availableCategories, setAvailableCategories] = useState([]);
 
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const res = await fetch('/api/categorias');
+        if (res.ok) {
+          const data = await res.json();
+          setAvailableCategories(data);
+        }
+      } catch (error) {
+         console.error(error);
+      }
+    };
+    fetchCats();
+  }, []);
+
+  const handleCategoryToggle = (catName) => {
+    setFormData(prev => {
+      const isSelected = prev.categorias.includes(catName);
+      return {
+        ...prev,
+        categorias: isSelected
+          ? prev.categorias.filter(c => c !== catName)
+          : [...prev.categorias, catName]
+      };
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +82,7 @@ export default function NewProductPage() {
           largura: Number(formData.largura),
           altura: Number(formData.altura)
         },
-        categorias: formData.categorias.split(',').map(s => s.trim()),
+        categorias: formData.categorias,
         tags_busca: formData.tags_busca.split(',').map(s => s.trim()),
         seo: {
           titulo: formData.seo_titulo,
@@ -99,7 +126,7 @@ export default function NewProductPage() {
         <section>
           <h3>Informações Básicas</h3>
           <input name="nome" placeholder="Nome do Produto" value={formData.nome} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem' }} />
-          <input name="slug" placeholder="Slug (URL)" value={formData.slug} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem' }} />
+          <input name="slug" placeholder="Slug / URL (Opcional - Gerado automaticamente se vazio)" value={formData.slug} onChange={handleChange} style={{ width: '100%', padding: '0.5rem' }} />
           <textarea name="descricao" placeholder="Descrição" value={formData.descricao} onChange={handleChange} rows={5} style={{ width: '100%', padding: '0.5rem' }} />
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -147,7 +174,25 @@ export default function NewProductPage() {
               <li><strong>Meta Descrição:</strong> O resuminho que aparece debaixo do título no Google. Seja persuasivo! (máx ~160 caracteres).</li>
             </ul>
           </div>
-          <input name="categorias" placeholder="Categorias (separadas por vírgula)" value={formData.categorias} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />
+          <div style={{ marginBottom: '1rem' }}>
+             <strong style={{ display: 'block', marginBottom: '0.5rem' }}>Selecione as Categorias:</strong>
+             {availableCategories.length === 0 ? (
+                <p style={{ fontSize: '0.85rem', color: '#666' }}>Nenhuma categoria disponível.</p>
+             ) : (
+                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                  {availableCategories.map(cat => (
+                     <label key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.categorias.includes(cat.nome)}
+                          onChange={() => handleCategoryToggle(cat.nome)}
+                        />
+                        {cat.nome}
+                     </label>
+                  ))}
+                </div>
+             )}
+          </div>
           <input name="tags_busca" placeholder="Tags de Busca (separadas por vírgula)" value={formData.tags_busca} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />
           <input name="seo_titulo" placeholder="Título SEO" value={formData.seo_titulo} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', marginBottom: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />
           <input name="seo_descricao" placeholder="Meta Descrição" value={formData.seo_descricao} onChange={handleChange} style={{ width: '100%', padding: '0.8rem', border: '1px solid #ccc', borderRadius: '4px' }} />

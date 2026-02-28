@@ -27,7 +27,7 @@ export default function EditarProdutoPage() {
     images: [],
     variations: [],
     skus: {},
-    category: '',
+    categories: [],
     brand: '',
     tags: '',
     isLancamento: false,
@@ -35,6 +35,22 @@ export default function EditarProdutoPage() {
   });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [availableCategories, setAvailableCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const res = await fetch('/api/categorias');
+        if (res.ok) {
+          const data = await res.json();
+          setAvailableCategories(data);
+        }
+      } catch (error) {
+         console.error(error);
+      }
+    };
+    fetchCats();
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -60,7 +76,9 @@ export default function EditarProdutoPage() {
             length: data.length || data.dimensoes_cm?.comprimento || '',
             width: data.width || data.dimensoes_cm?.largura || '',
             height: data.height || data.dimensoes_cm?.altura || '',
-            category: data.category || (Array.isArray(data.categorias) ? data.categorias.join(', ') : data.categorias) || '',
+            categories: Array.isArray(data.categorias)
+              ? data.categorias
+              : (data.category ? data.category.split(',').map(s=>s.trim()) : []),
             tags: data.tags || (Array.isArray(data.tags_busca) ? data.tags_busca.join(', ') : data.tags_busca) || '',
             isLancamento: !!data.isLancamento,
             isOferta: !!data.isOferta,
@@ -82,6 +100,18 @@ export default function EditarProdutoPage() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
+  };
+
+  const handleCategoryToggle = (catName) => {
+    setProduct((prev) => {
+      const isSelected = prev.categories.includes(catName);
+      return {
+        ...prev,
+        categories: isSelected
+          ? prev.categories.filter((c) => c !== catName)
+          : [...prev.categories, catName]
+      };
+    });
   };
 
   const handleImageUpload = (url) => {
@@ -134,10 +164,10 @@ export default function EditarProdutoPage() {
         dimensoes_cm: {
             comprimento: Number(product.length),
             largura: Number(product.width),
-            altura: Number(product.height)
+        altura: Number(product.height)
         },
         imagens: product.images,
-        categorias: product.category.split(',').map(s => s.trim()),
+        categorias: product.categories,
         tags_busca: product.tags.split(',').map(s => s.trim()),
       };
 
@@ -189,14 +219,13 @@ export default function EditarProdutoPage() {
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="slug">Slug (URL)</label>
+            <label htmlFor="slug">Slug / URL (Opcional - Pode manter esse gerado pelo sistema)</label>
             <input
               type="text"
               id="slug"
               name="slug"
               value={product.slug}
               onChange={handleChange}
-              required
               autoComplete="off"
             />
           </div>
@@ -273,9 +302,24 @@ export default function EditarProdutoPage() {
         <div className={styles.card}>
             <h2>Organização</h2>
             <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="category">Categoria</label>
-                    <input type="text" id="category" name="category" value={product.category} onChange={handleChange} autoComplete="off" />
+                <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+                    <label>Categorias</label>
+                    {availableCategories.length === 0 ? (
+                      <p style={{ fontSize: '0.85rem', color: '#666' }}>Nenhuma categoria disponível.</p>
+                    ) : (
+                      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem', marginBottom: '1rem', padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '4px', backgroundColor: 'var(--surface)' }}>
+                        {availableCategories.map((cat) => (
+                           <label key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', fontSize: '0.9rem' }}>
+                              <input
+                                type="checkbox"
+                                checked={product.categories.includes(cat.nome)}
+                                onChange={() => handleCategoryToggle(cat.nome)}
+                              />
+                              {cat.nome}
+                           </label>
+                        ))}
+                      </div>
+                    )}
                 </div>
                 <div className={styles.formGroup}>
                     <label htmlFor="brand">Marca</label>
