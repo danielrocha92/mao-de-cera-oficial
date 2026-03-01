@@ -24,9 +24,16 @@
 
 .grid {
     display: grid;
-    grid-template-columns: 55% 40%;
-    gap: 3rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     align-items: start;
+}
+
+@media (min-width: 769px) {
+    .grid {
+        grid-template-columns: 55% 40%;
+        gap: 3rem;
+    }
 }
 
 .gallery {
@@ -88,11 +95,17 @@
 }
 
 .title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
     color: var(--text-primary);
     line-height: 1.2;
+}
+
+@media (min-width: 769px) {
+    .title {
+        font-size: 1.75rem;
+    }
 }
 
 .sku {
@@ -123,10 +136,16 @@
 }
 
 .price {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--primary);
     line-height: 1;
+}
+
+@media (min-width: 769px) {
+    .price {
+        font-size: 2.5rem;
+    }
 }
 
 .installments {
@@ -168,19 +187,4 @@
 
 .freight {
     margin-top: 1rem;
-}
-
-@media (max-width: 768px) {
-    .grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .title {
-        font-size: 1.5rem;
-    }
-
-    .price {
-        font-size: 2rem;
-    }
 }

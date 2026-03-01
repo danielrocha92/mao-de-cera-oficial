@@ -1,16 +1,17 @@
 .checkoutContainer {
-  max-width: 1100px;
+  width: 100%;
   margin: 2rem auto;
   padding: 0 1.5rem;
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr;
   gap: 2rem;
   align-items: start;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 901px) {
   .checkoutContainer {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 400px;
+    max-width: 1100px;
   }
 }
 
@@ -134,6 +135,13 @@
 .inputRow {
   display: flex;
   gap: 1rem;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .inputRow {
+    flex-direction: row;
+  }
 }
 
 .inputGroup {
@@ -147,7 +155,13 @@
 }
 
 .halfWidth {
-  width: 50%;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .halfWidth {
+    width: 50%;
+  }
 }
 
 .inputGroup label {

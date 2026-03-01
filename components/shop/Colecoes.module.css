@@ -1,13 +1,25 @@
 .collectionsWrapper {
-  padding: 3rem 0;
+  padding: 2rem 0;
   background-color: var(--surface);
+}
+
+@media (min-width: 769px) {
+  .collectionsWrapper {
+    padding: 3rem 0;
+  }
 }
 
 .title {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 2rem;
   color: var(--text-primary);
+}
+
+@media (min-width: 769px) {
+  .title {
+    font-size: 2rem;
+  }
 }
 
 .carouselWrapper {
@@ -22,14 +34,17 @@
   overflow-x: auto;
   padding: 1rem;
   /* Hide scrollbar for a cleaner look */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
   scroll-behavior: smooth;
   justify-content: center;
 }
 
 .carouselContainer::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Opera */
+  display: none;
+  /* Chrome, Safari, and Opera */
 }
 
 .navButton {
@@ -41,12 +56,19 @@
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  display: flex;
+  display: none;
+  /* Oculta as setas em telas menores, pois o deslize é mais natural */
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 1;
   transition: background-color 0.3s;
+}
+
+@media (min-width: 769px) {
+  .navButton {
+    display: flex;
+  }
 }
 
 .navButton:hover {
@@ -75,17 +97,24 @@
 }
 
 .imageWrapper {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
+@media (min-width: 769px) {
+  .imageWrapper {
+    width: 120px;
+    height: 120px;
+  }
+}
+
 .collectionItem:hover .imageWrapper {
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .collectionImage {
@@ -97,24 +126,4 @@
 .collectionName {
   font-weight: 500;
   font-size: 1rem;
-}
-
-@media (max-width: 768px) {
-  .collectionsWrapper {
-    padding: 2rem 0;
-  }
-  .title {
-    font-size: 1.5rem;
-  }
-  .carouselContainer {
-    justify-content: flex-start;
-    padding: 1rem;
-  }
-  .imageWrapper {
-    width: 100px;
-    height: 100px;
-  }
-  .navButton {
-    display: none; /* Oculta as setas em telas menores, pois o deslize é mais natural */
-  }
 }

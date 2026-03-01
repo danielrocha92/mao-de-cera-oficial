@@ -27,9 +27,15 @@
 }
 
 .title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     color: var(--text-primary);
     font-weight: 600;
+}
+
+@media (min-width: 769px) {
+    .title {
+        font-size: 1.75rem;
+    }
 }
 
 .carouselWrapper {
@@ -44,7 +50,8 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    display: flex;
+    display: none;
+    /* Hide arrows on mobile */
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -53,6 +60,12 @@
     position: absolute;
     z-index: 10;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 769px) {
+    .arrowButton {
+        display: flex;
+    }
 }
 
 .leftArrow {
@@ -89,31 +102,13 @@
 
 .cardWrapper {
     flex: 0 0 auto;
-    width: 300px;
-    /* Largura fixa para o card no carrossel */
+    width: 260px;
+    /* Largura ajustada para mobile */
 }
 
-@media (max-width: 768px) {
-    .title {
-        font-size: 1.5rem;
-    }
-
+@media (min-width: 769px) {
     .cardWrapper {
-        width: 260px;
-    }
-
-    .controls {
-        display: none;
-        /* Oculta setas no mobile, usa scroll nativo */
-    }
-
-    .arrowButton {
-        display: none;
-        /* Hide arrows on mobile */
-    }
-
-    .leftArrow,
-    .rightArrow {
-        display: none;
+        width: 300px;
+        /* Largura fixa para o card no carrossel desktop */
     }
 }

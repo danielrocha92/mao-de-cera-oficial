@@ -1,10 +1,19 @@
 /* Main container */
 .carouselWrapper {
   width: 100%;
-  height: 100vh; /* Fullscreen height for desktop */
+  height: 60vh;
+  /* Adjusted height for mobile */
   position: relative;
   overflow: hidden;
-  background-color: #000; /* Fallback background */
+  background-color: #000;
+  /* Fallback background */
+}
+
+@media (min-width: 769px) {
+  .carouselWrapper {
+    height: 100vh;
+    /* Fullscreen height for desktop */
+  }
 }
 
 /* Slides container - this moves */
@@ -25,7 +34,8 @@
 .slideMedia {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* As requested */
+  object-fit: cover;
+  /* As requested */
 }
 
 /* Dark overlay for text readability */
@@ -51,14 +61,26 @@
 }
 
 .slideContent h2 {
-  font-size: 3rem;
+  font-size: 1.8rem;
   margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 769px) {
+  .slideContent h2 {
+    font-size: 3rem;
+  }
 }
 
 .slideContent p {
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 769px) {
+  .slideContent p {
+    font-size: 1.2rem;
+  }
 }
 
 /* Navigation Arrows */
@@ -70,10 +92,17 @@
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
-  padding: 1rem;
-  font-size: 1.5rem;
+  padding: 0.5rem;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+@media (min-width: 769px) {
+  .arrow {
+    padding: 1rem;
+    font-size: 1.5rem;
+  }
 }
 
 .arrow:hover {
@@ -81,11 +110,23 @@
 }
 
 .leftArrow {
-  left: 20px;
+  left: 10px;
+}
+
+@media (min-width: 769px) {
+  .leftArrow {
+    left: 20px;
+  }
 }
 
 .rightArrow {
-  right: 20px;
+  right: 10px;
+}
+
+@media (min-width: 769px) {
+  .rightArrow {
+    right: 20px;
+  }
 }
 
 /* Pagination Dots */
@@ -114,32 +155,4 @@
 
 .activeDot {
   background-color: white;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .carouselWrapper {
-    height: 60vh; /* Adjusted height for mobile */
-  }
-
-  .slideContent h2 {
-    font-size: 1.8rem;
-  }
-
-  .slideContent p {
-    font-size: 1rem;
-  }
-
-  .arrow {
-    padding: 0.5rem;
-    font-size: 1.2rem;
-  }
-
-  .leftArrow {
-    left: 10px;
-  }
-
-  .rightArrow {
-    right: 10px;
-  }
 }

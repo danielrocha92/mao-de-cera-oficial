@@ -1,16 +1,34 @@
 .container {
-  padding: 40px 20px;
+  padding: 20px 10px;
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
 }
 
+@media (min-width: 481px) {
+  .container {
+    padding: 40px 20px;
+  }
+}
+
 .title {
-  font-size: 2.5em;
+  font-size: 1.8em;
   color: #333;
   margin-bottom: 40px;
   position: relative;
   display: inline-block;
+}
+
+@media (min-width: 481px) {
+  .title {
+    font-size: 2em;
+  }
+}
+
+@media (min-width: 769px) {
+  .title {
+    font-size: 2.5em;
+  }
 }
 
 .title::after {
@@ -21,7 +39,8 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background-color: #ff6f61; /* A nice accent color */
+  background-color: #ff6f61;
+  /* A nice accent color */
   border-radius: 2px;
 }
 
@@ -37,9 +56,21 @@
 
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr;
   gap: 30px;
   justify-content: center;
+}
+
+@media (min-width: 481px) {
+  .cardGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (min-width: 769px) {
+  .cardGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 
 .cardLink {
@@ -66,7 +97,8 @@
 
 .cardImageWrapper {
   width: 100%;
-  height: 200px; /* Fixed height for consistency */
+  height: 200px;
+  /* Fixed height for consistency */
   position: relative;
 }
 
@@ -83,10 +115,16 @@
 }
 
 .cardContent h3 {
-  font-size: 1.5em;
+  font-size: 1.3em;
   color: #333;
   margin-top: 0;
   margin-bottom: 10px;
+}
+
+@media (min-width: 481px) {
+  .cardContent h3 {
+    font-size: 1.5em;
+  }
 }
 
 .cardContent p {
@@ -94,33 +132,4 @@
   color: #555;
   line-height: 1.5;
   margin-bottom: 15px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .title {
-    font-size: 2em;
-  }
-
-  .cardGrid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 20px 10px;
-  }
-
-  .title {
-    font-size: 1.8em;
-  }
-
-  .cardGrid {
-    grid-template-columns: 1fr; /* Stack cards on very small screens */
-  }
-
-  .cardContent h3 {
-    font-size: 1.3em;
-  }
 }

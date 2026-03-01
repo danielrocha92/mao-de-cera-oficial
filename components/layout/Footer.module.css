@@ -20,10 +20,19 @@
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  text-align: center;
   gap: 1.5rem;
+}
+
+@media (min-width: 769px) {
+  .newsletterContainer {
+    flex-direction: row;
+    text-align: left;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .newsletterText h3 {
@@ -39,9 +48,18 @@
 
 .newsletterForm {
   display: flex;
-  flex: 1;
-  max-width: 500px;
+  width: 100%;
+  flex-direction: column;
   gap: 0.5rem;
+}
+
+@media (min-width: 769px) {
+  .newsletterForm {
+    width: auto;
+    flex: 1;
+    max-width: 500px;
+    flex-direction: row;
+  }
 }
 
 .newsletterForm input {
@@ -77,26 +95,71 @@
 
 /* Links Grid */
 .linksGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   margin-bottom: 3rem;
+}
+
+@media (min-width: 769px) {
+  .linksGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+}
+
+.section {
+  border-bottom: 1px solid var(--border-color);
+}
+
+@media (min-width: 769px) {
+  .section {
+    border-bottom: none;
+  }
 }
 
 .section h4 {
   font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
+  padding: 1rem 0;
+  cursor: pointer;
   color: var(--text-primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+@media (min-width: 769px) {
+  .section h4 {
+    margin-bottom: 1.5rem;
+    padding: 0;
+    cursor: default;
+  }
+}
+
+.section h4.noAccordion {
+  cursor: default;
+  border-bottom: none;
+}
+
 .content {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 0.8rem;
+  padding-bottom: 1rem;
+}
+
+.content.open {
+  display: flex;
+}
+
+@media (min-width: 769px) {
+  .content {
+    display: flex;
+    padding-bottom: 0;
+  }
 }
 
 .content a {
@@ -117,54 +180,14 @@
 
 /* Mobile Accordion */
 .indicator {
-  display: none;
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 300;
 }
 
-@media (max-width: 768px) {
-  .newsletterContainer {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .newsletterForm {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .linksGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .section {
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .section h4 {
-    padding: 1rem 0;
-    margin-bottom: 0;
-    cursor: pointer;
-  }
-
-  .section h4.noAccordion {
-    cursor: default;
-    border-bottom: none;
-  }
-
+@media (min-width: 769px) {
   .indicator {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 300;
-  }
-
-  .content {
     display: none;
-    padding-bottom: 1rem;
-  }
-
-  .content.open {
-    display: flex;
   }
 }
 

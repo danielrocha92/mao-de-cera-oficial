@@ -1,16 +1,34 @@
 .container {
-  padding: 40px 20px;
+  padding: 20px 10px;
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
 }
 
+@media (min-width: 481px) {
+  .container {
+    padding: 40px 20px;
+  }
+}
+
 .title {
-  font-size: 2.5em;
+  font-size: 1.8em;
   color: #333;
   margin-bottom: 40px;
   position: relative;
   display: inline-block;
+}
+
+@media (min-width: 481px) {
+  .title {
+    font-size: 2em;
+  }
+}
+
+@media (min-width: 769px) {
+  .title {
+    font-size: 2.5em;
+  }
 }
 
 .title::after {
@@ -21,15 +39,28 @@
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background-color: #ff6f61; /* Accent color */
+  background-color: #ff6f61;
+  /* Accent color */
   border-radius: 2px;
 }
 
 .reviewsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr;
   gap: 30px;
   justify-content: center;
+}
+
+@media (min-width: 481px) {
+  .reviewsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (min-width: 769px) {
+  .reviewsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 
 .reviewCard {
@@ -74,7 +105,8 @@
 }
 
 .stars {
-  color: #fcc419; /* A golden color for stars */
+  color: #fcc419;
+  /* A golden color for stars */
   font-size: 1.2em;
 }
 
@@ -91,34 +123,14 @@
   font-size: 0.95em;
   line-height: 1.6;
   margin-bottom: 15px;
-  flex-grow: 1; /* Allows text to take up available space */
+  flex-grow: 1;
+  /* Allows text to take up available space */
 }
 
 .reviewTime {
   color: #888;
   font-size: 0.85em;
   text-align: right;
-  margin-top: auto; /* Pushes time to the bottom */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .title {
-    font-size: 2em;
-  }
-  .reviewsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 20px 10px;
-  }
-  .title {
-    font-size: 1.8em;
-  }
-  .reviewsGrid {
-    grid-template-columns: 1fr; /* Stack reviews on very small screens */
-  }
+  margin-top: auto;
+  /* Pushes time to the bottom */
 }

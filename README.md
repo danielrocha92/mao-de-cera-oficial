@@ -32,16 +32,21 @@
 
 <hr>
 
-<h2>🖼️ Arquitetura do Projeto (Full-Stack)</h2>
+<h2>🖼️ Arquitetura do Projeto (Full-Stack Next.js 14 App Router)</h2>
 
 <pre><code>mao-de-cera-oficial/
-├── public/
-├── src/
-│   ├── api/                 # Rotas da API (se usando rotas API do Next.js ou Node.js separado)
-│   ├── components/          # Componentes de UI e Layout
-│   ├── pages/               # Rotas Front-End (Next.js)
-│   ├── services/            # Configuração de serviços (Firebase)
-│   ├── styles/              # Arquivos de estilização (CSS Dedicado)
+├── app/
+│   ├── (admin)/             # Rotas e layouts do Painel Administrativo
+│   ├── (cliente)/           # Rotas e layouts da loja front-facing
+│   ├── api/                 # Rotas da API e Webhooks (Mercado Pago, Bling)
+│   ├── globals.css          # Estilos Globais
+│   └── layout.jsx           # Root Layout principal
+├── components/              # Componentes de UI modulares
+│   ├── layout/              # Header, Footer, Sidebar
+│   ├── shop/                # Componentes específicos de e-commerce (Carrosséis, Cards)
+│   └── ui/                  # Botões, Inputs, Modais base
+├── lib/                     # Utilitários, hooks customizados e validações (Zod)
+├── public/                  # Assets estáticos (imagens, ícones)
 └── package.json
 </code></pre>
 
@@ -59,13 +64,13 @@
     <li>
         <p><strong>Desenvolvimento Mobile-First com CSS Puro:</strong></p>
         <ul>
-            <li><strong>Lição:</strong> Criação de um design totalmente responsivo utilizando apenas <b>CSS3/Puro</b> e media queries, garantindo flexibilidade e performance superior.</li>
+            <li><strong>Lição:</strong> Transição arquitetural completa para <b>Mobile First</b>. Todos os componentes foram refatorados para usar <code>min-width</code> ao invés de <code>max-width</code>, com CSS puro em formato de modularização (CSS Modules). Garantindo renderização nativa rápida no mobile e escalonamento responsivo fluido para desktop.</li>
         </ul>
     </li>
     <li>
         <p><strong>Persistência de Dados (BaaS):</strong></p>
         <ul>
-            <li><strong>Lição:</strong> Utilização do Firebase (BaaS) para o armazenamento e acesso rápido aos dados de leads, simplificando a infraestrutura de dados para focar na entrega de valor.</li>
+            <li><strong>Lição:</strong> Utilização do Firebase (Firestore e Auth) para gerenciamento completo do catálogo, pedidos, clientes e integração de pagamentos (Mercado Pago), sem depender de CMS engessados.</li>
         </ul>
     </li>
 </ol>
