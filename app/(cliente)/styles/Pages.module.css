@@ -1,0 +1,107 @@
+.container {
+    width: 100%;
+    padding: 1.5rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--surface);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 2rem 3rem;
+    }
+}
+
+.title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 300;
+}
+
+@media (min-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+}
+
+.content p,
+.content ul,
+.content li {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* FAQ accordion */
+.accordionItem {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.question {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0.75rem 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.answer {
+    padding: 0.5rem 0 1rem 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+/* Contact form */
+.contactForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputGroup label {
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.input {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+.submitBtn {
+    align-self: flex-start;
+    padding: 0.6rem 1.2rem;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.submitBtn:hover {
+    background: var(--primary-dark);
+}
+
+.status {
+    margin-top: 0.5rem;
+    color: var(--primary);
+}

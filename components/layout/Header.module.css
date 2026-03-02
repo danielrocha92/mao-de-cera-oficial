@@ -149,6 +149,11 @@
   color: var(--text-primary);
 }
 
+.scrolled .searchInput::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
 .iconsWrapper {
   grid-area: icons;
   display: flex;
