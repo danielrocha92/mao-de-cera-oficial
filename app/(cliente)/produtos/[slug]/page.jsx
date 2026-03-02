@@ -109,7 +109,9 @@ export default async function ProductPage({ params }) {
 
           <div className={styles.description}>
             <h2>Descrição do Produto</h2>
-            <p>{product.descricao || product.description}</p>
+            <div
+              dangerouslySetInnerHTML={{ __html: product.descricao || product.description }}
+            />
           </div>
         </div>
       </div>

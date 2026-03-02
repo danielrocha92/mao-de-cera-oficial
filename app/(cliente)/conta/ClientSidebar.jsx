@@ -23,43 +23,38 @@ export default function ClientSidebar() {
     }
   };
 
-  const getLinkStyle = (path) => {
-    // Para a home ('/conta'), precisamos verificar exatidão para não dar match em tudo
-    const isActive = path === '/conta' ? pathname === path : pathname.startsWith(path);
-    return {
-      borderColor: isActive ? 'var(--primary)' : 'transparent',
-      color: isActive ? 'var(--primary)' : 'var(--text-primary)'
-    };
+  const isActive = (path) => {
+    return path === '/conta' ? pathname === path : pathname.startsWith(path);
   };
 
   return (
     <aside className={styles.sidebar}>
       <nav>
-        <Link href="/conta" style={getLinkStyle('/conta')}>
+        <Link href="/conta" className={isActive('/conta') ? styles.active : ''}>
           <MdDashboard size={24} />
           <span>Visão Geral</span>
         </Link>
-        <Link href="/conta/pedidos" style={getLinkStyle('/conta/pedidos')}>
+        <Link href="/conta/pedidos" className={isActive('/conta/pedidos') ? styles.active : ''}>
           <MdShoppingBag size={24} />
           <span>Meus Pedidos</span>
         </Link>
-        <Link href="/conta/perfil" style={getLinkStyle('/conta/perfil')}>
+        <Link href="/conta/perfil" className={isActive('/conta/perfil') ? styles.active : ''}>
           <MdPerson size={24} />
           <span>Meus Dados</span>
         </Link>
-        <Link href="/conta/enderecos" style={getLinkStyle('/conta/enderecos')}>
+        <Link href="/conta/enderecos" className={isActive('/conta/enderecos') ? styles.active : ''}>
           <MdLocationOn size={24} />
           <span>Meus Endereços</span>
         </Link>
-        <Link href="/conta/favoritos" style={getLinkStyle('/conta/favoritos')}>
+        <Link href="/conta/favoritos" className={isActive('/conta/favoritos') ? styles.active : ''}>
           <MdFavorite size={24} />
           <span>Favoritos</span>
         </Link>
-        <Link href="/conta/financeiro" style={getLinkStyle('/conta/financeiro')}>
+        <Link href="/conta/financeiro" className={isActive('/conta/financeiro') ? styles.active : ''}>
           <MdPayment size={24} />
           <span>Financeiro / Cartões</span>
         </Link>
-        <Link href="/conta/suporte" style={getLinkStyle('/conta/suporte')}>
+        <Link href="/conta/suporte" className={isActive('/conta/suporte') ? styles.active : ''}>
           <MdSupportAgent size={24} />
           <span>Trocas e Suporte</span>
         </Link>

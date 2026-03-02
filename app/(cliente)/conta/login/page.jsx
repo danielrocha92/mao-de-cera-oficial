@@ -5,6 +5,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaGoogle, FaEnvelope, FaLock } from 'react-icons/fa';
+import Loading from '@/components/Loading/Loading';
 import styles from './Login.module.css';
 
 export default function LoginPage() {
@@ -12,29 +13,31 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, loginWithGoogle, user } = useAuth();
+  const [redirecting, setRedirecting] = useState(false);
+  const { login, loginWithGoogle, user, loading: authLoading } = useAuth();
   const router = useRouter();
 
+  // Automatiza o redirecionamento para quem já está logado
   React.useEffect(() => {
-    if (user) {
+    // Só redireciona se o AuthContext já terminou de carregar (incluindo syncSession)
+    if (user && !authLoading && !redirecting) {
       user.getIdTokenResult().then(idTokenResult => {
         const adminStatus = !!idTokenResult.claims.admin;
-        if (adminStatus) {
-          router.push('/admin/dashboard');
-        } else {
-          router.push('/conta');
+        const target = adminStatus ? '/admin/dashboard' : '/conta';
+
+        // Evita loop se já estivermos tentando ir para o lugar certo
+        if (window.location.pathname !== target) {
+          console.log(`LoginPage: Redirecionando para ${target}...`);
+          setRedirecting(true);
+          window.location.href = target;
         }
       });
     }
-  }, [user, router]);
+  }, [user, authLoading, redirecting]);
 
-  if (user) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.spinner}></div>
-        <p>Acessando sua conta...</p>
-      </div>
-    );
+  // Se já houver um usuário ou estiver redirecionando, mostramos o Lottie
+  if (user || redirecting) {
+    return <Loading />;
   }
 
   const handleSubmit = async (e) => {
@@ -42,22 +45,27 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     try {
-      await login(email, password);
+      const is_admin = await login(email, password);
+      // Após o login com sucesso, AuthContext já terá resolvido a sessão
+      setRedirecting(true);
+      window.location.href = is_admin ? '/admin/dashboard' : '/conta';
     } catch (err) {
+      console.error('Erro no login:', err);
       setError('Email ou senha inválidos. Tente novamente.');
-    } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
     setError('');
+    setLoading(true);
     try {
-      await loginWithGoogle();
+      const is_admin = await loginWithGoogle();
+      setRedirecting(true);
+      window.location.href = is_admin ? '/admin/dashboard' : '/conta';
     } catch (err) {
+      console.error('Erro no Google Login:', err);
       setError('Falha ao autenticar com o Google.');
-    } finally {
       setLoading(false);
     }
   };

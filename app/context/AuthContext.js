@@ -24,14 +24,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // onAuthStateChanged apenas monitora o estado do *cliente*
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
+      if (firebaseUser) {
         try {
-          const tokenResult = await user.getIdTokenResult();
+          const tokenResult = await firebaseUser.getIdTokenResult();
           setIsAdmin(tokenResult.claims.admin === true);
+
+          // Sincroniza a sessão se necessário (silenciosamente)
+          await syncSession(firebaseUser);
         } catch (e) {
-          console.error("Erro ao obter claims:", e);
+          console.error("Erro ao processar login inicial:", e);
           setIsAdmin(false);
         }
       } else {
@@ -44,7 +47,6 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const loginWithGoogle = async () => {
-    setLoading(true);
     try {
       if (auth.isMock) {
         throw new Error("Firebase keys missing. Check your .env.local file.");
@@ -63,13 +65,25 @@ export const AuthProvider = ({ children }) => {
       return tokenResult.claims.admin === true;
     } catch (error) {
       console.error("Erro no login com Google:", error);
-      setLoading(false);
       throw error;
     }
   };
 
+  const syncSession = async (targetUser) => {
+    if (!targetUser) return;
+    try {
+      const idToken = await targetUser.getIdToken();
+      await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      });
+    } catch (e) {
+      console.error("Erro ao sincronizar sessão:", e);
+    }
+  };
+
   const login = async (email, password) => {
-    setLoading(true);
     try {
       // 1. Faz login no cliente (Firebase Auth)
       if (auth.isMock) {
@@ -93,13 +107,11 @@ export const AuthProvider = ({ children }) => {
 
     } catch (error) {
       console.error("Erro no login:", error);
-      setLoading(false);
       throw error; // Repassa o erro para a página de login tratar
     }
   };
 
   const logout = async () => {
-    setLoading(true);
     try {
       // 1. Faz logout no cliente (Firebase Auth)
       await signOut(auth);
@@ -115,8 +127,6 @@ export const AuthProvider = ({ children }) => {
 
     } catch (error) {
       console.error("Erro no logout:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -127,11 +137,16 @@ export const AuthProvider = ({ children }) => {
     login,
     loginWithGoogle,
     logout,
+    syncSession,
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {loading ? <Loading /> : children}
+      {loading ? (
+        <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Loading />
+        </div>
+      ) : children}
     </AuthContext.Provider>
   );
 };

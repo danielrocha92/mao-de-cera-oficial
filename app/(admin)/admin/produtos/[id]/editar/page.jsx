@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import styles from '../../novo/NovoProduto.module.css'; // Reusing the same styles
 import ImageUpload from '@/components/ui/ImageUpload';
 import VariationsManager from '@/components/admin/VariationsManager';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 export default function EditarProdutoPage() {
   const router = useRouter();
@@ -231,12 +232,10 @@ export default function EditarProdutoPage() {
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="description">Descrição</label>
-            <textarea
-              id="description"
-              name="description"
+            <RichTextEditor
               value={product.description}
-              onChange={handleChange}
-              autoComplete="off"
+              onChange={(content) => setProduct(prev => ({ ...prev, description: content }))}
+              placeholder="Descrição completa do produto..."
             />
           </div>
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>

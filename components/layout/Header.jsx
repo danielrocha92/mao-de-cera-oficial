@@ -132,19 +132,22 @@ const Header = () => {
                         <Link href="/quem-somos">Quem Somos</Link>
                     </nav>
 
-                    <div className={styles.searchWrapper}>
-                        <input
-                           type="text"
-                           placeholder="O que você procura?"
-                           className={styles.searchInput}
-                           value={searchQuery}
-                           onChange={(e) => setSearchQuery(e.target.value)}
-                           onKeyDown={handleKeyDown}
-                        />
-                        <button className={styles.searchButton} aria-label="Buscar" onClick={handleSearch}>
-                            <SearchIcon className={styles.searchIcon} />
-                        </button>
-                    </div>
+                    {/* Oculta busca no admin para maior foco */}
+                    {!pathname.startsWith('/admin') && (
+                        <div className={styles.searchWrapper}>
+                            <input
+                            type="text"
+                            placeholder="O que você procura?"
+                            className={styles.searchInput}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            />
+                            <button className={styles.searchButton} aria-label="Buscar" onClick={handleSearch}>
+                                <SearchIcon className={styles.searchIcon} />
+                            </button>
+                        </div>
+                    )}
 
                     <div className={styles.iconsWrapper}>
                         <Link href={user ? (isAdmin ? "/admin/dashboard" : "/conta") : "/conta/login"} aria-label={user ? "Minha Conta" : "Login"}>

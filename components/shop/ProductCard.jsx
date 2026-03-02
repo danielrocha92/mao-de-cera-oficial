@@ -1,14 +1,20 @@
+'use client';
+
 import CustomLink from '../ui/CustomLink';
 import Image from 'next/image';
 import styles from './ProductCard.module.css';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
+import { useFavorites } from '../../app/context/FavoritesContext';
 
 const ProductCard = ({ product }) => {
+  const { isFavorite, toggleFavorite } = useFavorites();
+
   if (!product) return null;
+
+  const isFav = isFavorite(product.id);
 
   const numericPrice = parseFloat(product.price);
   const numericComparePrice = product.comparePrice ? parseFloat(product.comparePrice) : null;
-
-  const displayPrice = numericComparePrice || numericPrice;
 
   const images = (product.imagens || product.images || []).filter(url => !url.startsWith('blob:'));
   const mainImage = images[0] || "https://placehold.co/300";
@@ -19,18 +25,30 @@ const ProductCard = ({ product }) => {
     safeSlug = parts[parts.length - 1] || product.id;
   }
 
+  const handleToggleFavorite = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(product);
+  };
+
   return (
     <div className={styles.card}>
+      <button
+        className={`${styles.favoriteButton} ${isFav ? styles.isFavorite : ''}`}
+        onClick={handleToggleFavorite}
+        aria-label={isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      >
+        {isFav ? <MdFavorite size={20} /> : <MdFavoriteBorder size={20} />}
+      </button>
+
       <CustomLink href={`/produtos/${safeSlug}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={mainImage}
-          alt={product.nome || product.title}
-          width={300}
-          height={300}
-          className={styles.image}
-          style={{ objectFit: 'cover' }}
-        />
+        <div className={styles.imageContainer}>
+          <img
+            src={mainImage}
+            alt={product.nome || product.title}
+            className={styles.image}
+          />
+        </div>
         <h3 className={styles.name}>{product.nome || product.title}</h3>
         <div className={styles.priceContainer}>
           {(product.preco_promocional || product.comparePrice) && (

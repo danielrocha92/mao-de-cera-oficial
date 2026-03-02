@@ -14,6 +14,8 @@ import { usePathname } from 'next/navigation';
 import MainContent from './MainContent';
 import GlobalLoader from '@/components/ui/GlobalLoader';
 
+import { FavoritesProvider } from '@/app/context/FavoritesContext';
+
 export default function ClientLayout({ children }) {
   const pathname = usePathname() || '';
   const isAdmin = pathname.startsWith('/admin');
@@ -21,19 +23,21 @@ export default function ClientLayout({ children }) {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <CartProvider>
-          <TransitionProvider>
-            <CartAnimationProvider>
-              <PageTransition>
-                <GlobalLoader />
-                {!isAdmin && <Header />}
-                <MainContent>{children}</MainContent>
-                {!isAdmin && <Footer />}
-              </PageTransition>
-              <FlyToCartAnimation />
-            </CartAnimationProvider>
-          </TransitionProvider>
-        </CartProvider>
+        <FavoritesProvider>
+          <CartProvider>
+            <TransitionProvider>
+              <CartAnimationProvider>
+                <PageTransition>
+                  <GlobalLoader />
+                  <Header />
+                  <MainContent>{children}</MainContent>
+                  <Footer />
+                </PageTransition>
+                <FlyToCartAnimation />
+              </CartAnimationProvider>
+            </TransitionProvider>
+          </CartProvider>
+        </FavoritesProvider>
       </AuthProvider>
     </ThemeProvider>
   );

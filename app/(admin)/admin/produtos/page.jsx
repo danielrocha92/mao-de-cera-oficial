@@ -76,39 +76,52 @@ export default function ProdutosPage() {
         </div>
         <div className={styles.tableContainer}>
           {loading ? (
-            <p>Carregando produtos...</p>
+            <p style={{ padding: '2rem', textAlign: 'center' }}>Carregando produtos...</p>
           ) : (
             <table className={styles.produtosTable}>
               <thead>
                 <tr>
-                  <th>Nome</th>
+                  <th>Produto</th>
                   <th>Preço</th>
                   <th>Estoque</th>
                   <th>Status</th>
-                  <th>Ações</th>
+                  <th style={{ textAlign: 'right' }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
-                {products.map((product) => (
+                {products.length > 0 ? products.map((product) => (
                   <tr key={product.id}>
-                    <td>{product.title || product.nome}</td>
-                    <td>{`R$ ${Number(product.price || product.preco).toFixed(2)}`}</td>
+                    <td>
+                      <div className={styles.productNameCell}>
+                        <span>{product.title || product.nome}</span>
+                        <span>{product.category || 'Geral'}</span>
+                      </div>
+                    </td>
+                    <td style={{ fontWeight: '600' }}>{`R$ ${Number(product.price || product.preco).toFixed(2)}`}</td>
                     <td>{product.stock !== undefined ? product.stock : product.estoque}</td>
                     <td>
                       <span className={`${styles.status} ${styles[getStatus(product).toLowerCase()]}`}>
                         {getStatus(product)}
                       </span>
                     </td>
-                    <td className={styles.actions}>
-                      <Link href={`/admin/produtos/${product.id}/editar`}>
-                        <button className={styles.editButton}>Editar</button>
-                      </Link>
-                      <button onClick={() => handleDelete(product.id)} className={styles.deleteButton}>
-                        Excluir
-                      </button>
+                    <td>
+                      <div className={styles.actions} style={{ justifyContent: 'flex-end' }}>
+                        <Link href={`/admin/produtos/${product.id}/editar`} className={styles.editButton} title="Editar">
+                           Editar
+                        </Link>
+                        <button onClick={() => handleDelete(product.id)} className={styles.deleteButton} title="Excluir">
+                           Excluir
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                ))}
+                )) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+                      Nenhum produto cadastrado.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           )}

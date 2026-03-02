@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import ImageUpload from '@/components/ui/ImageUpload';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -127,7 +128,11 @@ export default function NewProductPage() {
           <h3>Informações Básicas</h3>
           <input name="nome" placeholder="Nome do Produto" value={formData.nome} onChange={handleChange} required style={{ width: '100%', padding: '0.5rem' }} />
           <input name="slug" placeholder="Slug / URL (Opcional - Gerado automaticamente se vazio)" value={formData.slug} onChange={handleChange} style={{ width: '100%', padding: '0.5rem' }} />
-          <textarea name="descricao" placeholder="Descrição" value={formData.descricao} onChange={handleChange} rows={5} style={{ width: '100%', padding: '0.5rem' }} />
+          <RichTextEditor
+            value={formData.descricao}
+            onChange={(content) => setFormData(prev => ({ ...prev, descricao: content }))}
+            placeholder="Descrição detalhada do produto..."
+          />
           <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <input type="checkbox" name="isLancamento" checked={formData.isLancamento} onChange={handleChange} />

@@ -180,9 +180,38 @@
     color: var(--text-primary);
 }
 
-.description p {
+.description div {
     color: var(--text-secondary);
     line-height: 1.6;
+}
+
+.description div h1,
+.description div h2,
+.description div h3 {
+    color: var(--text-primary);
+    margin: 1.5rem 0 0.75rem;
+    font-weight: 600;
+}
+
+.description div h1 {
+    font-size: 1.5rem;
+}
+
+.description div h2 {
+    font-size: 1.25rem;
+}
+
+.description div h3 {
+    font-size: 1.1rem;
+}
+
+.description div ul,
+.description div ol {
+    margin: 0 0 1rem 1.5rem;
+}
+
+.description div p {
+    margin-bottom: 1rem;
 }
 
 .freight {

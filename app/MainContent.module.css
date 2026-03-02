@@ -1,13 +1,13 @@
 /* Adiciona preenchimento no topo em páginas que não são a home para compensar a altura do header */
 .mainContent {
-    padding-top: 110px;
-    /* Altura aproximada do header no mobile */
+    padding-top: 170px;
+    /* Ajustado para compensar a logo + barra de pesquisa no mobile */
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1024px) {
     .mainContent {
-        padding-top: 140px;
-        /* Altura aproximada do header no desktop */
+        padding-top: 130px;
+        /* Reduzido levemente para desktop se necessário */
     }
 }
 

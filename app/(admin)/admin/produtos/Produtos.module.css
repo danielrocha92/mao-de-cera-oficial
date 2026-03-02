@@ -1,5 +1,6 @@
+/* app/(admin)/admin/produtos/Produtos.module.css */
 .produtosContainer {
-    padding: 2rem;
+    width: 100%;
 }
 
 .header {
@@ -7,89 +8,152 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
 }
 
 .addButton {
-    background-color: #27ae60;
+    background: var(--primary);
     color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
     text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+    /* Adjust based on primary color */
 }
 
 .addButton:hover {
-    background-color: #219d52;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
 }
 
 .tableContainer {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    overflow-x: auto;
+    background-color: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
 
 .produtosTable {
     width: 100%;
-    border-collapse: collapse;
-    min-width: 600px;
-    /* Garante que as colunas não fiquem esmagadas */
-}
-
-.produtosTable th,
-.produtosTable td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #ecf0f1;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .produtosTable th {
-    font-weight: bold;
-    color: #7f8c8d;
+    background-color: var(--background);
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.produtosTable td {
+    padding: 1.25rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.productNameCell {
+    display: flex;
+    flex-direction: column;
+}
+
+.productNameCell span:first-child {
+    font-weight: 600;
+}
+
+.productNameCell span:last-child {
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
 
 .status {
-    padding: 0.3rem 0.6rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .status.ativo {
-    background-color: #e8f5e9;
-    color: #2e7d32;
+    background-color: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
 }
 
 .status.esgotado {
-    background-color: #ffebee;
-    color: #c62828;
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
 }
 
-.actions button {
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actions button,
+.actions a {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.85rem;
     cursor: pointer;
-    font-weight: bold;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-    transition: opacity 0.3s ease;
-    white-space: nowrap;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.actions button:hover {
-    opacity: 0.8;
+.editButton:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background-color: rgba(255, 107, 107, 0.05);
 }
 
-.editButton {
-    background-color: #3498db;
-    color: white;
+.deleteButton:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.05);
 }
 
-.deleteButton {
-    background-color: #e74c3c;
-    color: white;
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .addButton {
+        width: 100%;
+        text-align: center;
+    }
+
+    .produtosTable thead {
+        display: none;
+        /* Mobile view should be cards? Or scrollable */
+    }
+
+    /* Simple scroll fix for mobile table */
+    .tableContainer {
+        overflow-x: auto;
+    }
 }
