@@ -1,4 +1,4 @@
-import styles from '../quem-somos/QuemSomos.module.css';
+import styles from '../styles/Pages.module.css';
 
 export default function PrazosEntregasPage() {
     return (

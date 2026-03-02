@@ -63,7 +63,7 @@ export default function ClientSidebar() {
           <MdSupportAgent size={24} />
           <span>Trocas e Suporte</span>
         </Link>
-        <button onClick={handleLogout} style={{ color: '#e74c3c', marginTop: '1rem' }}>
+        <button onClick={handleLogout} className={styles.logoutBtn}>
           <MdExitToApp size={24} />
           <span>Sair</span>
         </button>
