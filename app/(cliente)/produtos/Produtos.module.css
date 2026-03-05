@@ -187,3 +187,21 @@
   color: var(--primary);
   /* Highlight color for active filter */
 }
+
+.sectionHeader {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.sectionHeader h2 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+@media (min-width: 769px) {
+  .sectionHeader h2 {
+    font-size: 2rem;
+  }
+}

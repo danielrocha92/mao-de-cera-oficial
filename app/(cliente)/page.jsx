@@ -1,8 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { db } from '@/lib/firebaseAdmin';
 import ProductCard from '@/components/shop/ProductCard';
+import BannerCarousel from '@/components/shop/BannerCarousel';
 import CategoryCarousel from '@/components/shop/CategoryCarousel';
 import PaymentIcons from '@/components/shop/PaymentIcons';
 import ProductCarousel from '@/components/shop/ProductCarousel';
@@ -54,46 +53,11 @@ async function getBanners() {
 export default async function Home() {
   const products = await getProducts();
   const banners = await getBanners();
-  const mainBanner = banners[0]; // Fetch the first active banner
 
   return (
     <div className={styles.homeContainer}>
-      {/* Hero Section */}
-      {/* Hero Section with Video Background */}
-      <section className={styles.hero}>
-        {mainBanner.tipo === 'video' ? (
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className={styles.videoBackground}
-          >
-            <source src={mainBanner.mediaUrl} type="video/mp4" />
-            Seu navegador não suporta vídeos HTML5.
-          </video>
-        ) : (
-          <Image
-            src={mainBanner.mediaUrl}
-            alt={mainBanner.titulo}
-            fill
-            priority
-            style={{ objectFit: 'cover', zIndex: -1 }}
-            className={styles.imageBackground}
-          />
-        )}
-        <div className={styles.heroOverlay}></div>
-
-        <div className={styles.heroContent}>
-          {mainBanner.titulo && <h1>{mainBanner.titulo}</h1>}
-          {mainBanner.descricao && <p>{mainBanner.descricao}</p>}
-          {mainBanner.link && mainBanner.textoBotao && (
-            <Link href={mainBanner.link} className={styles.ctaButton}>
-              {mainBanner.textoBotao}
-            </Link>
-          )}
-        </div>
-      </section>
+      {/* Hero Carousel Section */}
+      <BannerCarousel banners={banners} />
 
       {/* Category Carousel */}
       <CategoryCarousel />

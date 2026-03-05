@@ -1,36 +1,63 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/shop/ProductCard';
 import styles from './Produtos.module.css';
 
-const collections = ['Todos', 'Velas Aromáticas', 'Kits', 'Acessórios'];
+function ProdutosContent() {
+    const searchParams = useSearchParams();
+    const categoriaSlug = searchParams.get('categoria');
 
-export default function ProdutosPage() {
     const [showSidebar, setShowSidebar] = useState(false);
     const [sortOption, setSortOption] = useState('mais-vendidos');
     const [selectedCollection, setSelectedCollection] = useState('Todos');
+
+    const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/api/produtos');
-                if (!response.ok) {
-                    throw new Error('Falha ao buscar produtos');
+                const [prodRes, catRes] = await Promise.all([
+                    fetch('/api/produtos'),
+                    fetch('/api/categorias')
+                ]);
+
+                if (prodRes.ok) {
+                    const prodData = await prodRes.json();
+                    setProducts(prodData);
                 }
-                const data = await response.json();
-                setProducts(data);
+
+                if (catRes.ok) {
+                    const catData = await catRes.json();
+                    setCategories(catData);
+
+                    if (categoriaSlug) {
+                        const matchedCat = catData.find(c => c.slug === categoriaSlug);
+                        if (matchedCat) {
+                            setSelectedCollection(matchedCat.nome);
+                        } else {
+                            // verify if there's any direct match with the string itself
+                            const directMatch = catData.find(c => c.nome.toLowerCase() === categoriaSlug.toLowerCase());
+                            if (directMatch) {
+                                setSelectedCollection(directMatch.nome);
+                            } else {
+                                setSelectedCollection(categoriaSlug);
+                            }
+                        }
+                    }
+                }
             } catch (error) {
                 console.error(error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchProducts();
-    }, []);
+        fetchData();
+    }, [categoriaSlug]);
 
     const handleSortChange = (event) => {
         setSortOption(event.target.value);
@@ -38,14 +65,15 @@ export default function ProdutosPage() {
 
     const handleCollectionChange = (collection) => {
         setSelectedCollection(collection);
-        setShowSidebar(false); // Close sidebar after selecting a filter on mobile
+        setShowSidebar(false);
     };
 
-    const getFilteredProducts = (productsArray) => {
-        if (selectedCollection === 'Todos') {
-            return productsArray;
-        }
-        return productsArray.filter(product => product.collection === selectedCollection);
+    const isMatchCategory = (product, category) => {
+       if (!category || category === 'Todos') return true;
+       if (product.categorias && Array.isArray(product.categorias)) {
+           return product.categorias.includes(category);
+       }
+       return product.collection === category;
     };
 
     const getSortedProducts = (productsArray) => {
@@ -53,10 +81,10 @@ export default function ProdutosPage() {
 
         switch (sortOption) {
             case 'menor-preco':
-                sortedProducts.sort((a, b) => a.price - b.price);
+                sortedProducts.sort((a, b) => (a.preco || a.price || 0) - (b.preco || b.price || 0));
                 break;
             case 'maior-preco':
-                sortedProducts.sort((a, b) => b.price - a.price);
+                sortedProducts.sort((a, b) => (b.preco || b.price || 0) - (a.preco || a.price || 0));
                 break;
             case 'mais-vendidos':
             default:
@@ -65,13 +93,20 @@ export default function ProdutosPage() {
         return sortedProducts;
     };
 
-    const filteredProducts = getFilteredProducts(products);
-    const productsToDisplay = getSortedProducts(filteredProducts);
+    const allSorted = getSortedProducts(products);
+
+    const highlightedProducts = selectedCollection === 'Todos'
+        ? allSorted
+        : allSorted.filter(p => isMatchCategory(p, selectedCollection));
+
+    const otherProducts = selectedCollection === 'Todos'
+        ? []
+        : allSorted.filter(p => !isMatchCategory(p, selectedCollection));
 
     return (
         <div className={styles.pageLayout}>
-            <button 
-                className={styles.filterToggleButton} 
+            <button
+                className={styles.filterToggleButton}
                 onClick={() => setShowSidebar(!showSidebar)}
             >
                 {showSidebar ? 'Fechar Filtros' : 'Abrir Filtros'}
@@ -79,22 +114,24 @@ export default function ProdutosPage() {
             <aside className={`${styles.sidebar} ${showSidebar ? styles.showSidebar : ''}`}>
                 <h3>Filtros</h3>
                 <div className={styles.filterSection}>
-                    <h4>Coleções</h4>
+                    <h4>Categorias</h4>
                     <ul>
-                        {collections.map(collection => (
-                            <li 
-                                key={collection} 
-                                onClick={() => handleCollectionChange(collection)}
-                                className={selectedCollection === collection ? styles.activeFilter : ''}
+                        <li
+                            onClick={() => handleCollectionChange('Todos')}
+                            className={selectedCollection === 'Todos' ? styles.activeFilter : ''}
+                        >
+                            Todos
+                        </li>
+                        {categories.map(cat => (
+                            <li
+                                key={cat.id}
+                                onClick={() => handleCollectionChange(cat.nome)}
+                                className={selectedCollection === cat.nome ? styles.activeFilter : ''}
                             >
-                                {collection}
+                                {cat.nome}
                             </li>
                         ))}
                     </ul>
-                </div>
-                <div className={styles.filterSection}>
-                    <h4>Preço</h4>
-                    <input type="range" min="0" max="100" />
                 </div>
             </aside>
             <main className={styles.mainContent}>
@@ -109,18 +146,45 @@ export default function ProdutosPage() {
                 {loading ? (
                     <p>Carregando produtos...</p>
                 ) : (
-                    <div className={styles.grid}>
-                        {productsToDisplay.map(product => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                    <>
+                       {selectedCollection !== 'Todos' && (
+                           <div className={styles.sectionHeader}>
+                               <h2>Produtos em: {selectedCollection}</h2>
+                           </div>
+                       )}
+                       <div className={styles.grid}>
+                           {highlightedProducts.length > 0 ? (
+                               highlightedProducts.map(product => (
+                                   <ProductCard key={product.id} product={product} />
+                               ))
+                           ) : (
+                               <p>Nenhum produto encontrado nesta categoria.</p>
+                           )}
+                       </div>
+
+                       {selectedCollection !== 'Todos' && otherProducts.length > 0 && (
+                           <>
+                               <div className={styles.sectionHeader} style={{ marginTop: '4rem' }}>
+                                   <h2>Outros produtos</h2>
+                               </div>
+                               <div className={styles.grid}>
+                                   {otherProducts.map(product => (
+                                       <ProductCard key={product.id} product={product} />
+                                   ))}
+                               </div>
+                           </>
+                       )}
+                    </>
                 )}
-                <div className={styles.pagination}>
-                    <span>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                </div>
             </main>
         </div>
+    );
+}
+
+export default function ProdutosPage() {
+    return (
+        <Suspense fallback={<div style={{ padding: '4rem', textAlign: 'center' }}>Carregando catálogo...</div>}>
+            <ProdutosContent />
+        </Suspense>
     );
 }
